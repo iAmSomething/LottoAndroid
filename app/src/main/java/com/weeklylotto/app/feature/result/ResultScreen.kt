@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,6 +45,7 @@ import com.weeklylotto.app.ui.component.StatusBadge
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,6 +126,14 @@ fun ResultScreen() {
                 verticalArrangement = Arrangement.Center,
             ) {
                 CircularProgressIndicator()
+                if (uiState.hasRetried) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "재시도 중 (${uiState.retryAttempt}/${uiState.maxRetryAttempt})",
+                        color = LottoColors.TextMuted,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
             }
             return
         }
@@ -146,8 +156,27 @@ fun ResultScreen() {
                         text = uiState.error?.message ?: "잠시 후 다시 시도해 주세요.",
                         color = Color(0xFF424242),
                     )
+                    if (uiState.hasRetried) {
+                        Text(
+                            text = "총 ${uiState.maxRetryAttempt}회 시도 후 실패했습니다.",
+                            color = LottoColors.TextMuted,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                    uiState.lastErrorAt?.let { failedAt ->
+                        Text(
+                            text = "최근 실패 시각 ${failedAt.format(errorTimeFormatter)}",
+                            color = LottoColors.TextMuted,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
                     Button(onClick = viewModel::refresh) {
                         Text("다시 시도")
+                    }
+                    if (uiState.selectedRound != null) {
+                        TextButton(onClick = viewModel::loadLatestFromError) {
+                            Text("최신 회차 조회")
+                        }
                     }
                 }
             }
@@ -293,3 +322,5 @@ fun ResultScreen() {
         }
     }
 }
+
+private val errorTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")

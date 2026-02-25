@@ -41,6 +41,7 @@
 - [x] D-005 API 예외 분기별 사용자 메시지 표준화
 - [x] D-006 회차 추정 로직 검증 케이스 보강
 - [x] D-007 공식 API 차단 시 미러 endpoint 자동 fallback 구현/테스트
+- [x] D-008 Result 네트워크 실패 UX 개선(자동 재시도/실패시각/최신회차 재조회)
 
 ## E. 알림
 - [x] E-001 구매/결과 Worker 구현
@@ -72,6 +73,7 @@
 - [x] H-006 통합 테스트(Room + Repository) 작성
 - [x] H-007 회차 계산 회귀 테스트 추가(`nextDrawDate`, `currentSalesRound`)
 - [x] H-008 번호생성 저장 E2E 계측 회귀 테스트 추가(`WeeklySaveFlowInstrumentedTest`)
+- [x] H-009 ResultViewModel 재시도 로직 단위 테스트 추가
 
 ## I. 릴리즈 준비
 - [x] I-001 스토어 메타데이터 작성

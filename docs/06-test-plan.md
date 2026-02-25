@@ -22,6 +22,8 @@
 ### 당첨 판정
 - 1~5등, 낙첨 전체 분기
 - 2등 보너스 조건 검증
+- 결과 조회 네트워크 실패 시 자동 재시도/최종 에러 상태 검증
+- 자동 검증: `DefaultResultEvaluatorTest`, `ResultViewModelTest`
 
 ### 알림
 - 기본 스케줄 예약
@@ -47,4 +49,5 @@
 - 핵심 유즈케이스 회귀 실패 0건
 - CI 빌드/단위 테스트 성공
 - `connectedDebugAndroidTest` 통과(현재 7 tests, 0 failures)
+- `connectedDebugAndroidTest` 통과(현재 8 tests, 0 failures)
 - 치명 이슈(P0/P1) 0건
