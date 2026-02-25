@@ -27,6 +27,7 @@
 ./gradlew :app:testDebugUnitTest
 ./gradlew :app:connectedDebugAndroidTest
 ./gradlew :app:assembleRelease
+./scripts/show-widget-refresh-history.sh com.weeklylotto.app.debug
 ```
 
 ## 6. 커뮤니케이션 템플릿

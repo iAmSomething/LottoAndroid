@@ -9,8 +9,27 @@ import com.weeklylotto.app.widget.WeeklyNumbersWidget
 class GlanceWidgetRefreshScheduler(
     private val context: Context,
 ) : WidgetRefreshScheduler {
+    private val logger = WidgetRefreshHistoryLogger(context)
+
     override suspend fun refreshAll() {
-        WeeklyNumbersWidget().updateAll(context)
-        ResultSummaryWidget().updateAll(context)
+        logger.log("refresh_all:start")
+        runWidgetRefresh("weekly_numbers") {
+            WeeklyNumbersWidget().updateAll(context)
+        }
+        runWidgetRefresh("result_summary") {
+            ResultSummaryWidget().updateAll(context)
+        }
+        logger.log("refresh_all:done")
+    }
+
+    private suspend fun runWidgetRefresh(
+        widgetName: String,
+        action: suspend () -> Unit,
+    ) {
+        runCatching { action() }
+            .onSuccess { logger.log("$widgetName:success") }
+            .onFailure { error ->
+                logger.log("$widgetName:failure:${error.javaClass.simpleName}:${error.message.orEmpty().take(120)}")
+            }
     }
 }

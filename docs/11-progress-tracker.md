@@ -82,6 +82,9 @@
   - 번호 생성 저장 흐름 계측 회귀 테스트 추가(`WeeklySaveFlowInstrumentedTest`)
   - 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `connectedDebugAndroidTest`(8/8) 통과
   - Figma MCP 원본 대조 재시도 결과: 플랜 호출 한도 응답으로 직접 노드 수집 여전히 불가
+  - 디버그 전용 위젯 갱신 이력 로깅 추가(`WidgetRefreshHistoryLogger`, `widget_refresh_history.log`)
+  - 위젯별 예외 격리 적용: 한 위젯 갱신 실패 시 다른 위젯 갱신 계속 수행
+  - 위젯 로그 조회 스크립트 추가(`scripts/show-widget-refresh-history.sh`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
