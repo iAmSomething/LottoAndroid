@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="720" height="360" viewBox="0 0 720 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+<defs>
+  <filter id="ds" x="-50%" y="-50%" width="200%" height="200%">
+    <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="rgba(15,23,42,.12)"/>
+  </filter>
+</defs>
+
+<rect x="0" y="0" width="720" height="360" fill="#F8FAFC"/>
+
+<g id="WidgetA" filter="url(#ds)">
+  <rect x="24" y="24" width="320" height="144" rx="18" fill="#FFFFFF"/>
+  <text x="40" y="56" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="18" fill="#0F172A">내 번호 (4×2)</text>
+  <text x="40" y="80" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="600" font-size="12" fill="#64748B">1100회 · D-4</text>
+  <g transform="translate(40,92)">
+
+<g transform="translate(0,0)">
+  <circle cx="12" cy="12" r="12" fill="#60A5FA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">3</text>
+</g>
+
+<g transform="translate(32,0)">
+  <circle cx="12" cy="12" r="12" fill="#A78BFA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">14</text>
+</g>
+
+<g transform="translate(64,0)">
+  <circle cx="12" cy="12" r="12" fill="#FB7185"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">25</text>
+</g>
+
+<g transform="translate(96,0)">
+  <circle cx="12" cy="12" r="12" fill="#34D399"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">31</text>
+</g>
+
+<g transform="translate(128,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">38</text>
+</g>
+
+<g transform="translate(160,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">42</text>
+</g>
+</g>
+  <rect x="252" y="56" width="76" height="30" rx="15" fill="#4F46E5"/>
+  <text x="290" y="76" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="12" fill="#FFFFFF">QR스캔</text>
+  <text x="300" y="132" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="600" font-size="12" fill="#64748B">+ 3게임</text>
+</g>
+
+<g id="WidgetB" filter="url(#ds)">
+  <rect x="376" y="24" width="320" height="96" rx="18" fill="#FFFFFF"/>
+  <text x="392" y="56" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="18" fill="#0F172A">최신 결과 (4×1)</text>
+  <text x="392" y="80" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="600" font-size="12" fill="#64748B">1099회</text>
+  <g transform="translate(392,88)">
+
+<g transform="translate(0,0)">
+  <circle cx="12" cy="12" r="12" fill="#A78BFA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">20</text>
+</g>
+
+<g transform="translate(32,0)">
+  <circle cx="12" cy="12" r="12" fill="#FB7185"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">28</text>
+</g>
+
+<g transform="translate(64,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">38</text>
+</g>
+
+<g transform="translate(96,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">40</text>
+</g>
+
+<g transform="translate(128,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">43</text>
+</g>
+</g>
+  <g transform="translate(552,88)">
+    <circle cx="12" cy="12" r="12" fill="#FB7185"/>
+    <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#0F172A">26</text>
+  </g>
+  <text x="680" y="80" text-anchor="end" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="12" fill="#E11D48">5등 당첨</text>
+</g>
+
+<g id="WidgetB2" filter="url(#ds)">
+  <rect x="376" y="144" width="320" height="96" rx="18" fill="#FFFFFF"/>
+  <text x="392" y="176" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="18" fill="#0F172A">결과 없음</text>
+  <text x="392" y="200" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="600" font-size="12" fill="#64748B">불러오기에 실패했어요</text>
+  <rect x="392" y="212" width="108" height="30" rx="15" fill="rgba(79,70,229,.10)" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="446" y="232" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="12" fill="#4F46E5">새로고침</text>
+</g>
+</svg>

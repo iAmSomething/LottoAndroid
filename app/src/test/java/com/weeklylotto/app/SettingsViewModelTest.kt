@@ -1,0 +1,84 @@
+package com.weeklylotto.app
+
+import com.google.common.truth.Truth.assertThat
+import com.weeklylotto.app.domain.model.ReminderConfig
+import com.weeklylotto.app.domain.service.ReminderConfigStore
+import com.weeklylotto.app.domain.service.ReminderScheduler
+import com.weeklylotto.app.feature.settings.SettingsViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.Test
+import java.time.DayOfWeek
+import java.time.LocalTime
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class SettingsViewModelTest {
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    @Test
+    fun 금요일저녁_프리셋과_저장시_store_scheduler가_호출된다() =
+        runTest {
+            val initial = ReminderConfig(enabled = false)
+            val store = FakeReminderConfigStore(initial)
+            val scheduler = FakeReminderScheduler()
+            val viewModel = SettingsViewModel(store, scheduler)
+
+            advanceUntilIdle()
+            viewModel.useFridayEveningSchedule()
+            viewModel.setEnabled(true)
+            viewModel.saveSchedule()
+            advanceUntilIdle()
+
+            assertThat(store.saved).hasSize(1)
+            assertThat(scheduler.scheduled).hasSize(1)
+            val saved = store.saved.first()
+            assertThat(saved.purchaseReminderDay).isEqualTo(DayOfWeek.FRIDAY)
+            assertThat(saved.purchaseReminderTime).isEqualTo(LocalTime.of(18, 30))
+            assertThat(saved.enabled).isTrue()
+            assertThat(viewModel.uiState.value.message).isEqualTo("알림 설정을 저장했습니다.")
+        }
+
+    @Test
+    fun 기본값_프리셋은_토요일_기본시간으로_복원된다() =
+        runTest {
+            val initial =
+                ReminderConfig(purchaseReminderDay = DayOfWeek.MONDAY, purchaseReminderTime = LocalTime.of(9, 0))
+            val viewModel = SettingsViewModel(FakeReminderConfigStore(initial), FakeReminderScheduler())
+
+            advanceUntilIdle()
+            viewModel.useDefaultSchedule()
+
+            val config = viewModel.uiState.value.config
+            assertThat(config.purchaseReminderDay).isEqualTo(DayOfWeek.SATURDAY)
+            assertThat(config.purchaseReminderTime).isEqualTo(LocalTime.of(15, 0))
+            assertThat(config.resultReminderTime).isEqualTo(LocalTime.of(21, 0))
+        }
+}
+
+private class FakeReminderConfigStore(
+    private val loaded: ReminderConfig,
+) : ReminderConfigStore {
+    val saved: MutableList<ReminderConfig> = mutableListOf()
+
+    override suspend fun load(): ReminderConfig = loaded
+
+    override suspend fun save(config: ReminderConfig) {
+        saved += config
+    }
+}
+
+private class FakeReminderScheduler : ReminderScheduler {
+    val scheduled: MutableList<ReminderConfig> = mutableListOf()
+    var cancelCount: Int = 0
+
+    override suspend fun schedule(config: ReminderConfig) {
+        scheduled += config
+    }
+
+    override suspend fun cancelAll() {
+        cancelCount += 1
+    }
+}

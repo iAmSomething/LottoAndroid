@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="360" height="800" viewBox="0 0 360 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+<defs>
+  <filter id="ds" x="-50%" y="-50%" width="200%" height="200%">
+    <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="rgba(17,24,39,.12)"/>
+  </filter>
+  <pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse">
+    <path d="M16 0H0V16" fill="none" stroke="rgba(251,113,133,.18)" stroke-width="1"/>
+  </pattern>
+  <linearGradient id="appbarGrad" x1="0" y1="0" x2="360" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#6D28D9"/>
+    <stop offset="1" stop-color="#7C3AED"/>
+  </linearGradient>
+</defs>
+
+<rect x="0" y="0" width="360" height="800" fill="#FFF7FB"/>
+<rect x="0" y="0" width="360" height="800" fill="url(#grid)"/>
+
+<g id="AppBar">
+  <rect x="0" y="0" width="360" height="96" fill="url(#appbarGrad)"/>
+  <text x="16" y="56" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="20" fill="#FFFFFF">번호관리</text>
+  <text x="344" y="56" text-anchor="end" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="700" font-size="12" fill="rgba(255,255,255,.9)">필터</text>
+</g>
+<rect x="16" y="112" width="104" height="34" rx="17" fill="#FFFFFF" stroke="#E9D5FF" stroke-width="1"/><text x="68.0" y="134" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="12" fill="#374151">이번주</text>
+<rect x="124" y="112" width="104" height="34" rx="17" fill="#7C3AED"/><text x="176.0" y="134" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="12" fill="#FFFFFF">보관함</text>
+<rect x="232" y="112" width="112" height="34" rx="17" fill="#FFFFFF" stroke="#E9D5FF" stroke-width="1"/><text x="288.0" y="134" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="12" fill="#374151">스캔내역</text>
+<g id="Header">
+  <text x="16" y="176" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="950" font-size="18" fill="#111827">보관함</text>
+  <text x="344" y="176" text-anchor="end" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="14" fill="#7C3AED">편집</text>
+</g>
+
+<g id="FolderCard" filter="url(#ds)">
+  <rect x="16" y="192" width="328" height="92" rx="18" fill="#FFFFFF"/>
+  <rect x="32" y="212" width="44" height="32" rx="8" fill="rgba(124,58,237,.14)"/>
+  <path d="M36 218h20l4 4h16v22H36v-26Z" fill="rgba(124,58,237,.30)"/>
+  <text x="88" y="224" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="14" fill="#111827">즐겨찾기</text>
+  <text x="88" y="246" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="650" font-size="12" fill="#6B7280">10개 저장됨</text>
+  <text x="328" y="238" text-anchor="end" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="12" fill="#6B7280">›</text>
+</g>
+
+<g id="SavedList">
+  <text x="16" y="320" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="16" fill="#111827">최근 저장</text>
+</g>
+
+<g id="Item1" filter="url(#ds)">
+  <rect x="16" y="336" width="328" height="112" rx="18" fill="#FFFFFF"/>
+  <text x="32" y="368" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="14" fill="#111827">1095회 · 2026.01.18</text>
+  <rect x="268" y="352" width="60" height="24" rx="12" fill="#DCFCE7"/>
+  <text x="298" y="368" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="12" fill="#166534">보관</text>
+  <g transform="translate(32,382)">
+<g transform="translate(0,0)">
+  <circle cx="12" cy="12" r="12" fill="#60A5FA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">2</text>
+</g>
+<g transform="translate(32,0)">
+  <circle cx="12" cy="12" r="12" fill="#A78BFA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">11</text>
+</g>
+<g transform="translate(64,0)">
+  <circle cx="12" cy="12" r="12" fill="#FB7185"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">19</text>
+</g>
+<g transform="translate(96,0)">
+  <circle cx="12" cy="12" r="12" fill="#34D399"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">27</text>
+</g>
+<g transform="translate(128,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">33</text>
+</g>
+<g transform="translate(160,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">44</text>
+</g>
+</g>
+  <text x="32" y="436" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="650" font-size="12" fill="#6B7280">메모: 생일 조합</text>
+</g>
+
+<g id="FAB">
+  <circle cx="316" cy="664" r="26" fill="#FB7185"/>
+  <path d="M316 652v24M304 664h24" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+</g>
+
+
+<g id="BottomNav">
+  <rect x="0" y="720" width="360" height="80" fill="#FFFFFF"/>
+  <line x1="0" y1="720" x2="360" y2="720" stroke="#E9D5FF" stroke-width="1"/>
+  
+<g transform="translate(60,748)">
+  <path d="M-10 2V-6L0-14L10-6V2" stroke="#6B7280" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 2V-4H4V2" stroke="#6B7280" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+  <text x="60" y="784" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="600" font-size="12" fill="#6B7280">홈</text>
+  
+<g transform="translate(180,748)">
+  <rect x="-11" y="-12" width="22" height="24" rx="5" stroke="#7C3AED" stroke-width="2.2" fill="none"/>
+  <path d="M-6 -6H6M-6 -1H6M-6 4H2" stroke="#7C3AED" stroke-width="2.2" stroke-linecap="round"/>
+</g>
+  <text x="180" y="784" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="12" fill="#7C3AED">번호관리</text>
+  
+<g transform="translate(300,748)">
+  <path d="M-6 -12H6V-6C6 -2 3 1 0 1C-3 1 -6 -2 -6 -6V-12Z" stroke="#6B7280" stroke-width="2.2" fill="none" stroke-linejoin="round"/>
+  <path d="M-6 -10H-12V-8C-12 -4 -10 -2 -6 -2" stroke="#6B7280" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M6 -10H12V-8C12 -4 10 -2 6 -2" stroke="#6B7280" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M0 1V6" stroke="#6B7280" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M-6 10H6" stroke="#6B7280" stroke-width="2.2" stroke-linecap="round"/>
+</g>
+  <text x="300" y="784" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="600" font-size="12" fill="#6B7280">당첨결과</text>
+</g>
+
+</svg>

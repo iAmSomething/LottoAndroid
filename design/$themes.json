@@ -1,0 +1,11 @@
+[
+  {
+    "id": "theme_light",
+    "name": "Light",
+    "selectedTokenSets": {
+      "core": "enabled",
+      "semantic": "enabled"
+    },
+    "$figmaStyleReferences": {}
+  }
+]

@@ -1,0 +1,130 @@
+{
+  "color": {
+    "bg": {
+      "app": {
+        "value": "{core.color.gray.50}",
+        "type": "color"
+      },
+      "surface": {
+        "value": "{core.color.gray.0}",
+        "type": "color"
+      },
+      "surfaceAlt": {
+        "value": "{core.color.teal.50}",
+        "type": "color"
+      }
+    },
+    "text": {
+      "primary": {
+        "value": "{core.color.gray.900}",
+        "type": "color"
+      },
+      "secondary": {
+        "value": "{core.color.gray.700}",
+        "type": "color"
+      },
+      "inverse": {
+        "value": "{core.color.gray.0}",
+        "type": "color"
+      }
+    },
+    "brand": {
+      "primary": {
+        "value": "{core.color.teal.900}",
+        "type": "color"
+      },
+      "primaryContainer": {
+        "value": "{core.color.teal.100}",
+        "type": "color"
+      },
+      "accent": {
+        "value": "{core.color.amber.500}",
+        "type": "color"
+      }
+    },
+    "border": {
+      "default": {
+        "value": "{core.color.gray.200}",
+        "type": "color"
+      },
+      "focus": {
+        "value": "{core.color.teal.900}",
+        "type": "color"
+      }
+    },
+    "ball": {
+      "yellow": {
+        "value": "{core.color.amber.500}",
+        "type": "color"
+      },
+      "blue": {
+        "value": "{core.color.blue.700}",
+        "type": "color"
+      },
+      "red": {
+        "value": "{core.color.red.700}",
+        "type": "color"
+      },
+      "green": {
+        "value": "{core.color.green.700}",
+        "type": "color"
+      },
+      "gray": {
+        "value": "{core.color.gray.800}",
+        "type": "color"
+      }
+    },
+    "state": {
+      "success": {
+        "value": "{core.color.amber.700}",
+        "type": "color"
+      },
+      "danger": {
+        "value": "{core.color.red.700}",
+        "type": "color"
+      }
+    }
+  },
+  "dimension": {
+    "cardRadius": {
+      "value": "{core.dimension.radius.lg}",
+      "type": "borderRadius"
+    },
+    "chipRadius": {
+      "value": "{core.dimension.radius.pill}",
+      "type": "borderRadius"
+    },
+    "screenPadding": {
+      "value": "{core.dimension.space.4}",
+      "type": "dimension"
+    }
+  },
+  "shadow": {
+    "card": {
+      "value": "{core.shadow.sm}",
+      "type": "boxShadow"
+    }
+  },
+  "typography": {
+    "appbarTitle": {
+      "value": "{core.typography.title.md}",
+      "type": "typography"
+    },
+    "sectionTitle": {
+      "value": "{core.typography.title.sm}",
+      "type": "typography"
+    },
+    "body": {
+      "value": "{core.typography.body.md}",
+      "type": "typography"
+    },
+    "caption": {
+      "value": "{core.typography.body.sm}",
+      "type": "typography"
+    },
+    "chip": {
+      "value": "{core.typography.label.md}",
+      "type": "typography"
+    }
+  }
+}

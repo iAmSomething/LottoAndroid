@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="360" height="800" viewBox="0 0 360 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+<defs>
+  <filter id="ds" x="-50%" y="-50%" width="200%" height="200%">
+    <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="rgba(17,24,39,.12)"/>
+  </filter>
+  <pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse">
+    <path d="M16 0H0V16" fill="none" stroke="rgba(251,113,133,.18)" stroke-width="1"/>
+  </pattern>
+  <linearGradient id="appbarGrad" x1="0" y1="0" x2="360" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#6D28D9"/>
+    <stop offset="1" stop-color="#7C3AED"/>
+  </linearGradient>
+</defs>
+
+<rect x="0" y="0" width="360" height="800" fill="#FFF7FB"/>
+<rect x="0" y="0" width="360" height="800" fill="url(#grid)"/>
+
+<g id="AppBar">
+  <rect x="0" y="0" width="360" height="96" fill="url(#appbarGrad)"/>
+  <text x="16" y="56" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="900" font-size="20" fill="#FFFFFF">QR 스캔</text>
+  <text x="344" y="56" text-anchor="end" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="700" font-size="12" fill="rgba(255,255,255,.9)">닫기</text>
+</g>
+<g id="Camera" filter="url(#ds)">
+  <rect x="16" y="112" width="328" height="520" rx="18" fill="rgba(17,24,39,.88)"/>
+  <rect x="56" y="220" width="248" height="248" rx="18" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2"/>
+  <path d="M90 344l34 34 76-92" stroke="rgba(34,197,94,.85)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="180" y="560" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="12" fill="rgba(255,255,255,.78)">인식 완료</text>
+</g>
+
+<g id="Dim">
+  <rect x="0" y="0" width="360" height="800" fill="rgba(17,24,39,.28)"/>
+</g>
+
+<g id="Sheet" filter="url(#ds)">
+  <rect x="0" y="520" width="360" height="280" rx="22" fill="#FFFFFF"/>
+  <rect x="152" y="534" width="56" height="6" rx="3" fill="#E9D5FF"/>
+  <text x="16" y="572" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="950" font-size="16" fill="#111827">등록할까요?</text>
+  <text x="16" y="596" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="650" font-size="12" fill="#6B7280">1100회 · 2게임</text>
+  <g transform="translate(16,612)">
+<g transform="translate(0,0)">
+  <circle cx="12" cy="12" r="12" fill="#60A5FA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">3</text>
+</g>
+<g transform="translate(32,0)">
+  <circle cx="12" cy="12" r="12" fill="#A78BFA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">14</text>
+</g>
+<g transform="translate(64,0)">
+  <circle cx="12" cy="12" r="12" fill="#FB7185"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">25</text>
+</g>
+<g transform="translate(96,0)">
+  <circle cx="12" cy="12" r="12" fill="#34D399"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">31</text>
+</g>
+<g transform="translate(128,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">38</text>
+</g>
+<g transform="translate(160,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="900" fill="#FFFFFF">42</text>
+</g>
+</g>
+
+  <rect x="16" y="700" width="160" height="52" rx="18" fill="#FFFFFF" stroke="#E9D5FF" stroke-width="1"/>
+  <text x="96" y="732" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="950" font-size="14" fill="#111827">취소</text>
+  <rect x="184" y="700" width="160" height="52" rx="18" fill="#7C3AED"/>
+  <text x="264" y="732" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="950" font-size="14" fill="#FFFFFF">저장</text>
+</g>
+
+
+<g id="BottomNav">
+  <rect x="0" y="720" width="360" height="80" fill="#FFFFFF"/>
+  <line x1="0" y1="720" x2="360" y2="720" stroke="#E9D5FF" stroke-width="1"/>
+  
+<g transform="translate(60,748)">
+  <path d="M-10 2V-6L0-14L10-6V2" stroke="#7C3AED" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 2V-4H4V2" stroke="#7C3AED" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+  <text x="60" y="784" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="12" fill="#7C3AED">홈</text>
+  
+<g transform="translate(180,748)">
+  <rect x="-11" y="-12" width="22" height="24" rx="5" stroke="#6B7280" stroke-width="2.2" fill="none"/>
+  <path d="M-6 -6H6M-6 -1H6M-6 4H2" stroke="#6B7280" stroke-width="2.2" stroke-linecap="round"/>
+</g>
+  <text x="180" y="784" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="600" font-size="12" fill="#6B7280">번호관리</text>
+  
+<g transform="translate(300,748)">
+  <path d="M-6 -12H6V-6C6 -2 3 1 0 1C-3 1 -6 -2 -6 -6V-12Z" stroke="#6B7280" stroke-width="2.2" fill="none" stroke-linejoin="round"/>
+  <path d="M-6 -10H-12V-8C-12 -4 -10 -2 -6 -2" stroke="#6B7280" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M6 -10H12V-8C12 -4 10 -2 6 -2" stroke="#6B7280" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M0 1V6" stroke="#6B7280" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M-6 10H6" stroke="#6B7280" stroke-width="2.2" stroke-linecap="round"/>
+</g>
+  <text x="300" y="784" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="600" font-size="12" fill="#6B7280">당첨결과</text>
+</g>
+
+</svg>

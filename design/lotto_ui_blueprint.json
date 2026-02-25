@@ -1,0 +1,204 @@
+{
+  "schema": "lotto-ui-blueprint/v1",
+  "meta": {
+    "name": "매주로또 UI Kit",
+    "frameSize": {
+      "w": 360,
+      "h": 800
+    },
+    "notes": [
+      "이 파일은 '컴포넌트/Variants/오토레이아웃 규칙'을 기계적으로 생성하기 위한 청사진입니다.",
+      "Tokens Studio로 토큰을 먼저 import한 뒤, 별도 플러그인(또는 수동)로 컴포넌트를 구성합니다."
+    ]
+  },
+  "components": {
+    "BallChip": {
+      "type": "component",
+      "base": {
+        "size": 28,
+        "radius": "{semantic.dimension.chipRadius}",
+        "shadow": "none",
+        "stroke": {
+          "width": "{core.dimension.stroke.thin}",
+          "color": "{semantic.color.border.default}"
+        },
+        "text": {
+          "token": "{semantic.typography.chip}",
+          "color": "{semantic.color.text.primary}"
+        }
+      },
+      "variants": [
+        {
+          "name": "state=default",
+          "fill": "{semantic.color.bg.surface}",
+          "strokeColor": "{semantic.color.border.default}"
+        },
+        {
+          "name": "state=selected/yellow",
+          "fill": "{semantic.color.ball.yellow}",
+          "strokeColor": "{semantic.color.ball.yellow}",
+          "textColor": "{semantic.color.text.inverse}"
+        },
+        {
+          "name": "state=selected/blue",
+          "fill": "{semantic.color.ball.blue}",
+          "strokeColor": "{semantic.color.ball.blue}",
+          "textColor": "{semantic.color.text.inverse}"
+        },
+        {
+          "name": "state=selected/red",
+          "fill": "{semantic.color.ball.red}",
+          "strokeColor": "{semantic.color.ball.red}",
+          "textColor": "{semantic.color.text.inverse}"
+        },
+        {
+          "name": "state=selected/green",
+          "fill": "{semantic.color.ball.green}",
+          "strokeColor": "{semantic.color.ball.green}",
+          "textColor": "{semantic.color.text.inverse}"
+        },
+        {
+          "name": "state=selected/gray",
+          "fill": "{semantic.color.ball.gray}",
+          "strokeColor": "{semantic.color.ball.gray}",
+          "textColor": "{semantic.color.text.inverse}"
+        },
+        {
+          "name": "state=locked",
+          "fill": "{semantic.color.bg.surface}",
+          "strokeColor": "{semantic.color.border.focus}",
+          "lockBadge": true
+        },
+        {
+          "name": "state=hit",
+          "fill": "{semantic.color.bg.surface}",
+          "strokeColor": "{semantic.color.brand.accent}",
+          "glow": "{semantic.color.brand.accent}"
+        },
+        {
+          "name": "state=bonus",
+          "fill": "{semantic.color.bg.surface}",
+          "doubleRing": {
+            "outer": "{semantic.color.brand.accent}",
+            "inner": "{semantic.color.bg.surface}"
+          }
+        }
+      ]
+    },
+    "ActionTile": {
+      "type": "component",
+      "base": {
+        "radius": "{semantic.dimension.cardRadius}",
+        "padding": 16,
+        "minHeight": 96,
+        "shadow": "{semantic.shadow.card}",
+        "title": {
+          "token": "{semantic.typography.sectionTitle}",
+          "color": "{semantic.color.text.primary}"
+        },
+        "subtitle": {
+          "token": "{semantic.typography.caption}",
+          "color": "{semantic.color.text.secondary}"
+        }
+      },
+      "variants": [
+        {
+          "name": "tone=primary",
+          "fill": "{semantic.color.brand.primary}",
+          "titleColor": "{semantic.color.text.inverse}",
+          "subtitleColor": "{semantic.color.text.inverse}"
+        },
+        {
+          "name": "tone=accent",
+          "fill": "{semantic.color.brand.accent}",
+          "titleColor": "{semantic.color.text.primary}",
+          "subtitleColor": "{semantic.color.text.secondary}"
+        }
+      ]
+    },
+    "GameRowCard": {
+      "type": "component",
+      "base": {
+        "radius": "{semantic.dimension.cardRadius}",
+        "padding": 12,
+        "gap": 10,
+        "fill": "{semantic.color.bg.surface}",
+        "stroke": {
+          "width": "{core.dimension.stroke.thin}",
+          "color": "{semantic.color.border.default}"
+        },
+        "shadow": "{semantic.shadow.card}",
+        "header": {
+          "token": "{semantic.typography.label.md}",
+          "color": "{semantic.color.text.secondary}"
+        },
+        "tag": {
+          "radius": "{core.dimension.radius.pill}",
+          "paddingX": 10,
+          "paddingY": 4
+        }
+      },
+      "variants": [
+        {
+          "name": "status=idle",
+          "strokeColor": "{semantic.color.border.default}"
+        },
+        {
+          "name": "status=active",
+          "strokeColor": "{semantic.color.border.focus}"
+        },
+        {
+          "name": "status=won",
+          "badge": {
+            "text": "5등 당첨",
+            "fill": "{core.color.amber.700}",
+            "textColor": "{semantic.color.text.primary}"
+          }
+        },
+        {
+          "name": "status=lost",
+          "badge": {
+            "text": "낙첨",
+            "fill": "{core.color.gray.200}",
+            "textColor": "{semantic.color.text.secondary}"
+          }
+        }
+      ]
+    }
+  },
+  "screens": {
+    "Home": {
+      "frame": "lotto_home 1",
+      "sections": [
+        "RoundSummaryCard",
+        "ActionTilesRow",
+        "ThisWeekTicketsList",
+        "BottomNav"
+      ]
+    },
+    "Generator": {
+      "frame": "lotto_generator 1",
+      "sections": [
+        "GuideText",
+        "GameRows(A~E)",
+        "PrimaryCTA",
+        "SecondaryCTA"
+      ]
+    },
+    "Result": {
+      "frame": "lotto_result 1",
+      "sections": [
+        "WinningNumbersCard",
+        "MyTicketsResults",
+        "BottomNav"
+      ]
+    },
+    "Widgets": {
+      "frame": "lotto_widgets 1",
+      "sections": [
+        "WidgetTypeA",
+        "WidgetTypeB"
+      ]
+    }
+  }
+}

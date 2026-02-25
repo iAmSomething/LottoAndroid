@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="360" height="800" viewBox="0 0 360 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+<defs>
+  <filter id="ds" x="-50%" y="-50%" width="200%" height="200%">
+    <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="rgba(15,23,42,.12)"/>
+  </filter>
+</defs>
+
+<rect x="0" y="0" width="360" height="800" fill="#F8FAFC"/>
+
+<g id="AppBar">
+  <rect x="0" y="0" width="360" height="96" fill="#4F46E5"/>
+  <rect x="0" y="74" width="360" height="22" fill="#3730A3" opacity="0.18"/>
+  <text x="16" y="56" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="20" fill="#FFFFFF">매주로또</text>
+  <text x="344" y="56" text-anchor="end" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="600" font-size="12" fill="rgba(255,255,255,.88)">100% 15:30</text>
+</g>
+<g id="RoundSummary" filter="url(#ds)">
+  <rect x="16" y="104" width="328" height="124" rx="18" fill="#FFFFFF"/>
+  <text x="32" y="138" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="600" font-size="13" fill="#475569">이번 주 토요일 추첨</text>
+  <text x="32" y="170" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="24" fill="#0F172A">제 1100회 로또 6/45</text>
+  <rect x="32" y="184" width="126" height="26" rx="13" fill="rgba(79,70,229,.10)"/>
+  <text x="44" y="202" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="700" font-size="12" fill="#4F46E5">D-4 · 토 20:45</text>
+  <rect x="274" y="120" width="54" height="22" rx="11" fill="rgba(251,113,133,.14)"/>
+  <text x="301" y="136" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="11" fill="#E11D48">NEW</text>
+</g>
+
+<g id="ActionTiles">
+  <g id="TileQR" filter="url(#ds)">
+    <rect x="16" y="244" width="160" height="112" rx="18" fill="#3730A3"/>
+    <rect x="16" y="244" width="160" height="112" rx="18" fill="url(#gradQR)" opacity="0.0"/>
+    <circle cx="44" cy="276" r="14" fill="rgba(255,255,255,.16)"/>
+    <path d="M39 271h10v10H39zM41 273h6v6h-6z" fill="rgba(255,255,255,.72)"/>
+    <text x="32" y="314" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="16" fill="#FFFFFF">QR 스캔</text>
+    <text x="32" y="336" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="500" font-size="12" fill="rgba(255,255,255,.72)">종이 복권 등록</text>
+  </g>
+
+  <g id="TileGenerate" filter="url(#ds)">
+    <rect x="184" y="244" width="160" height="112" rx="18" fill="#FB7185"/>
+    <circle cx="212" cy="276" r="14" fill="rgba(255,255,255,.28)"/>
+    <path d="M212 270v12M206 276h12" stroke="rgba(15,23,42,.55)" stroke-width="2" stroke-linecap="round"/>
+    <text x="200" y="314" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="16" fill="#0F172A">번호 생성</text>
+    <text x="200" y="336" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="500" font-size="12" fill="rgba(15,23,42,.65)">스마트 랜덤 추출</text>
+  </g>
+</g>
+
+<g id="SectionMyTickets">
+  <text x="16" y="408" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="18" fill="#0F172A">이번 주 구매 번호</text>
+  <text x="344" y="408" text-anchor="end" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="700" font-size="14" fill="#4F46E5">전체보기</text>
+</g>
+
+<g id="TicketA" filter="url(#ds)">
+  <rect x="16" y="424" width="328" height="98" rx="18" fill="#FFFFFF"/>
+  <text x="32" y="456" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="14" fill="#0F172A">A 게임 <tspan font-weight="600" fill="#64748B">(수동)</tspan></text>
+  <g transform="translate(32,472)">
+
+<g transform="translate(0,0)">
+  <circle cx="12" cy="12" r="12" fill="#60A5FA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">3</text>
+</g>
+
+<g transform="translate(32,0)">
+  <circle cx="12" cy="12" r="12" fill="#A78BFA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">14</text>
+</g>
+
+<g transform="translate(64,0)">
+  <circle cx="12" cy="12" r="12" fill="#FB7185"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">25</text>
+</g>
+
+<g transform="translate(96,0)">
+  <circle cx="12" cy="12" r="12" fill="#34D399"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">31</text>
+</g>
+
+<g transform="translate(128,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">38</text>
+</g>
+
+<g transform="translate(160,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">42</text>
+</g>
+</g>
+</g>
+
+<g id="TicketB" filter="url(#ds)">
+  <rect x="16" y="536" width="328" height="98" rx="18" fill="#FFFFFF"/>
+  <text x="32" y="568" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="800" font-size="14" fill="#0F172A">B 게임 <tspan font-weight="600" fill="#64748B">(자동)</tspan></text>
+  <g transform="translate(32,584)">
+
+<g transform="translate(0,0)">
+  <circle cx="12" cy="12" r="12" fill="#60A5FA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">7</text>
+</g>
+
+<g transform="translate(32,0)">
+  <circle cx="12" cy="12" r="12" fill="#A78BFA"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">18</text>
+</g>
+
+<g transform="translate(64,0)">
+  <circle cx="12" cy="12" r="12" fill="#FB7185"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">21</text>
+</g>
+
+<g transform="translate(96,0)">
+  <circle cx="12" cy="12" r="12" fill="#34D399"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">35</text>
+</g>
+
+<g transform="translate(128,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">40</text>
+</g>
+
+<g transform="translate(160,0)">
+  <circle cx="12" cy="12" r="12" fill="#94A3B8"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">45</text>
+</g>
+</g>
+</g>
+
+
+<g id="BottomNav">
+  <rect x="0" y="720" width="360" height="80" fill="#FFFFFF"/>
+  <line x1="0" y1="720" x2="360" y2="720" stroke="#E2E8F0" stroke-width="1"/>
+  
+<g transform="translate(60,748)">
+  <path d="M-10 2V-6L0-14L10-6V2" stroke="#4F46E5" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 2V-4H4V2" stroke="#4F46E5" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+  <text x="60" y="784" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="700" font-size="12" fill="#4F46E5">홈</text>
+  
+<g transform="translate(180,748)">
+  <rect x="-11" y="-12" width="22" height="24" rx="4" stroke="#64748B" stroke-width="2" fill="none"/>
+  <path d="M-6 -6H6M-6 -1H6M-6 4H2" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+</g>
+  <text x="180" y="784" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="500" font-size="12" fill="#64748B">번호관리</text>
+  
+<g transform="translate(300,748)">
+  <path d="M-6 -12H6V-6C6 -2 3 1 0 1C-3 1 -6 -2 -6 -6V-12Z" stroke="#64748B" stroke-width="2" fill="none" stroke-linejoin="round"/>
+  <path d="M-6 -10H-12V-8C-12 -4 -10 -2 -6 -2" stroke="#64748B" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M6 -10H12V-8C12 -4 10 -2 6 -2" stroke="#64748B" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M0 1V6" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+  <path d="M-6 10H6" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+</g>
+  <text x="300" y="784" text-anchor="middle" font-family='Inter, "Noto Sans KR", sans-serif' font-weight="500" font-size="12" fill="#64748B">당첨결과</text>
+</g>
+
+</svg>
