@@ -23,6 +23,7 @@ enum class StatsPeriod(
 ) {
     ALL("전체"),
     RECENT_4_WEEKS("최근 4주"),
+    RECENT_8_WEEKS("최근 8주"),
 }
 
 data class StatsUiState(
@@ -125,6 +126,10 @@ class StatsViewModel(
             StatsPeriod.ALL -> bundles
             StatsPeriod.RECENT_4_WEEKS -> {
                 val cutoff = Instant.now().minus(28, ChronoUnit.DAYS)
+                bundles.filter { it.createdAt >= cutoff }
+            }
+            StatsPeriod.RECENT_8_WEEKS -> {
+                val cutoff = Instant.now().minus(56, ChronoUnit.DAYS)
                 bundles.filter { it.createdAt >= cutoff }
             }
         }

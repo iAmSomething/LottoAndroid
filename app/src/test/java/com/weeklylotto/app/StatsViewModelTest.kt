@@ -79,6 +79,30 @@ class StatsViewModelTest {
             assertThat(state.totalGames).isEqualTo(1)
             assertThat(state.totalPurchaseAmount).isEqualTo(1_000L)
         }
+
+    @Test
+    fun 최근8주_필터는_4주를_초과한_데이터를_포함한다() =
+        runTest {
+            val round = Round(1204, LocalDate.of(2026, 4, 4))
+            val within8Weeks = ticket(round, listOf(3, 14, 25, 31, 38, 42), Instant.now().minus(40, ChronoUnit.DAYS))
+            val olderThan8Weeks = ticket(round, listOf(7, 8, 9, 10, 11, 12), Instant.now().minus(70, ChronoUnit.DAYS))
+
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(listOf(within8Weeks, olderThan8Weeks)),
+                    drawRepository = StatsDrawRepository(draw(round)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            viewModel.setPeriod(StatsPeriod.RECENT_8_WEEKS)
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(state.selectedPeriod).isEqualTo(StatsPeriod.RECENT_8_WEEKS)
+            assertThat(state.totalGames).isEqualTo(1)
+            assertThat(state.totalPurchaseAmount).isEqualTo(1_000L)
+        }
 }
 
 private fun draw(round: Round): DrawResult =
