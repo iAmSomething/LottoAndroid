@@ -61,6 +61,16 @@ section() {
   echo "== $1 =="
 }
 
+search_first_line() {
+  local pattern="$1"
+  local file="$2"
+  if command -v rg >/dev/null 2>&1; then
+    rg "$pattern" "$file" | head -n 1
+  else
+    grep -E "$pattern" "$file" | head -n 1
+  fi
+}
+
 extract_prop_from_file() {
   local file="$1"
   local key="$2"
@@ -96,8 +106,8 @@ else
 fi
 
 section "앱 버전"
-VERSION_CODE="$(rg '^[[:space:]]*versionCode[[:space:]]*=' app/build.gradle.kts | head -n 1 | sed -E 's/.*=[[:space:]]*([0-9]+).*/\1/')"
-VERSION_NAME="$(rg '^[[:space:]]*versionName[[:space:]]*=' app/build.gradle.kts | head -n 1 | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/')"
+VERSION_CODE="$(search_first_line '^[[:space:]]*versionCode[[:space:]]*=' app/build.gradle.kts | sed -E 's/.*=[[:space:]]*([0-9]+).*/\1/')"
+VERSION_NAME="$(search_first_line '^[[:space:]]*versionName[[:space:]]*=' app/build.gradle.kts | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/')"
 if [[ -n "$VERSION_CODE" && -n "$VERSION_NAME" ]]; then
   pass "버전 확인(versionCode=${VERSION_CODE}, versionName=${VERSION_NAME})"
 else
