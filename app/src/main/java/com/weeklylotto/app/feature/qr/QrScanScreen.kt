@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,6 +28,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -73,6 +77,9 @@ fun QrScanScreen(onBack: () -> Unit) {
     var lastHandledQr by remember { mutableStateOf("") }
     var lastHandledAt by remember { mutableLongStateOf(0L) }
     var scannerEnabled by remember { mutableStateOf(true) }
+    var torchEnabled by remember { mutableStateOf(false) }
+    var torchAvailable by remember { mutableStateOf(false) }
+    var isEnvironmentGuideOpen by remember { mutableStateOf(false) }
 
     fun restartScanner() {
         scannerEnabled = true
@@ -95,6 +102,10 @@ fun QrScanScreen(onBack: () -> Unit) {
             contract = ActivityResultContracts.RequestPermission(),
             onResult = { granted ->
                 hasCameraPermission = granted
+                if (!granted) {
+                    torchEnabled = false
+                    torchAvailable = false
+                }
             },
         )
 
@@ -107,7 +118,6 @@ fun QrScanScreen(onBack: () -> Unit) {
     LaunchedEffect(uiState.latestMessage) {
         uiState.latestMessage?.let {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-            viewModel.clearMessage()
         }
     }
 
@@ -171,6 +181,30 @@ fun QrScanScreen(onBack: () -> Unit) {
             }
         }
     }
+    if (isEnvironmentGuideOpen) {
+        val quickTips = environmentTips(uiState.consecutiveFailureCount, torchAvailable, torchEnabled)
+        ModalBottomSheet(
+            onDismissRequest = { isEnvironmentGuideOpen = false },
+            containerColor = LottoColors.Surface,
+            shape = RoundedCornerShape(topStart = LottoDimens.SheetRadius, topEnd = LottoDimens.SheetRadius),
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Text("저조도/반사 환경 가이드", fontWeight = FontWeight.Bold)
+                quickTips.forEach { tip ->
+                    Text("- $tip", color = LottoColors.TextSecondary, fontSize = 13.sp)
+                }
+                Button(
+                    onClick = { isEnvironmentGuideOpen = false },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("닫기")
+                }
+            }
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize().background(LottoColors.Background)) {
         LottoTopAppBar(
@@ -179,159 +213,237 @@ fun QrScanScreen(onBack: () -> Unit) {
             onRightClick = onBack,
         )
 
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
-            shape = RoundedCornerShape(LottoDimens.CardRadius),
-            border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
-            colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+        Column(
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("실시간 카메라 스캔", fontWeight = FontWeight.Bold)
-                Text(
-                    "용지 우측 상단 QR을 프레임 중앙에 맞추면 인식 후 저장 확인 시트가 열립니다.",
-                    color = Color(0xFF757575),
-                )
-                Text(
-                    "여러 장이 보이면 한 장씩 가까이 촬영하세요.",
-                    color = Color(0xFF757575),
-                    fontSize = 12.sp,
-                )
-                val modeDescription =
-                    if (uiState.continuousScanEnabled) {
-                        "여러 장을 연속으로 저장합니다."
-                    } else {
-                        "1장 저장 후 스캔을 멈춥니다."
-                    }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Column {
-                        Text("연속 스캔 모드", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                        Text(
-                            modeDescription,
-                            color = Color(0xFF757575),
-                            fontSize = 12.sp,
-                        )
-                    }
-                    Switch(
-                        checked = uiState.continuousScanEnabled,
-                        onCheckedChange = { enabled ->
-                            viewModel.setContinuousScan(enabled)
-                            if (enabled) {
-                                restartScanner()
-                            }
-                        },
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                shape = RoundedCornerShape(LottoDimens.CardRadius),
+                border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text("실시간 카메라 스캔", fontWeight = FontWeight.Bold)
+                    Text(
+                        "용지 우측 상단 QR을 프레임 중앙에 맞추면 인식 후 저장 확인 시트가 열립니다.",
+                        color = Color(0xFF757575),
                     )
-                }
-                Text(
-                    "세션 저장 수: ${uiState.savedTicketCount}" +
-                        (uiState.lastSavedRound?.let { " · 마지막 ${it}회" } ?: ""),
-                    color = Color(0xFF424242),
-                    fontSize = 12.sp,
-                )
-
-                if (hasCameraPermission) {
-                    Box(modifier = Modifier.fillMaxWidth().height(220.dp)) {
-                        CameraScannerPreview(
-                            modifier = Modifier.fillMaxSize(),
-                            onQrDetected = { qrValue ->
-                                if (!scannerEnabled) return@CameraScannerPreview
-                                val now = System.currentTimeMillis()
-                                if (qrValue == lastHandledQr && now - lastHandledAt < 5_000L) {
-                                    return@CameraScannerPreview
+                    Text(
+                        "여러 장이 보이면 한 장씩 가까이 촬영하세요.",
+                        color = Color(0xFF757575),
+                        fontSize = 12.sp,
+                    )
+                    val modeDescription =
+                        if (uiState.continuousScanEnabled) {
+                            "여러 장을 연속으로 저장합니다."
+                        } else {
+                            "1장 저장 후 스캔을 멈춥니다."
+                        }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column {
+                            Text("연속 스캔 모드", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            Text(
+                                modeDescription,
+                                color = Color(0xFF757575),
+                                fontSize = 12.sp,
+                            )
+                        }
+                        Switch(
+                            checked = uiState.continuousScanEnabled,
+                            onCheckedChange = { enabled ->
+                                viewModel.setContinuousScan(enabled)
+                                if (enabled) {
+                                    restartScanner()
                                 }
-                                lastHandledQr = qrValue
-                                lastHandledAt = now
-                                rawInput = qrValue
-                                viewModel.parseForConfirm(qrValue)
                             },
                         )
-                        QrGuideOverlay(modifier = Modifier.fillMaxSize())
                     }
-                } else {
-                    Text("카메라 권한이 필요합니다.", color = Color(0xFFD32F2F))
-                    Button(onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) }) {
-                        Text("카메라 권한 요청")
-                    }
-                }
-
-                if (!scannerEnabled) {
-                    Button(
-                        onClick = { restartScanner() },
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text("다음 티켓 스캔")
-                    }
-                }
-
-                if (uiState.consecutiveFailureCount > 0) {
-                    Card(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .background(Color(0xFFFFF3E0)),
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(12.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp),
-                        ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("저조도 보정(플래시)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                             Text(
-                                text = "스캔 실패 ${uiState.consecutiveFailureCount}회",
-                                color = Color(0xFFEF6C00),
-                                fontWeight = FontWeight.Bold,
+                                when {
+                                    !hasCameraPermission -> "카메라 권한 허용 후 사용 가능합니다."
+                                    !torchAvailable -> "현재 기기/에뮬레이터는 플래시를 지원하지 않습니다."
+                                    torchEnabled -> "플래시가 켜져 있어 저조도 인식이 개선됩니다."
+                                    else -> "어두우면 켜고, 반사가 강하면 끈 뒤 각도를 바꿔보세요."
+                                },
+                                color = Color(0xFF757575),
+                                fontSize = 12.sp,
                             )
-                            uiState.failureGuideMessage?.let { guide ->
-                                Text(
-                                    text = guide,
-                                    color = Color(0xFF5D4037),
-                                    fontSize = 12.sp,
-                                )
-                            }
-                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Button(onClick = { restartScanner() }) {
-                                    Text("재시도")
+                        }
+                        Switch(
+                            checked = torchEnabled && torchAvailable,
+                            onCheckedChange = { enabled ->
+                                if (torchAvailable) {
+                                    torchEnabled = enabled
                                 }
-                                Button(onClick = { rawInput = "" }) {
-                                    Text("수동입력 준비")
+                            },
+                            enabled = hasCameraPermission && torchAvailable,
+                        )
+                    }
+                    TextButton(
+                        onClick = { isEnvironmentGuideOpen = true },
+                        modifier = Modifier.align(Alignment.End),
+                    ) {
+                        Text("환경 가이드 보기")
+                    }
+                    Text(
+                        "세션 저장 수: ${uiState.savedTicketCount}" +
+                            (uiState.lastSavedRound?.let { " · 마지막 ${it}회" } ?: ""),
+                        color = Color(0xFF424242),
+                        fontSize = 12.sp,
+                    )
+                    uiState.latestMessage?.let { message ->
+                        Text(
+                            text = message,
+                            color = Color(0xFF616161),
+                            fontSize = 12.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+
+                    if (hasCameraPermission) {
+                        Box(modifier = Modifier.fillMaxWidth().height(220.dp)) {
+                            CameraScannerPreview(
+                                modifier = Modifier.fillMaxSize(),
+                                torchEnabled = torchEnabled,
+                                onTorchAvailabilityChanged = { supported ->
+                                    torchAvailable = supported
+                                    if (!supported) {
+                                        torchEnabled = false
+                                    }
+                                },
+                                onQrDetected = { qrValue ->
+                                    if (!scannerEnabled) return@CameraScannerPreview
+                                    val now = System.currentTimeMillis()
+                                    if (qrValue == lastHandledQr && now - lastHandledAt < 5_000L) {
+                                        return@CameraScannerPreview
+                                    }
+                                    lastHandledQr = qrValue
+                                    lastHandledAt = now
+                                    rawInput = qrValue
+                                    viewModel.parseForConfirm(qrValue)
+                                },
+                            )
+                            QrGuideOverlay(modifier = Modifier.fillMaxSize())
+                        }
+                    } else {
+                        Text("카메라 권한이 필요합니다.", color = Color(0xFFD32F2F))
+                        Button(onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) }) {
+                            Text("카메라 권한 요청")
+                        }
+                    }
+
+                    if (!scannerEnabled) {
+                        Button(
+                            onClick = { restartScanner() },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text("다음 티켓 스캔")
+                        }
+                    }
+
+                    if (uiState.consecutiveFailureCount > 0) {
+                        Card(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .background(Color(0xFFFFF3E0)),
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp),
+                            ) {
+                                Text(
+                                    text = "스캔 실패 ${uiState.consecutiveFailureCount}회",
+                                    color = Color(0xFFEF6C00),
+                                    fontWeight = FontWeight.Bold,
+                                )
+                                uiState.failureGuideMessage?.let { guide ->
+                                    Text(
+                                        text = guide,
+                                        color = Color(0xFF5D4037),
+                                        fontSize = 12.sp,
+                                    )
+                                }
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    Button(onClick = { restartScanner() }) {
+                                        Text("재시도")
+                                    }
+                                    if (uiState.shouldRecommendTorch && torchAvailable && !torchEnabled) {
+                                        Button(onClick = { torchEnabled = true }) {
+                                            Text("플래시 켜기")
+                                        }
+                                    }
+                                    Button(onClick = { rawInput = "" }) {
+                                        Text("수동입력 준비")
+                                    }
+                                }
+                                if (uiState.shouldRecommendManualInput) {
+                                    Text(
+                                        text = "실패가 반복되면 하단 수동 입력 백업으로 먼저 등록하세요.",
+                                        color = Color(0xFF5D4037),
+                                        fontSize = 12.sp,
+                                    )
                                 }
                             }
                         }
                     }
-                }
 
-                Button(
-                    onClick = { viewModel.resetSessionCount() },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text("세션 카운터 초기화")
+                    Button(
+                        onClick = { viewModel.resetSessionCount() },
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text("세션 카운터 초기화")
+                    }
                 }
             }
-        }
 
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(LottoDimens.CardRadius),
-            border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
-            colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
-        ) {
-            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("수동 입력 백업", fontWeight = FontWeight.Bold)
-                Text("스캔이 어려운 경우 URL을 붙여넣어 등록하세요.", color = Color(0xFF757575))
-                OutlinedTextField(
-                    value = rawInput,
-                    onValueChange = { rawInput = it },
-                    label = { Text("QR URL") },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Button(
-                    onClick = { viewModel.parseForConfirm(rawInput) },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text("파싱")
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(LottoDimens.CardRadius),
+                border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text("수동 입력 백업", fontWeight = FontWeight.Bold)
+                    Text("스캔이 어려운 경우 URL을 붙여넣어 등록하세요.", color = Color(0xFF757575))
+                    OutlinedTextField(
+                        value = rawInput,
+                        onValueChange = {
+                            rawInput = it
+                            if (it.isNotBlank()) {
+                                scannerEnabled = false
+                            }
+                        },
+                        label = { Text("QR URL") },
+                        modifier = Modifier.fillMaxWidth().testTag("qr_manual_input"),
+                    )
+                    Button(
+                        onClick = {
+                            scannerEnabled = false
+                            viewModel.parseForConfirm(rawInput)
+                        },
+                        modifier = Modifier.fillMaxWidth().testTag("qr_manual_parse"),
+                    ) {
+                        Text("파싱")
+                    }
                 }
             }
+            Box(modifier = Modifier.height(12.dp))
         }
     }
 }
@@ -393,4 +505,33 @@ private fun QrGuideOverlay(modifier: Modifier = Modifier) {
                     .background(Color.Black.copy(alpha = 0.35f)),
         )
     }
+}
+
+private fun environmentTips(
+    failureCount: Int,
+    torchAvailable: Boolean,
+    torchEnabled: Boolean,
+): List<String> {
+    val baseTips =
+        mutableListOf(
+            "QR이 있는 용지 우측 상단이 프레임 중앙 박스 안에 오도록 맞춰주세요.",
+            "형광등 반사가 있으면 용지를 10~15도 기울여 반짝임을 피하세요.",
+            "촬영 거리는 15~20cm를 유지하고, 한 프레임에는 한 장만 넣어주세요.",
+        )
+
+    if (torchAvailable) {
+        baseTips +=
+            if (torchEnabled) {
+                "플래시가 켜져 있습니다. 과노출이면 플래시를 끄고 밝은 방향으로 이동하세요."
+            } else {
+                "저조도면 플래시를 켜서 QR 대비를 높이세요."
+            }
+    }
+    if (failureCount >= 2) {
+        baseTips += "실패가 2회 이상이면 카메라를 잠시 멈추고 각도/거리부터 다시 맞추세요."
+    }
+    if (failureCount >= 4) {
+        baseTips += "반복 실패 시 하단 수동 입력 백업으로 URL 등록을 진행하세요."
+    }
+    return baseTips
 }

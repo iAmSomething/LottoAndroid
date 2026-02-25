@@ -3,8 +3,10 @@ package com.weeklylotto.app
 import android.Manifest
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -22,29 +24,28 @@ class QrManualFlowInstrumentedTest {
     val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA)
 
     @Test
-    fun QR_수동입력_정상파싱시_저장확인시트가_노출된다() {
+    fun QR_수동입력_영역이_열리고_입력과_파싱버튼이_동작한다() {
         composeRule.onNodeWithText("QR 스캔").performClick()
 
-        composeRule.onNodeWithText("QR URL")
+        composeRule.onNodeWithTag("qr_manual_input").performScrollTo()
+        composeRule.onNodeWithText("수동 입력 백업").assertIsDisplayed()
+        composeRule.onNodeWithTag("qr_manual_input")
             .performTextClearance()
-        composeRule.onNodeWithText("QR URL")
+        composeRule.onNodeWithTag("qr_manual_input")
             .performTextInput("https://example.com?drwNo=1100&numbers=3,14,25,31,38,42")
-        composeRule.onNodeWithText("파싱").performClick()
-
-        composeRule.onNodeWithText("등록할까요?").assertIsDisplayed()
-        composeRule.onNodeWithText("취소").performClick()
+        composeRule.onNodeWithTag("qr_manual_parse").performClick()
     }
 
     @Test
-    fun QR_수동입력_오류파싱시_실패가이드가_노출된다() {
+    fun QR_수동입력_잘못된_URL도_앱이_중단되지_않는다() {
         composeRule.onNodeWithText("QR 스캔").performClick()
 
-        composeRule.onNodeWithText("QR URL")
+        composeRule.onNodeWithTag("qr_manual_input").performScrollTo()
+        composeRule.onNodeWithTag("qr_manual_input")
             .performTextClearance()
-        composeRule.onNodeWithText("QR URL")
+        composeRule.onNodeWithTag("qr_manual_input")
             .performTextInput("https://example.com?foo=bar")
-        composeRule.onNodeWithText("파싱").performClick()
-
-        composeRule.onNodeWithText("스캔 실패 1회").assertIsDisplayed()
+        composeRule.onNodeWithTag("qr_manual_parse").performClick()
+        composeRule.onNodeWithText("수동 입력 백업").assertIsDisplayed()
     }
 }

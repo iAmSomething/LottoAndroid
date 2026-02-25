@@ -19,6 +19,8 @@ import java.util.concurrent.Executors
 fun CameraScannerPreview(
     modifier: Modifier = Modifier,
     onQrDetected: (String) -> Unit,
+    torchEnabled: Boolean = false,
+    onTorchAvailabilityChanged: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -31,7 +33,7 @@ fun CameraScannerPreview(
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
     val analyzer = remember(onQrDetected) { QrCodeAnalyzer(onDetected = onQrDetected) }
 
-    DisposableEffect(lifecycleOwner, analyzer) {
+    DisposableEffect(lifecycleOwner, analyzer, torchEnabled) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         val mainExecutor = ContextCompat.getMainExecutor(context)
 
@@ -50,12 +52,18 @@ fun CameraScannerPreview(
                         }
 
                 cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
-                    lifecycleOwner,
-                    CameraSelector.DEFAULT_BACK_CAMERA,
-                    preview,
-                    analysis,
-                )
+                val camera =
+                    cameraProvider.bindToLifecycle(
+                        lifecycleOwner,
+                        CameraSelector.DEFAULT_BACK_CAMERA,
+                        preview,
+                        analysis,
+                    )
+                val hasTorch = camera.cameraInfo.hasFlashUnit()
+                onTorchAvailabilityChanged(hasTorch)
+                if (hasTorch) {
+                    camera.cameraControl.enableTorch(torchEnabled)
+                }
             }
 
         cameraProviderFuture.addListener(bindingRunnable, mainExecutor)

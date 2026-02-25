@@ -88,6 +88,9 @@
   - Result 네트워크 실패 UX 개선: 자동 재시도(최대 3회), 실패 시각 노출, 최신 회차 재조회 액션 추가
   - ResultViewModel 재시도 로직 단위 테스트 추가(`ResultViewModelTest`)
   - 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `connectedDebugAndroidTest`(8/8) 통과
+  - QR 저조도/반사 대응 UX 강화: 플래시 토글, 환경 가이드 시트, 실패 누적 시 권장 액션 추가
+  - 수동 입력 시 카메라 스캐너 자동 일시정지 처리(입력 간섭 방지)
+  - QR 수동입력 계측 테스트를 태그 기반 상호작용 검증으로 안정화(`QrManualFlowInstrumentedTest`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)

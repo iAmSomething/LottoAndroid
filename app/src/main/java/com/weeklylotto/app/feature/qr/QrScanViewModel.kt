@@ -33,7 +33,10 @@ data class QrScanUiState(
     val consecutiveFailureCount: Int = 0,
     val failureGuideMessage: String? = null,
     val pendingScan: PendingScanTicket? = null,
-)
+) {
+    val shouldRecommendTorch: Boolean get() = consecutiveFailureCount >= 2
+    val shouldRecommendManualInput: Boolean get() = consecutiveFailureCount >= 4
+}
 
 class QrScanViewModel(
     private val parser: QrTicketParser,
@@ -177,13 +180,13 @@ class QrScanViewModel(
             is AppError.ParseError ->
                 when {
                     error.message.contains("지원하지 않는", ignoreCase = true) ->
-                        "동행복권 QR이 맞는지 확인하고, 카메라를 티켓 우측 상단 QR에 더 가깝게 맞춰주세요."
+                        "동행복권 QR이 맞는지 확인하고, 용지를 10~15도 기울여 반사를 줄인 뒤 우측 상단 QR을 다시 맞춰주세요."
                     error.message.contains("payload", ignoreCase = true) ->
-                        "QR 정보가 일부만 인식되었습니다. 밝은 곳에서 용지 한 장만 프레임에 넣고 다시 스캔하세요."
+                        "QR 정보가 일부만 인식되었습니다. 저조도면 플래시를 켜고, 용지 한 장만 프레임에 넣어 다시 스캔하세요."
                     else ->
-                        "QR 인식이 불안정합니다. 손떨림을 줄이고 15~20cm 거리에서 다시 시도하세요."
+                        "QR 인식이 불안정합니다. 손떨림을 줄이고 15~20cm 거리에서 다시 시도하세요. 반사가 있으면 각도를 살짝 틀어주세요."
                 }
 
-            else -> "일시적인 오류입니다. 잠시 후 다시 시도하거나 수동 입력을 이용하세요."
+            else -> "일시적인 오류입니다. 플래시/각도 조정 후 다시 시도하거나 수동 입력을 이용하세요."
         }
 }
