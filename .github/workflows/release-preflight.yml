@@ -53,10 +53,13 @@ jobs:
             echo "LOTTO_RELEASE_KEY_PASSWORD=$LOTTO_RELEASE_KEY_PASSWORD"
           } >> "$GITHUB_ENV"
 
-      - name: Run release preflight (CI mode, PR)
+      - name: Run release preflight checks (PR)
         if: github.event_name == 'pull_request'
-        run: ./scripts/release-preflight.sh --with-build-ci --skip-adb
+        run: ./scripts/release-preflight.sh --skip-adb
 
-      - name: Run release preflight (CI mode, signed)
+      - name: Run release preflight checks (signed)
         if: github.event_name != 'pull_request'
-        run: ./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing
+        run: ./scripts/release-preflight.sh --skip-adb --require-signing
+
+      - name: Run CI quality gate
+        run: ./gradlew --no-daemon --console=plain :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleRelease
