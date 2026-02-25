@@ -33,4 +33,18 @@ class RoundEstimatorTest {
 
         assertThat(round).isEqualTo(1)
     }
+
+    @Test
+    fun `다음 추첨일은 항상 토요일이다`() {
+        val drawDate = RoundEstimator.nextDrawDate(LocalDate.of(2026, 2, 25))
+
+        assertThat(drawDate).isEqualTo(LocalDate.of(2026, 2, 28))
+    }
+
+    @Test
+    fun `판매 회차는 다음 추첨 회차를 기준으로 계산한다`() {
+        val round = RoundEstimator.currentSalesRound(LocalDate.of(2026, 2, 25))
+
+        assertThat(round).isEqualTo(1213)
+    }
 }

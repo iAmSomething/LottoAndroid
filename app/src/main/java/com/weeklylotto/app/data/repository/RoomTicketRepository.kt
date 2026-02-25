@@ -19,7 +19,7 @@ class RoomTicketRepository(
         ticketDao.observeAll().map { entities -> entities.map { it.toDomain() } }
 
     override fun observeCurrentRoundTickets(): Flow<List<TicketBundle>> {
-        val currentRound = RoundEstimator.estimate(LocalDate.now())
+        val currentRound = RoundEstimator.currentSalesRound(LocalDate.now())
         return ticketDao.observeByRound(currentRound).map { entities -> entities.map { it.toDomain() } }
     }
 

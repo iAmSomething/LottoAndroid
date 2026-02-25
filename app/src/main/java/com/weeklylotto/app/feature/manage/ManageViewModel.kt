@@ -145,7 +145,7 @@ class ManageViewModel(
 
     fun filteredTickets(): List<TicketBundle> {
         val state = uiState.value
-        val currentRound = RoundEstimator.estimate(LocalDate.now())
+        val currentRound = RoundEstimator.currentSalesRound(LocalDate.now())
         val tabFiltered =
             when (state.tab) {
                 ManageTab.WEEK -> state.tickets.filter { it.round.number == currentRound }

@@ -20,6 +20,7 @@
 - [x] B-005 이번 주 번호 저장 구현
 - [x] B-006 번호 편집 UX(키패드/오류 메시지 세분화) 개선
 - [x] B-007 저장 시 중복 bundle 정책(덮어쓰기/누적) 고도화
+- [x] B-008 판매 회차 기준 통일(다음 추첨 회차 기준으로 홈/번호관리/저장 동기화)
 
 ## C. QR 등록
 - [x] C-001 QR URL 파서(2포맷) 구현
@@ -68,6 +69,7 @@
 - [x] H-004 `ktlintCheck`, `detekt`, `testDebugUnitTest` 파이프라인 통과
 - [x] H-005 UI 테스트(Compose) 작성
 - [x] H-006 통합 테스트(Room + Repository) 작성
+- [x] H-007 회차 계산 회귀 테스트 추가(`nextDrawDate`, `currentSalesRound`)
 
 ## I. 릴리즈 준비
 - [x] I-001 스토어 메타데이터 작성

@@ -103,10 +103,11 @@ class NumberGeneratorViewModel(
 
     fun saveCurrentAsWeeklyTicket() {
         viewModelScope.launch {
-            val drawDate = nextSaturday(LocalDate.now())
+            val today = LocalDate.now()
+            val drawDate = RoundEstimator.nextDrawDate(today)
             val round =
                 Round(
-                    number = RoundEstimator.estimate(drawDate),
+                    number = RoundEstimator.currentSalesRound(today),
                     drawDate = drawDate,
                 )
             val bundle =
@@ -131,14 +132,6 @@ class NumberGeneratorViewModel(
 
     fun clearManualInputError() {
         _uiState.update { it.copy(manualInputError = null) }
-    }
-
-    private fun nextSaturday(from: LocalDate): LocalDate {
-        var candidate = from
-        while (candidate.dayOfWeek != java.time.DayOfWeek.SATURDAY) {
-            candidate = candidate.plusDays(1)
-        }
-        return candidate
     }
 }
 

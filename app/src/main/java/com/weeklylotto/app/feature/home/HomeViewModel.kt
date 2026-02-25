@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.DayOfWeek
 import java.time.LocalDate
 
 data class HomeUiState(
@@ -22,20 +21,12 @@ data class HomeUiState(
     companion object {
         fun initial(): HomeUiState {
             val today = LocalDate.now()
-            val drawDate = nextSaturday(today)
+            val drawDate = RoundEstimator.nextDrawDate(today)
             return HomeUiState(
-                currentRound = RoundEstimator.estimate(today),
+                currentRound = RoundEstimator.currentSalesRound(today),
                 drawDate = drawDate,
                 dDay = java.time.temporal.ChronoUnit.DAYS.between(today, drawDate).toInt(),
             )
-        }
-
-        private fun nextSaturday(from: LocalDate): LocalDate {
-            var candidate = from
-            while (candidate.dayOfWeek != DayOfWeek.SATURDAY) {
-                candidate = candidate.plusDays(1)
-            }
-            return candidate
         }
     }
 }

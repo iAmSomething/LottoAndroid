@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.DayOfWeek
 import java.time.LocalDate
 
 data class ManualAddUiState(
@@ -58,10 +57,11 @@ class ManualAddViewModel(
         if (selected.size != 6) return
 
         viewModelScope.launch {
-            val drawDate = nextSaturday(LocalDate.now())
+            val today = LocalDate.now()
+            val drawDate = RoundEstimator.nextDrawDate(today)
             ticketRepository.save(
                 TicketBundle(
-                    round = Round(RoundEstimator.estimate(drawDate), drawDate),
+                    round = Round(RoundEstimator.currentSalesRound(today), drawDate),
                     source = TicketSource.MANUAL,
                     games =
                         listOf(
@@ -80,13 +80,5 @@ class ManualAddViewModel(
 
     fun consumeSaved() {
         _uiState.update { it.copy(saved = false) }
-    }
-
-    private fun nextSaturday(from: LocalDate): LocalDate {
-        var candidate = from
-        while (candidate.dayOfWeek != DayOfWeek.SATURDAY) {
-            candidate = candidate.plusDays(1)
-        }
-        return candidate
     }
 }

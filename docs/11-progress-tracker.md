@@ -75,6 +75,10 @@
   - `--repo` 미지정 시 계정 Android repo 자동 탐지 로직 추가(0/복수 후보면 안전 중단)
   - `ktlintCheck`, `testDebugUnitTest`, `connectedDebugAndroidTest(7/7)`, `assembleRelease` 재통과
   - 운영 인수인계 문서 추가(`15-incident-response-runbook.md`, `16-next-sprint-backlog.md`)
+  - 주중 회차 불일치 버그 수정: 홈/번호관리/저장 기준을 `다음 추첨(판매) 회차`로 통일
+  - `RoundEstimator.nextDrawDate`, `RoundEstimator.currentSalesRound` 추가 및 회귀 테스트 보강
+  - 회귀 검증 재실행: `testDebugUnitTest` + `connectedDebugAndroidTest`(선별 4/4) 통과
+  - GitHub Actions `Release Preflight` 성공 확인(run `22419063335`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
