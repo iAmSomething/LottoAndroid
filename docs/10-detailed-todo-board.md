@@ -70,6 +70,7 @@
 - [x] H-005 UI 테스트(Compose) 작성
 - [x] H-006 통합 테스트(Room + Repository) 작성
 - [x] H-007 회차 계산 회귀 테스트 추가(`nextDrawDate`, `currentSalesRound`)
+- [x] H-008 번호생성 저장 E2E 계측 회귀 테스트 추가(`WeeklySaveFlowInstrumentedTest`)
 
 ## I. 릴리즈 준비
 - [x] I-001 스토어 메타데이터 작성
