@@ -13,6 +13,7 @@ GROUP_ALIAS=""
 SERVICE_ACCOUNT=""
 RELEASE_NOTES=""
 RELEASE_NOTES_FILE=""
+DRY_RUN=0
 
 usage() {
   cat <<'USAGE'
@@ -36,6 +37,7 @@ Options:
   --release-notes-file <path>  File path for release notes
   --group-display-name <name>  Create group before distribute (display name)
   --group-alias <alias>        Group alias for create/distribute
+  --dry-run                    Validate inputs and print distribution command without upload
   -h, --help                   Show this help
 USAGE
 }
@@ -77,6 +79,10 @@ while [[ $# -gt 0 ]]; do
     --group-alias)
       GROUP_ALIAS="${2:-}"
       shift 2
+      ;;
+    --dry-run)
+      DRY_RUN=1
+      shift
       ;;
     --service-account)
       SERVICE_ACCOUNT="${2:-}"
@@ -133,18 +139,22 @@ if [[ -n "$GROUP_DISPLAY_NAME" ]]; then
     exit 1
   fi
 
-  echo "[INFO] Ensure tester group exists: ${GROUP_DISPLAY_NAME} (${GROUP_ALIAS})"
-  set +e
-  group_out="$("${FIREBASE_CMD[@]}" appdistribution:group:create "$GROUP_DISPLAY_NAME" "$GROUP_ALIAS" 2>&1)"
-  group_code=$?
-  set -e
-  if [[ $group_code -ne 0 ]]; then
-    if [[ "$group_out" == *"already exists"* ]] || [[ "$group_out" == *"ALREADY_EXISTS"* ]]; then
-      echo "[INFO] Group already exists: ${GROUP_ALIAS}"
-    else
-      echo "$group_out"
-      echo "[FAIL] Failed to create tester group."
-      exit $group_code
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    echo "[INFO] Dry-run: skip tester group creation (${GROUP_DISPLAY_NAME}/${GROUP_ALIAS})"
+  else
+    echo "[INFO] Ensure tester group exists: ${GROUP_DISPLAY_NAME} (${GROUP_ALIAS})"
+    set +e
+    group_out="$("${FIREBASE_CMD[@]}" appdistribution:group:create "$GROUP_DISPLAY_NAME" "$GROUP_ALIAS" 2>&1)"
+    group_code=$?
+    set -e
+    if [[ $group_code -ne 0 ]]; then
+      if [[ "$group_out" == *"already exists"* ]] || [[ "$group_out" == *"ALREADY_EXISTS"* ]]; then
+        echo "[INFO] Group already exists: ${GROUP_ALIAS}"
+      else
+        echo "$group_out"
+        echo "[FAIL] Failed to create tester group."
+        exit $group_code
+      fi
     fi
   fi
   if [[ -z "$TESTER_GROUPS" ]]; then
@@ -199,5 +209,12 @@ if [[ -n "$TESTERS" ]]; then
   echo "  - testers: $TESTERS"
 fi
 
-"${DIST_CMD[@]}"
-echo "[PASS] Firebase distribution completed."
+if [[ "$DRY_RUN" -eq 1 ]]; then
+  echo "[INFO] Dry-run command:"
+  printf '  %q' "${DIST_CMD[@]}"
+  printf '\n'
+  echo "[PASS] Firebase distribution dry-run completed."
+else
+  "${DIST_CMD[@]}"
+  echo "[PASS] Firebase distribution completed."
+fi

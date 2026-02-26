@@ -44,14 +44,124 @@
     - `motion_splash_shown`, `motion_splash_skip` 이벤트 실제 연결
     - 스플래시 캡처 증적 확보(`splash_cold.png`, `splash_warm.png`)
     - 품질 스냅샷 재검증(`app:ktlintCheck`, `detekt`, `testDebugUnitTest`, `assembleDebug`, `wear:assembleDebug`)
+  - Cycle-14 루틴 반영:
+    - 타입/컬러 반영 이후에도 남아있는 "기본 앱 느낌" 원인을 fallback 폰트 중심으로 재진단
+    - UI 비주얼 폴리시 2차 가이드 추가(`27-ui-visual-polish-pack.md`)
+    - 백로그/우선순위/보드에 AB 트랙 연동(`16`, `22`, `10`)
+    - 품질 스냅샷 재검증(`./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공)
+  - Cycle-15 루틴 반영:
+    - 코드 진행 스냅샷/품질 스냅샷 재검증(`app/main=101`, `wear/main=2`, Gradle 3종 성공)
+    - 실폰트 미적용 상태를 타입 가이드에 명시(`26` 13장)
+    - 우선순위에 `T03`(실폰트 자산 적용) 추가 및 스프린트 순서 재정렬(`22`, `16`)
+    - AB 실행 순서 고정(AB-005/006 → AB-007/008 → AB-009/010)
+  - Cycle-16 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=101`, `wear/main=2`, Gradle 3종 성공)
+    - 실폰트 미적용 상태 유지 확인(`Type.kt` fallback)
+    - `google-services.json` 미추적 상태를 관리 정책 결정 항목으로 승격(`AD-005`)
+  - Cycle-17 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=101`, `wear/main=2`, Gradle 3종 성공)
+    - 실폰트 fallback 상태 유지 확인(`Type.kt`)
+    - 시크릿 JSON 정책 대상을 2종으로 확장(`google-services.json`, `lottoeveryday-firebase-adminsdk-fbsvc-06db76153d.json`)
+  - Cycle-18 루틴 반영:
+    - 시크릿 JSON 2종 제외 규칙 재검증(`.gitignore`)
+    - Firebase 배포 운영 규칙/스크립트 정합성 확인(`docs/14-signing-and-distribution.md`, `scripts/firebase-distribute.sh`)
+    - 품질 스냅샷 재검증(`./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공)
+  - Cycle-19 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=101`, `wear/main=2`, Gradle 3종 성공)
+    - 시크릿 JSON 정책 완료 상태 재확인(`AD-005`, `AE-005`)
+    - 후속 핵심 과제를 `AF-005` + `AB-005/006` 중심으로 재정렬
+  - Cycle-20 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=101`, `wear/main=2`, Gradle 3종 성공)
+    - 실폰트 fallback 상태 유지 확인(`Type.kt`)
+    - AB-005 착수용 체크리스트 과제를 `AH-005`로 명시(AG-005와 통합 추적)
+  - Cycle-21 루틴 반영:
+    - AB-005 코드 착수 전 승인 기준 항목을 `AI-005`로 고정(체크리스트 + 배포 검증 증적)
+    - 우선순위 게이트를 `AH-005 → AF-005 → AB-005/006`으로 재확인
+  - Cycle-22 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=120`, `wear/main=9`, Gradle 3종 성공)
+    - 실폰트 fallback 상태 유지 확인(`Type.kt`: `SansSerif`/`Monospace`)
+    - AB-005 착수 승인 패키지 요구사항을 `AJ-005`로 구체화(체크리스트/배포 증적/타이포 시안)
+  - Cycle-23 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=120`, `wear/main=9`, Gradle 3종 성공)
+    - 우선순위 게이트 유지 확인(`AH-005 → AF-005 → AB-005/006`)
+    - AB-009/AB-010 시각 증적 매트릭스를 `AK-005`로 분리(화면/폰트스케일/저조도 기준)
+  - Cycle-24 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=120`, `wear/main=9`, Gradle 3종 성공)
+    - 실폰트 fallback 상태 유지 확인(`Type.kt`: `SansSerif`/`Monospace`)
+    - `AK-005` 실행 운영안(`AL-005`) 추가: 파일명 규칙/담당 구분/완료 판정 템플릿
+  - Cycle-25 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=120`, `wear/main=9`, Gradle 3종 성공)
+    - `AL-005` 완료 처리(`27` 12장 기준 실행 운영안 반영)
+    - `AJ-005` 산출물 인벤토리 과제를 `AM-005`로 추가(실제 파일 경로 매핑)
+  - Cycle-26 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=120`, `wear/main=9`, Gradle 3종 성공)
+    - `AM-005` 완료 처리(신규 인벤토리 문서 `28` 생성)
+    - 인벤토리 기준 `missing` 3종을 `AN-005` 후속 과제로 고정
+  - Cycle-27 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=120`, `wear/main=9`, Gradle 3종 성공)
+    - `AN-005` 완료 처리(해소 계획 문서 `29` 생성)
+    - `AO-005`로 실행 증적 1건 선확보 과제 설정(`missing` 중 1개 `ready` 전환)
+  - Cycle-28 루틴 반영:
+    - `push -> PR -> merge -> Release Preflight -> Firebase Distribution` 실체인 검증 완료(PR #1, run `22432219038`, `22432295422`)
+    - `distribution_evidence` 증적 문서화(`docs/assets/distribution/firebase_dry_run_2026-02-26.md`)
+    - 브랜드 폰트 3종 반입 + `Type.kt` 매핑 완료(`AB-005`, `AB-006`)
+    - Home/Result 카드 레이어(그라디언트/깊이) 2차 반영(`AB-007`)
+    - Generator/Manage 아이콘 스타일 토큰화(`LottoVisualTokens.kt`, `AB-008`)
+    - 시각 증적 자동 캡처 스크립트 추가(`scripts/capture-visual-matrix.sh`)
+    - 전/후 2세트 + 매트릭스 캡처 + 타이포 시안 2종 확보(`AB-009`, `AB-010`, `AK-005`, `AJ-005`)
+    - 폰트 자산/라이선스 레지스터 및 시각 리포트 추가(`31`, `32`)
+  - Cycle-29 루틴 반영:
+    - `WeeklySaveFlowInstrumentedTest` 안정화: Home/Generator CTA에 `testTag` 적용, 테스트를 semantics click + retry 기반으로 재설계
+    - 저장 CTA 오매핑 수정: `generator_save_weekly` 태그를 재생성 버튼이 아닌 저장 버튼으로 교정
+    - 회귀 검증: `./gradlew :app:connectedDebugAndroidTest` 9/9 통과
+    - 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest` 통과
+    - 최종 점검 재실행: `./scripts/release-final-check.sh` PASS 15 / WARN 0 / FAIL 0 (`docs/18-device-validation-report.md` 최신 이력 반영)
+  - Cycle-30 루틴 반영:
+    - 번호관리 빠른 액션 후속 최적화(`A02`) 구현: 카드 하단 `상세/이번주 복사/보관/삭제` 액션 추가
+    - 번호관리 피드백 일관화: `feedbackMessage`를 `Toast`로 노출하도록 `ManageScreen` 동기화
+    - 상태 액션 도메인 보강: `requestDeleteSingle`, `moveTicketToVault` 단건 액션 API 추가
+    - 회귀 테스트 추가: `ManageViewModelTest`에 단건 보관/삭제 요청 시나리오 추가
+    - 품질/회귀 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `connectedDebugAndroidTest`(9/9), `release-final-check.sh` PASS 재확인
+    - Figma 동기화 재시도: `whoami` 확인 완료(계정 유효)이나 `get_design_context(fileKey=DY43CuXVwQwlqakFfR2yM1,node=6:2)`는 플랜 호출 한도 메시지로 실패
+  - Cycle-31 루틴 반영:
+    - 문서 정합성 보정: `19-offline-design-qa-checklist.md`를 최신 토큰(딥틸/샌드) 기준으로 업데이트하고 체크리스트 전 항목 Pass 처리
+    - 폰트 온보딩 게이트 정리: `30-font-onboarding-gate.md` 체크박스 전 항목 완료 처리 + 유지보수 루틴으로 다음 실행 항목 갱신
+    - 자산/증적 경로 재확인: `res/font` 3종, 라이선스 3종, 시각 매트릭스 캡처 세트 존재 확인
+    - 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` 성공
+  - Cycle-32 루틴 반영:
+    - 통계 인사이트 확장(`C01`) 구현: 선택 기간 기준 `조합 중복도 경고`(중복률/중복 조합 수/최다 반복 조합/경고 레벨) 집계 추가
+    - 통계 UI 반영: `StatsScreen`에 `조합 중복도 경고` 카드 추가(경고 레벨 색상/최다 반복 조합 번호볼 표시)
+    - 회귀 테스트 추가: `StatsViewModelTest`에 중복률 계산/무중복 레벨 시나리오 2건 추가
+    - 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` 성공
+    - 배포 점검 루틴 실행: `./scripts/release-final-check.sh` PASS 15 / WARN 0 / FAIL 0 (에뮬레이터 검증 + 실기기 pending 유지)
+  - Cycle-33 루틴 반영:
+    - 통계 행동 유도 보강: `StatsScreen` 중복도 경고 카드에 `중복 줄이기 번호 생성` CTA 추가
+    - 내비게이션 연계: `Stats -> Generator` 직접 이동 연결(`WeeklyLottoApp` 경로 매핑)
+    - 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` 성공
+    - 배포 점검 루틴 재실행: `./scripts/release-final-check.sh` PASS 15 / WARN 0 / FAIL 0 (`docs/18-device-validation-report.md` 갱신)
+  - Cycle-34 루틴 반영:
+    - 통계 CTA 계측 연동: `interaction_cta_press` 이벤트를 `screen=stats`, `component=duplicate_warning_card`, `action=click` 스키마로 추가
+    - 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` 성공
+    - 배포 점검 루틴 재실행: `./scripts/release-final-check.sh` PASS 15 / WARN 0 / FAIL 0 (`docs/18-device-validation-report.md` 갱신)
+  - Cycle-35 루틴 반영:
+    - stats CTA 로그 샘플 수집 루틴 추가: `scripts/run-analytics-sample-check.sh` (계측 테스트 3종 실행 + 로그 저장 + 검증 일괄 수행)
+    - 계측 검증 스크립트 프로파일화: `scripts/verify-analytics-events.sh --profile full|stats-cta`
+    - 실검증 이력 확보: `run-analytics-sample-check.sh --serial emulator-5554` PASS (`docs/assets/distribution/analytics_sample_check_2026-02-26.md`)
+  - Cycle-36 루틴 반영:
+    - Firebase 배포 스크립트 dry-run 모드 추가: `scripts/firebase-distribute.sh --dry-run`
+    - 배포 주기 점검 래퍼 추가: `scripts/firebase-distribution-routine-check.sh` (CI preflight + Firebase dry-run 체인)
+    - 주간 스케줄 워크플로우 추가: `.github/workflows/firebase-distribution-routine.yml` (매주 UTC 월요일 01:00 + 수동 실행)
+    - 로컬 주기 점검 실검증: `firebase-distribution-routine-check.sh ... --report-file` PASS (`docs/assets/distribution/firebase_routine_local_2026-02-26.md`)
 - 미완료 작업
-  - Wear OS 구현/실기기 검증 착수
   - 실기기 기반 Wear QA 증적 확보(P-004)
+  - Figma 원본 노드 기준 정밀 픽셀 매핑(호출 가능 시 `node 6:2` 최종 동기화)
 - 블로커
-  - 없음(현재 품질 게이트 Green, 플래키 여부는 관찰)
+  - 실기기 미보유로 `P-004`(Wear 실기기 증적) 즉시 해소 불가
+  - Figma MCP 플랜 호출 한도 초과로 node `6:2` 직접 대조 불가(오프라인 QA 기준 유지)
 - 다음 액션
-  - `22` 상위 항목부터 `10`의 K/L 섹션 순차 착수
-  - 2주 단위 KPI 리뷰 루틴 실행
+  - 실기기 확보 시 `P-004` 증적(워치 소형/대형) 1회 확보
+  - Figma node `6:2` 기준 간격/밀도 최종 보정 후 디자인 정렬 상태 `Green` 전환
+  - 배포/계측 주기 점검 루틴 유지(`release-preflight` + `firebase-distribution` + `run-analytics-sample-check`) 및 `firebase-distribution-routine` 스케줄 실행 모니터링
 
 ## 2026-02-25
 - 완료 작업

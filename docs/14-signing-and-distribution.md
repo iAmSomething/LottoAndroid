@@ -60,6 +60,17 @@
 - 다중 디바이스 연결 시 특정 단말만 대상으로 `connectedDebugAndroidTest` 실행
 - `--require-physical-device`와 함께 쓰면 “지정 serial이 실기기인지”까지 검증
 
+### 3-1-c. stats CTA 계측 샘플 점검(권장)
+```bash
+./scripts/run-analytics-sample-check.sh --serial <adb-serial>
+```
+- 실행 범위: 계측 테스트 3종 실행 후 analytics 로그 샘플 검증
+- 검증 프로파일: `verify-analytics-events.sh --profile stats-cta`
+- 증적 로그 저장 옵션:
+```bash
+./scripts/run-analytics-sample-check.sh --serial <adb-serial> --save-log docs/assets/distribution/analytics_sample_YYYY-MM-DD.log
+```
+
 ## 3-1-1. CI 프리플라이트(ADB 없이)
 ```bash
 ./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing
@@ -128,12 +139,28 @@
 - 워크플로우:
   - PR/머지 품질게이트: `.github/workflows/release-preflight.yml`
   - Firebase 자동 배포: `.github/workflows/firebase-distribution.yml`
+  - Firebase 주기 점검(dry-run): `.github/workflows/firebase-distribution-routine.yml`
 - 트리거 체인:
   1. `push` → PR 생성
   2. PR에서 `Release Preflight` 통과
   3. PR merge 후 `main` push 발생
   4. `Release Preflight` 성공 시 `Firebase Distribution` 자동 실행
   5. Firebase App Distribution 그룹으로 release APK 배포
+
+### 6-6. 주기 점검 루틴(dry-run)
+- 로컬 점검:
+```bash
+./scripts/firebase-distribution-routine-check.sh \
+  --project-id lottoeveryday \
+  --app-id 1:1083851357764:android:2da8bc877b0e7c89b94611 \
+  --groups suyeoni \
+  --service-account ./lottoeveryday-firebase-adminsdk-fbsvc-06db76153d.json \
+  --report-file docs/assets/distribution/firebase_routine_local_2026-02-26.md
+```
+- CI 점검:
+  - 매주 스케줄(UTC 월요일 01:00) + 수동 실행으로 동작
+  - 실행 체인: `release-preflight --with-build-ci --skip-adb --require-signing` -> `firebase-distribute --dry-run`
+  - 증적: workflow artifact(`firebase-distribution-routine-<run_id>`)
 
 ### 6-5. GitHub Secrets (필수)
 - 릴리즈 서명:
