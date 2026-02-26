@@ -253,6 +253,10 @@
   - 통계 화면 확장: `출처별 성과 비교` 카드(자동/수동/QR, 구매/당첨/순이익/당첨률) 반영
   - 회귀 테스트 보강: `StatsViewModelTest`에 출처별 집계/빈데이터 0값 유지 케이스 추가
   - 통합 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
+  - 통계 인사이트 확장(C04) 1차 구현: 회차별 ROI 트렌드 모델(`RoiTrendPoint`) 및 집계 로직 추가
+  - 통계 화면 확장: `회차별 ROI 트렌드` 카드(회차/순이익 바/구매·당첨 메타) 반영
+  - 회귀 테스트 보강: `StatsViewModelTest`에 ROI 트렌드 8개 제한/빈데이터 케이스 추가
+  - 통합 품질 게이트 재검증: 동일 게이트 재통과(`ktlintCheck`, `detekt`, `testDebugUnitTest`, `assembleDebug`, `wear:assembleDebug`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Wear OS 실기기(소형/대형) 기준 UI/성능 검증

@@ -175,6 +175,52 @@ class StatsViewModelTest {
             )
                 .isTrue()
         }
+
+    @Test
+    fun ROI_트렌드는_회차순으로_최대_8개를_유지한다() =
+        runTest {
+            val bundles =
+                (1200..1209).map { roundNumber ->
+                    ticket(
+                        round = Round(roundNumber, LocalDate.of(2026, 1, 1).plusWeeks((roundNumber - 1200).toLong())),
+                        numbers = listOf(1, 2, 3, 4, 5, ((roundNumber - 1200) % 40) + 6),
+                        createdAt = Instant.now(),
+                        source = TicketSource.GENERATED,
+                    )
+                }
+            val latestRound = bundles.maxBy { it.round.number }.round
+
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(bundles),
+                    drawRepository = StatsDrawRepository(draw(latestRound)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            val trend = viewModel.uiState.value.roiTrend
+
+            assertThat(trend).hasSize(8)
+            assertThat(trend.first().round).isEqualTo(1202)
+            assertThat(trend.last().round).isEqualTo(1209)
+            assertThat(trend.all { it.totalPurchaseAmount == 1_000L }).isTrue()
+        }
+
+    @Test
+    fun ROI_트렌드는_데이터가_없으면_빈목록이다() =
+        runTest {
+            val round = Round(1210, LocalDate.of(2026, 4, 25))
+
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(emptyList()),
+                    drawRepository = StatsDrawRepository(draw(round)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            assertThat(viewModel.uiState.value.roiTrend).isEmpty()
+        }
 }
 
 private fun draw(round: Round): DrawResult =

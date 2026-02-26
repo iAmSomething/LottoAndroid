@@ -3,10 +3,12 @@ package com.weeklylotto.app.feature.stats
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -31,6 +33,7 @@ import com.weeklylotto.app.ui.format.toWonLabel
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
+import kotlin.math.abs
 
 @Composable
 fun StatsScreen() {
@@ -164,6 +167,93 @@ fun StatsScreen() {
                                             } else {
                                                 LottoColors.DangerText
                                             },
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            item {
+                Card(
+                    shape = RoundedCornerShape(LottoDimens.CardRadius),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                    colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Text(
+                            "회차별 ROI 트렌드",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        if (uiState.roiTrend.isEmpty()) {
+                            Text(
+                                "표시할 데이터가 없습니다.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = LottoColors.TextMuted,
+                            )
+                        } else {
+                            val maxAbsNet = uiState.roiTrend.maxOf { abs(it.netProfitAmount) }.coerceAtLeast(1L)
+                            uiState.roiTrend.forEach { point ->
+                                val netRatio = abs(point.netProfitAmount).toFloat() / maxAbsNet.toFloat()
+                                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                    ) {
+                                        Text(
+                                            "${point.round}회",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.SemiBold,
+                                        )
+                                        Text(
+                                            point.netProfitAmount.toWonLabel(),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color =
+                                                if (point.netProfitAmount >= 0) {
+                                                    LottoColors.SuccessText
+                                                } else {
+                                                    LottoColors.DangerText
+                                                },
+                                        )
+                                    }
+                                    Box(
+                                        modifier =
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .height(8.dp)
+                                                .background(
+                                                    color = LottoColors.Border.copy(alpha = 0.45f),
+                                                    shape = RoundedCornerShape(999.dp),
+                                                ),
+                                    ) {
+                                        if (point.netProfitAmount != 0L) {
+                                            Box(
+                                                modifier =
+                                                    Modifier
+                                                        .fillMaxWidth(fraction = netRatio.coerceAtLeast(0.05f))
+                                                        .height(8.dp)
+                                                        .background(
+                                                            color =
+                                                                if (point.netProfitAmount >= 0) {
+                                                                    LottoColors.SuccessText
+                                                                } else {
+                                                                    LottoColors.DangerText
+                                                                },
+                                                            shape = RoundedCornerShape(999.dp),
+                                                        ),
+                                            )
+                                        }
+                                    }
+                                    Text(
+                                        "게임 ${point.totalGames} · 구매 ${point.totalPurchaseAmount.toWonLabel()} · 당첨 ${point.totalWinAmount.toWonLabel()}",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = LottoColors.TextSecondary,
                                     )
                                 }
                             }

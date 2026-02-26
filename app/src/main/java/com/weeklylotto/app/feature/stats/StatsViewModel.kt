@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Instant
+import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 enum class StatsPeriod(
@@ -36,6 +37,7 @@ data class StatsUiState(
     val winningGames: Int = 0,
     val selectedPeriod: StatsPeriod = StatsPeriod.ALL,
     val sourceStats: List<SourceStats> = TicketSource.entries.map { SourceStats(source = it) },
+    val roiTrend: List<RoiTrendPoint> = emptyList(),
 ) {
     val netProfitAmount: Long = totalWinAmount - totalPurchaseAmount
 }
@@ -55,6 +57,17 @@ data class SourceStats(
         } else {
             (winningGames * 100) / totalGames
         }
+}
+
+data class RoiTrendPoint(
+    val round: Int,
+    val drawDate: LocalDate,
+    val totalGames: Int = 0,
+    val winningGames: Int = 0,
+    val totalPurchaseAmount: Long = 0,
+    val totalWinAmount: Long = 0,
+) {
+    val netProfitAmount: Long = totalWinAmount - totalPurchaseAmount
 }
 
 class StatsViewModel(
@@ -107,11 +120,19 @@ class StatsViewModel(
                 var winningGames = 0
                 val sourceStatsAccumulator =
                     TicketSource.entries.associateWith { MutableSourceStats() }.toMutableMap()
+                val roundRoiAccumulator = mutableMapOf<Int, MutableRoundRoiStats>()
 
                 filteredBundles.forEach { bundle ->
                     val sourceAccumulator = sourceStatsAccumulator.getValue(bundle.source)
                     sourceAccumulator.totalGames += bundle.games.size
                     sourceAccumulator.totalPurchaseAmount += bundle.games.size * 1_000L
+
+                    val roundAccumulator =
+                        roundRoiAccumulator.getOrPut(bundle.round.number) {
+                            MutableRoundRoiStats(drawDate = bundle.round.drawDate)
+                        }
+                    roundAccumulator.totalGames += bundle.games.size
+                    roundAccumulator.totalPurchaseAmount += bundle.games.size * 1_000L
 
                     val draw =
                         drawCache.getOrPut(bundle.round.number) {
@@ -127,9 +148,11 @@ class StatsViewModel(
                             val prizeAmount = PrizeAmountPolicy.amountFor(evaluation.rank)
                             totalWinAmount += prizeAmount
                             sourceAccumulator.totalWinAmount += prizeAmount
+                            roundAccumulator.totalWinAmount += prizeAmount
                             if (evaluation.rank != DrawRank.NONE) {
                                 winningGames += 1
                                 sourceAccumulator.winningGames += 1
+                                roundAccumulator.winningGames += 1
                             }
                         }
                     }
@@ -147,6 +170,22 @@ class StatsViewModel(
                         )
                     }
 
+                val roiTrend =
+                    roundRoiAccumulator
+                        .entries
+                        .sortedBy { it.key }
+                        .takeLast(8)
+                        .map { (round, value) ->
+                            RoiTrendPoint(
+                                round = round,
+                                drawDate = value.drawDate,
+                                totalGames = value.totalGames,
+                                winningGames = value.winningGames,
+                                totalPurchaseAmount = value.totalPurchaseAmount,
+                                totalWinAmount = value.totalWinAmount,
+                            )
+                        }
+
                 _uiState.update {
                     it.copy(
                         totalPurchaseAmount = purchase,
@@ -155,6 +194,7 @@ class StatsViewModel(
                         topNumbers = topNumbers,
                         winningGames = winningGames,
                         sourceStats = sourceStats,
+                        roiTrend = roiTrend,
                     )
                 }
             }
@@ -179,6 +219,14 @@ class StatsViewModel(
 }
 
 private data class MutableSourceStats(
+    var totalGames: Int = 0,
+    var winningGames: Int = 0,
+    var totalPurchaseAmount: Long = 0,
+    var totalWinAmount: Long = 0,
+)
+
+private data class MutableRoundRoiStats(
+    val drawDate: LocalDate,
     var totalGames: Int = 0,
     var winningGames: Int = 0,
     var totalPurchaseAmount: Long = 0,

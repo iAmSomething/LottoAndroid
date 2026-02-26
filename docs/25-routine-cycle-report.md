@@ -349,3 +349,33 @@
 1. `C04`(ROI 트렌드) 최소 차트 버전 범위 정의 및 1차 구현
 2. `C01`(중복도 경고) 기준 주차(N)와 경고 임계치 확정
 3. `P-004`는 실기기 확보 전까지 블로커 유지 + 에뮬레이터 증적 누적
+
+## 2026-02-26 Cycle-11
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 범위
+  - `StatsViewModel`에 회차별 ROI 트렌드 모델(`RoiTrendPoint`) 추가
+  - 선택 기간 기준 ROI 집계 추가(회차순, 최대 최근 8회)
+  - `StatsScreen`에 `회차별 ROI 트렌드` 카드 추가
+  - `StatsViewModelTest` ROI 트렌드 회귀 테스트 2건 추가
+- 품질 스냅샷
+  - `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
+
+### 2) 진행도 진단
+- 개선점
+  - Medium 우선순위 `C04`를 코드 기준으로 1차 완료
+  - 통계 화면에서 기간 필터 + 출처 비교 + 회차 ROI 흐름이 연속적으로 연결됨
+- 남은 갭
+  - `C01`(중복도 경고) 미착수
+  - `P-004` 실기기 증적 블로커 유지
+
+### 3) 증적
+- 코드:
+  - `app/src/main/java/com/weeklylotto/app/feature/stats/StatsViewModel.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/stats/StatsScreen.kt`
+  - `app/src/test/java/com/weeklylotto/app/StatsViewModelTest.kt`
+
+### 4) 다음 루틴 시작점
+1. `C01`(조합 중복도 경고) 계산 기준 확정 및 1차 구현
+2. 통계 카드 간 정보 밀도(스크롤 길이/요약 문구) 미세 조정
+3. `P-004` 블로커 유지 + 에뮬레이터 증적 누적

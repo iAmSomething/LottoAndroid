@@ -300,3 +300,10 @@
 - [x] X-003 `StatsScreen`에 `출처별 성과 비교` 카드 섹션 추가
 - [x] X-004 회귀 테스트 추가(`StatsViewModelTest`: 출처별 집계/빈데이터 0값 유지)
 - [x] X-005 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug`)
+
+## Y. 통계 인사이트 확장 C04(2026-02-26 Cycle-11)
+- [x] Y-001 `StatsViewModel`에 회차별 ROI 트렌드 모델(`RoiTrendPoint`) 추가
+- [x] Y-002 선택 기간 기준 회차별 구매/당첨/순이익 집계 로직 추가(최대 최근 8회)
+- [x] Y-003 `StatsScreen`에 `회차별 ROI 트렌드` 카드 추가(순이익 바 + 회차 메타)
+- [x] Y-004 회귀 테스트 추가(`StatsViewModelTest`: ROI 트렌드 8개 제한/빈데이터 케이스)
+- [x] Y-005 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug`)
