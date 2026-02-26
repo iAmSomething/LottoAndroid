@@ -152,9 +152,15 @@ object AppGraph {
                     "weekly_lotto.db",
                 ).fallbackToDestructiveMigration().build()
 
-            val drawApiClient = DrawApiClient(BuildConfig.DRAW_API_BASE_URL)
+            val analyticsLogger = LogcatAnalyticsLogger()
+            val drawApiClient = DrawApiClient(BuildConfig.DRAW_API_BASE_URL, analyticsLogger = analyticsLogger)
             val refreshScheduler = GlanceWidgetRefreshScheduler(appContext)
-            val ticketRepository = RoomTicketRepository(db.ticketDao(), refreshScheduler)
+            val ticketRepository =
+                RoomTicketRepository(
+                    ticketDao = db.ticketDao(),
+                    widgetRefreshScheduler = refreshScheduler,
+                    analyticsLogger = analyticsLogger,
+                )
             val drawRepository = RemoteDrawRepository(db.drawDao(), drawApiClient, refreshScheduler)
             val numberGenerator = RandomNumberGenerator()
             val resultEvaluator = DefaultResultEvaluator()
@@ -164,7 +170,6 @@ object AppGraph {
             val motionPreferenceStore = DataStoreMotionPreferenceStore(appContext)
             val widgetDataProvider = DefaultWidgetDataProvider(ticketRepository, drawRepository, resultEvaluator)
             val qrParser = QrTicketParser()
-            val analyticsLogger = LogcatAnalyticsLogger()
 
             widgetRefreshSchedulerInternal = refreshScheduler
             ticketRepositoryInternal = ticketRepository

@@ -20,12 +20,22 @@ object AnalyticsEvent {
     const val INTERACTION_SHEET_APPLY = "interaction_sheet_apply"
     const val MOTION_SPLASH_SHOWN = "motion_splash_shown"
     const val MOTION_SPLASH_SKIP = "motion_splash_skip"
+    const val OPS_API_REQUEST = "ops_api_request"
+    const val OPS_STORAGE_MUTATION = "ops_storage_mutation"
+    const val OPS_DATA_INTEGRITY = "ops_data_integrity"
 }
 
 object AnalyticsParamKey {
     const val SCREEN = "screen"
     const val COMPONENT = "component"
     const val ACTION = "action"
+    const val STATUS = "status"
+    const val SOURCE = "source"
+    const val OPERATION = "operation"
+    const val LATENCY_MS = "latency_ms"
+    const val ERROR_TYPE = "error_type"
+    const val ROUND = "round"
+    const val ISSUE_COUNT = "issue_count"
 }
 
 object AnalyticsActionValue {

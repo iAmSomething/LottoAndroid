@@ -1285,8 +1285,72 @@
 
 ### 4) 문서 반영 상태
 - Cycle-38 반영 문서: `11`, `25`
+- 원격 반영: PR #4 merge(`a95aabe36260af01eb360ed125bd4fef6d32fa30`)
 
 ### 5) 다음 루틴 시작점
 1. 실기기 Wear QA 증적(`P-004`) 확보
 2. Figma 플랜 한도 해소 후 node `6:2` 직접 대조 재시도
 3. 첫 스케줄 실행(2026-03-02 01:00 UTC) 결과를 배포 점검 이력에 추가
+
+## 2026-02-26 Cycle-39
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 변경
+  - `DrawApiClient` 관측성 추가: `ops_api_request` 이벤트 로깅(소스/라운드/지연/성공실패/오류타입)
+  - `RoomTicketRepository` 관측성 추가: `ops_storage_mutation` 이벤트 로깅(연산/지연/성공실패)
+  - `AppGraph` DI 연결: 공통 `LogcatAnalyticsLogger`를 네트워크/저장소 계층에 주입
+- 품질 스냅샷
+  - `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest --tests "com.weeklylotto.app.data.network.DrawApiClientTest" --tests "com.weeklylotto.app.RoomTicketRepositoryIntegrationTest"` 성공
+
+### 2) UI/UX 진단(운영 관측성 관점)
+- 강점
+  - API 실패/지연과 로컬 저장 연산 상태를 동일 로그 채널(`WeeklyLottoAnalytics`)에서 추적 가능
+  - 배포 이전 품질 점검 시 기능 이벤트와 운영 이벤트를 함께 검증할 수 있는 기반 확보
+- 잔여 갭
+  - 임계치 기반 경보/자동 판정(예: 실패율 초과 알림)은 아직 미구현
+  - 실기기 Wear 증적(`P-004`)과 Figma node `6:2` 직접 대조는 블로커 유지
+
+### 3) 이번 루틴에서 도출한 개선안
+- 완료
+  - `E01/L-010/L-011`의 코드 기반 관측성 1차 구현 완료
+- 후속
+  - `ops_api_request`, `ops_storage_mutation` 샘플 로그 수집 규칙을 배포 점검 루틴에 편입
+
+### 4) 문서 반영 상태
+- Cycle-39 반영 문서: `10`, `11`, `16`, `17`, `21`, `25`
+
+### 5) 다음 루틴 시작점
+1. 실기기 Wear QA 증적(`P-004`) 확보
+2. Figma 플랜 한도 해소 후 node `6:2` 직접 대조 재시도
+3. `ops_*` 샘플 로그 검증 규칙을 `verify-analytics-events` 루틴에 확장
+
+## 2026-02-26 Cycle-40
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 변경
+  - `verify-analytics-events.sh`에 `ops-core` 프로파일 추가
+  - `run-ops-observability-check.sh` 신규 추가(계측 2종 + ops 이벤트 검증)
+- 품질 스냅샷
+  - `./scripts/run-ops-observability-check.sh --serial emulator-5554 --save-log docs/assets/distribution/ops_observability_2026-02-26.log` 성공
+
+### 2) UI/UX 진단(운영 계측 관점)
+- 강점
+  - 기능 계측(`interaction_*`)과 운영 계측(`ops_*`)을 분리된 프로파일로 반복 검증 가능
+  - API/저장소 계층의 실패/지연 추이를 수동 테스트 단계에서 즉시 확인 가능
+- 잔여 갭
+  - `ops_*` 임계치 초과 시 자동 실패 판정/알림은 후속 구현 필요
+  - 실기기 Wear 증적(`P-004`) 및 Figma node `6:2` 대조 블로커는 유지
+
+### 3) 이번 루틴에서 도출한 개선안
+- 완료
+  - 운영 관측성 샘플 수집 루틴 도입 및 PASS 증적 확보
+- 후속
+  - `ops-core` 프로파일을 주기 점검 스크립트 체인에 편입 검토
+
+### 4) 문서 반영 상태
+- Cycle-40 반영 문서: `07`, `10`, `11`, `14`, `17`, `25`, `docs/assets/distribution/ops_observability_check_2026-02-26.md`
+
+### 5) 다음 루틴 시작점
+1. 실기기 Wear QA 증적(`P-004`) 확보
+2. Figma 플랜 한도 해소 후 node `6:2` 직접 대조 재시도
+3. `ops-core` 검증을 배포 주기 점검 스크립트에 통합할지 결정

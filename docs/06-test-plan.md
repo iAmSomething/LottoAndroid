@@ -44,6 +44,7 @@
 - 누적 구매금/당첨금 계산
 - 최근 4주 필터 계산
 - 최근 8주 필터 계산(4주 초과/8주 이내 데이터 포함)
+- 조합 중복도 경고 계산(중복 비율/최다 반복 조합/경고 레벨)
 - 자동 검증: `StatsViewModelTest`
 
 ### 접근성
@@ -67,6 +68,11 @@
 - 실험군/대조군 분기 규칙 검증
 - KPI 집계 배치(주간) 누락/중복 검증
 
+### 운영 관측성
+- API 요청 관측 이벤트(`ops_api_request`)의 source/round/latency/status/error_type 스키마 검증
+- 저장소 mutation 관측 이벤트(`ops_storage_mutation`)의 operation/latency/status 스키마 검증
+- 자동 검증: `run-ops-observability-check.sh`, `verify-analytics-events.sh --profile ops-core`
+
 ### 모션/상호작용
 - 스플래시 콜드/웜 실행 시간 검증(목표 900ms 이하/축약 300ms)
 - 핵심 인터랙션 모션 일관성 검증(버튼/볼/탭/시트/리스트)
@@ -83,7 +89,7 @@
 ## 4. 합격 기준
 - 핵심 유즈케이스 회귀 실패 0건
 - CI 빌드/단위 테스트 성공
-- `connectedDebugAndroidTest` 통과(현재 8 tests, 0 failures)
+- `connectedDebugAndroidTest` 통과(현재 9 tests, 0 failures)
 - Wear OS 핵심 플로우 회귀 테스트 통과(추가 시나리오 기준)
 - 모션 품질 기준 통과(스플래시 시간/Reduce Motion/프레임 안정성)
 - 치명 이슈(P0/P1) 0건

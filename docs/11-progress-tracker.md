@@ -159,6 +159,16 @@
   - Cycle-38 루틴 반영:
     - Figma node `6:2` 직접 대조 재시도: `get_design_context(fileKey=DY43CuXVwQwlqakFfR2yM1,nodeId=6:2)` 호출
     - 결과: seat 한도 응답으로 실패(Starter/View 플랜의 MCP tool call limit), 블로커 유지
+    - 문서 증적 원격 반영: PR #4 merge(`a95aabe36260af01eb360ed125bd4fef6d32fa30`)
+  - Cycle-39 루틴 반영:
+    - API 관측성 1차 반영: `DrawApiClient`에 `ops_api_request` 로깅 추가(official/mirror source, latency_ms, success/failure, error_type)
+    - 로컬 저장 관측성 1차 반영: `RoomTicketRepository`에 `ops_storage_mutation` 로깅 추가(save/update_status/delete, latency_ms, status)
+    - DI 연결 반영: `AppGraph`에서 `LogcatAnalyticsLogger`를 `DrawApiClient`/`RoomTicketRepository`에 주입
+    - 품질 게이트 검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest --tests \"com.weeklylotto.app.data.network.DrawApiClientTest\" --tests \"com.weeklylotto.app.RoomTicketRepositoryIntegrationTest\"` 성공
+  - Cycle-40 루틴 반영:
+    - 운영 관측성 샘플 루틴 추가: `scripts/run-ops-observability-check.sh` (MainNavigation/WeeklySave 계측 + ops-core 검증)
+    - 검증 스크립트 확장: `scripts/verify-analytics-events.sh --profile ops-core`
+    - 실검증 이력 확보: `run-ops-observability-check.sh --serial emulator-5554` PASS (`docs/assets/distribution/ops_observability_check_2026-02-26.md`)
 - 미완료 작업
   - 실기기 기반 Wear QA 증적 확보(P-004)
   - Figma 원본 노드 기준 정밀 픽셀 매핑(호출 가능 시 `node 6:2` 최종 동기화)
@@ -168,7 +178,7 @@
 - 다음 액션
   - 실기기 확보 시 `P-004` 증적(워치 소형/대형) 1회 확보
   - Figma node `6:2` 기준 간격/밀도 최종 보정 후 디자인 정렬 상태 `Green` 전환
-  - 배포/계측 주기 점검 루틴 유지(`release-preflight` + `firebase-distribution` + `run-analytics-sample-check`) 및 첫 스케줄 실행(2026-03-02 01:00 UTC) 결과 모니터링
+  - 배포/계측 주기 점검 루틴 유지(`release-preflight` + `firebase-distribution` + `run-analytics-sample-check` + `run-ops-observability-check`) 및 첫 스케줄 실행(2026-03-02 01:00 UTC) 결과 모니터링
 
 ## 2026-02-25
 - 완료 작업
