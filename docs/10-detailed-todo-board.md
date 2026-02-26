@@ -78,6 +78,7 @@
 - [x] H-009 ResultViewModel 재시도 로직 단위 테스트 추가
 - [x] H-010 실기기 계측 검증 자동화 스크립트/리포트 템플릿 추가(`scripts/run-physical-device-validation.sh`, `docs/18-device-validation-report.md`)
 - [x] H-011 공통 컴포넌트 스크린리더 문구/접근성 역할 보강(`BallChip`, `TicketCard`, `LottoTopAppBar`)
+- [x] H-012 테마 색상 콘트라스트 자동 검증 추가(`ColorContrastTest`, WCAG AA 4.5:1 기준)
 
 ## I. 릴리즈 준비
 - [x] I-001 스토어 메타데이터 작성

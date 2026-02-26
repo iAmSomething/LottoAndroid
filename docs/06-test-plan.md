@@ -49,7 +49,8 @@
 ### 접근성
 - 번호볼 상태별 스크린리더 문구 검증(일반/잠금/보너스)
 - 클릭 가능한 공통 UI 요소의 역할(role) 검증
-- 자동 검증: `BallChipAccessibilityTest`
+- 테마 핵심 색상 대비비율(WCAG AA 4.5:1) 검증
+- 자동 검증: `BallChipAccessibilityTest`, `ColorContrastTest`
 
 ### 번호관리 상세
 - 상세 화면 공유 텍스트 포맷(회차/출처/상태/게임 번호) 검증
