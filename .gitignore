@@ -24,3 +24,7 @@ build/
 *.jks
 *.keystore
 keystore.properties
+
+# Firebase (local only)
+google-services.json
+*firebase-adminsdk*.json

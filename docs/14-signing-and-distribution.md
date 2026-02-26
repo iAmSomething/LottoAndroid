@@ -99,3 +99,27 @@
 
 ## 5. 산출물 경로
 - APK: `app/build/outputs/apk/release/`
+
+## 6. Firebase App Distribution (TestFlight 대체)
+
+### 6-1. 사전 준비
+- Firebase App ID 확보 (예: `1:1083851357764:android:2da8bc877b0e7c89b94611`)
+- 서비스 계정 키(JSON) 발급 후 로컬 보관
+- 테스터 그룹 alias 준비(배포 옵션 `--groups`는 **그룹 이름이 아니라 alias** 사용)
+
+### 6-2. 로컬 배포 스크립트
+```bash
+./scripts/firebase-distribute.sh \
+  --project-id lottoeveryday \
+  --app-id 1:1083851357764:android:2da8bc877b0e7c89b94611 \
+  --service-account ./lottoeveryday-firebase-adminsdk-fbsvc-06db76153d.json \
+  --group-display-name "수연이" \
+  --group-alias suyeoni \
+  --groups suyeoni \
+  --build-task :app:assembleDebug
+```
+
+### 6-3. 운영 주의사항
+- 서비스 계정 JSON은 git에 커밋하지 않는다.
+- `google-services.json`, `*firebase-adminsdk*.json`은 `.gitignore`로 제외한다.
+- 배포 노트는 `--release-notes` 또는 `--release-notes-file`로 명시 가능하다.
