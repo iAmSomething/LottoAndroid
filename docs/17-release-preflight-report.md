@@ -13,7 +13,7 @@
 ```
 
 ## 결과 요약
-- PASS: 13
+- PASS: 15
 - WARN: 0
 - FAIL: 0
 
@@ -28,7 +28,7 @@
   - `:app:ktlintCheck`
   - `:app:detekt`
   - `:app:testDebugUnitTest`
-  - `:app:connectedDebugAndroidTest` (8/8)
+  - `:app:connectedDebugAndroidTest` (9/9)
   - `:app:assembleRelease`
 - CI 모드 품질 게이트 통과
   - `./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing`
@@ -49,6 +49,10 @@
 13. 앱 스타트업 안정화(2026-02-26): `AppGraph` 초기화를 lazy로 전환해 프로세스 시작 시 동기 초기화 부하 완화
 14. 계측 회귀 안정화(2026-02-26): `WeeklySaveFlowInstrumentedTest`의 back 동작을 Compose dispatcher 기반으로 교체
 15. 프리플라이트 재시도 확장 및 재검증(2026-02-26): 설치/연결/startup 불안정 패턴 포함 3회 재시도 적용 후 `--with-build --android-serial emulator-5554`에서 PASS 14 / WARN 0 / FAIL 0
+16. 계측 플래키 후속 보정 및 최종 점검(2026-02-26): `WeeklySaveFlowInstrumentedTest` 태그/클릭 경로 안정화 후 `release-final-check.sh` 재실행 PASS 15 / WARN 0 / FAIL 0 (`connectedDebugAndroidTest` 9/9)
+17. 번호관리 빠른 액션(A02) 반영 후 재검증(2026-02-26): 단위/계측/릴리즈 점검 재실행 PASS 15 / WARN 0 / FAIL 0 유지
+18. stats CTA 계측 샘플 루틴 검증(2026-02-26): `run-analytics-sample-check.sh --serial emulator-5554` 실행으로 계측 3/3 + `verify-analytics-events --profile stats-cta` PASS (`docs/assets/distribution/analytics_sample_check_2026-02-26.md`)
+19. 배포 주기 점검 루틴 검증(2026-02-26): `firebase-distribution-routine-check.sh` 실행으로 CI preflight PASS + Firebase dry-run PASS (`docs/assets/distribution/firebase_routine_local_2026-02-26.md`)
 
 ## 후속 조치
 1. CI 환경에도 동일하게 `LOTTO_RELEASE_*` 시크릿 설정
