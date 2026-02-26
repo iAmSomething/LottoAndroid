@@ -320,3 +320,32 @@
 1. `P-004` 실기기 증적 확보(가능 시 워치 소형/대형 우선)
 2. 모션 공통 컴포넌트 확장 범위 점검(티켓 상세/통계/가져오기)
 3. EXP-05/06 로그를 에뮬레이터 실플로우 기준으로 1회 수집/검증
+
+## 2026-02-26 Cycle-10
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 범위
+  - `StatsViewModel` 출처별 성과 집계 모델(`sourceStats`) 추가
+  - `StatsScreen`에 `출처별 성과 비교` 카드 추가(자동/수동/QR)
+  - `StatsViewModelTest` 출처별 집계 회귀 테스트 2건 추가
+- 품질 스냅샷
+  - `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
+
+### 2) 진행도 진단
+- 개선점
+  - Medium 우선순위 `C03`를 코드 기준으로 1차 완료
+  - 기존 통계 화면의 단순 합계 중심 정보에서 출처 비교 중심 인사이트로 확장
+- 남은 갭
+  - `C04`(기간별 ROI 트렌드 차트), `C01`(중복도 경고)은 미착수
+  - `P-004` 실기기 증적 블로커는 유지
+
+### 3) 증적
+- 코드:
+  - `app/src/main/java/com/weeklylotto/app/feature/stats/StatsViewModel.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/stats/StatsScreen.kt`
+  - `app/src/test/java/com/weeklylotto/app/StatsViewModelTest.kt`
+
+### 4) 다음 루틴 시작점
+1. `C04`(ROI 트렌드) 최소 차트 버전 범위 정의 및 1차 구현
+2. `C01`(중복도 경고) 기준 주차(N)와 경고 임계치 확정
+3. `P-004`는 실기기 확보 전까지 블로커 유지 + 에뮬레이터 증적 누적

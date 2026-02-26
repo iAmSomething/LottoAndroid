@@ -293,3 +293,10 @@
 - [x] W-003 QR/설정 화면 모션 확장(시트/닫기/저장/프리셋 액션)
 - [x] W-004 EXP-05/06 샘플 이벤트 검증 스크립트 추가(`scripts/verify-analytics-events.sh`)
 - [x] W-005 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug`)
+
+## X. 통계 인사이트 확장 C03(2026-02-26 Cycle-10)
+- [x] X-001 `StatsViewModel`에 출처별 성과 집계 모델 추가(자동/수동/QR)
+- [x] X-002 출처별 구매금/당첨금/순이익/당첨률 계산 반영
+- [x] X-003 `StatsScreen`에 `출처별 성과 비교` 카드 섹션 추가
+- [x] X-004 회귀 테스트 추가(`StatsViewModelTest`: 출처별 집계/빈데이터 0값 유지)
+- [x] X-005 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug`)

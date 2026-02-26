@@ -249,6 +249,10 @@
   - EXP-05/06 이벤트 샘플 검증 자동화 스크립트 추가(`scripts/verify-analytics-events.sh`)
   - 샘플 로그 기반 스크립트 검증 성공: 필수 이벤트 5종 및 interaction 스키마(`screen/component/action`) PASS
   - 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
+  - 통계 인사이트 확장(C03) 1차 구현: 출처별 성과 집계 모델(`sourceStats`) 추가
+  - 통계 화면 확장: `출처별 성과 비교` 카드(자동/수동/QR, 구매/당첨/순이익/당첨률) 반영
+  - 회귀 테스트 보강: `StatsViewModelTest`에 출처별 집계/빈데이터 0값 유지 케이스 추가
+  - 통합 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Wear OS 실기기(소형/대형) 기준 UI/성능 검증

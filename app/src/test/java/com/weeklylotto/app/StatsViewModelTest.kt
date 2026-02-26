@@ -104,6 +104,77 @@ class StatsViewModelTest {
             assertThat(state.totalGames).isEqualTo(1)
             assertThat(state.totalPurchaseAmount).isEqualTo(1_000L)
         }
+
+    @Test
+    fun 출처별_성과가_자동_수동_QR로_집계된다() =
+        runTest {
+            val round = Round(1205, LocalDate.of(2026, 4, 11))
+            val generatedWin = ticket(round, listOf(3, 14, 25, 31, 38, 42), Instant.now(), TicketSource.GENERATED)
+            val manualLose = ticket(round, listOf(1, 2, 3, 4, 5, 6), Instant.now(), TicketSource.MANUAL)
+            val qrLose = ticket(round, listOf(7, 8, 9, 10, 11, 12), Instant.now(), TicketSource.QR_SCAN)
+
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(listOf(generatedWin, manualLose, qrLose)),
+                    drawRepository = StatsDrawRepository(draw(round)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            val state = viewModel.uiState.value
+
+            val generated = state.sourceStats.first { it.source == TicketSource.GENERATED }
+            val manual = state.sourceStats.first { it.source == TicketSource.MANUAL }
+            val qr = state.sourceStats.first { it.source == TicketSource.QR_SCAN }
+
+            assertThat(generated.totalGames).isEqualTo(1)
+            assertThat(generated.winningGames).isEqualTo(1)
+            assertThat(generated.totalPurchaseAmount).isEqualTo(1_000L)
+            assertThat(generated.totalWinAmount).isEqualTo(5_000L)
+            assertThat(generated.netProfitAmount).isEqualTo(4_000L)
+            assertThat(generated.winRatePercent).isEqualTo(100)
+
+            assertThat(manual.totalGames).isEqualTo(1)
+            assertThat(manual.winningGames).isEqualTo(0)
+            assertThat(manual.totalPurchaseAmount).isEqualTo(1_000L)
+            assertThat(manual.totalWinAmount).isEqualTo(0L)
+            assertThat(manual.netProfitAmount).isEqualTo(-1_000L)
+            assertThat(manual.winRatePercent).isEqualTo(0)
+
+            assertThat(qr.totalGames).isEqualTo(1)
+            assertThat(qr.winningGames).isEqualTo(0)
+            assertThat(qr.totalPurchaseAmount).isEqualTo(1_000L)
+            assertThat(qr.totalWinAmount).isEqualTo(0L)
+            assertThat(qr.netProfitAmount).isEqualTo(-1_000L)
+            assertThat(qr.winRatePercent).isEqualTo(0)
+        }
+
+    @Test
+    fun 출처별_데이터가_없으면_기본_3개_출처를_0값으로_유지한다() =
+        runTest {
+            val round = Round(1206, LocalDate.of(2026, 4, 18))
+
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(emptyList()),
+                    drawRepository = StatsDrawRepository(draw(round)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            val state = viewModel.uiState.value
+
+            assertThat(state.sourceStats).hasSize(3)
+            assertThat(state.sourceStats.map { it.source })
+                .containsExactly(TicketSource.GENERATED, TicketSource.QR_SCAN, TicketSource.MANUAL)
+                .inOrder()
+            assertThat(
+                state.sourceStats.all {
+                    it.totalGames == 0 && it.totalPurchaseAmount == 0L && it.totalWinAmount == 0L
+                },
+            )
+                .isTrue()
+        }
 }
 
 private fun draw(round: Round): DrawResult =
@@ -118,11 +189,12 @@ private fun ticket(
     round: Round,
     numbers: List<Int>,
     createdAt: Instant,
+    source: TicketSource = TicketSource.GENERATED,
 ): TicketBundle =
     TicketBundle(
         round = round,
         games = listOf(LottoGame(slot = GameSlot.A, numbers = numbers.map(::LottoNumber))),
-        source = TicketSource.GENERATED,
+        source = source,
         createdAt = createdAt,
     )
 

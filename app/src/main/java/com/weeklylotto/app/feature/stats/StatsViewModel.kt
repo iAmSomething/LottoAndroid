@@ -7,6 +7,7 @@ import com.weeklylotto.app.domain.model.DrawRank
 import com.weeklylotto.app.domain.model.LottoNumber
 import com.weeklylotto.app.domain.model.PrizeAmountPolicy
 import com.weeklylotto.app.domain.model.TicketBundle
+import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.ResultEvaluator
@@ -34,8 +35,26 @@ data class StatsUiState(
     val totalGames: Int = 0,
     val winningGames: Int = 0,
     val selectedPeriod: StatsPeriod = StatsPeriod.ALL,
+    val sourceStats: List<SourceStats> = TicketSource.entries.map { SourceStats(source = it) },
 ) {
     val netProfitAmount: Long = totalWinAmount - totalPurchaseAmount
+}
+
+data class SourceStats(
+    val source: TicketSource,
+    val totalGames: Int = 0,
+    val winningGames: Int = 0,
+    val totalPurchaseAmount: Long = 0,
+    val totalWinAmount: Long = 0,
+) {
+    val netProfitAmount: Long = totalWinAmount - totalPurchaseAmount
+
+    val winRatePercent: Int =
+        if (totalGames == 0) {
+            0
+        } else {
+            (winningGames * 100) / totalGames
+        }
 }
 
 class StatsViewModel(
@@ -86,8 +105,14 @@ class StatsViewModel(
                 val drawCache = mutableMapOf<Int, com.weeklylotto.app.domain.model.DrawResult?>()
                 var totalWinAmount = 0L
                 var winningGames = 0
+                val sourceStatsAccumulator =
+                    TicketSource.entries.associateWith { MutableSourceStats() }.toMutableMap()
 
                 filteredBundles.forEach { bundle ->
+                    val sourceAccumulator = sourceStatsAccumulator.getValue(bundle.source)
+                    sourceAccumulator.totalGames += bundle.games.size
+                    sourceAccumulator.totalPurchaseAmount += bundle.games.size * 1_000L
+
                     val draw =
                         drawCache.getOrPut(bundle.round.number) {
                             when (val drawResult = drawRepository.fetchByRound(bundle.round)) {
@@ -99,13 +124,28 @@ class StatsViewModel(
                     if (draw != null) {
                         bundle.games.forEach { game ->
                             val evaluation = resultEvaluator.evaluate(game, draw)
-                            totalWinAmount += PrizeAmountPolicy.amountFor(evaluation.rank)
+                            val prizeAmount = PrizeAmountPolicy.amountFor(evaluation.rank)
+                            totalWinAmount += prizeAmount
+                            sourceAccumulator.totalWinAmount += prizeAmount
                             if (evaluation.rank != DrawRank.NONE) {
                                 winningGames += 1
+                                sourceAccumulator.winningGames += 1
                             }
                         }
                     }
                 }
+
+                val sourceStats =
+                    TicketSource.entries.map { source ->
+                        val value = sourceStatsAccumulator.getValue(source)
+                        SourceStats(
+                            source = source,
+                            totalGames = value.totalGames,
+                            winningGames = value.winningGames,
+                            totalPurchaseAmount = value.totalPurchaseAmount,
+                            totalWinAmount = value.totalWinAmount,
+                        )
+                    }
 
                 _uiState.update {
                     it.copy(
@@ -114,6 +154,7 @@ class StatsViewModel(
                         totalGames = games.size,
                         topNumbers = topNumbers,
                         winningGames = winningGames,
+                        sourceStats = sourceStats,
                     )
                 }
             }
@@ -136,3 +177,10 @@ class StatsViewModel(
         }
     }
 }
+
+private data class MutableSourceStats(
+    var totalGames: Int = 0,
+    var winningGames: Int = 0,
+    var totalPurchaseAmount: Long = 0,
+    var totalWinAmount: Long = 0,
+)
