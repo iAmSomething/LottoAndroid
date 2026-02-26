@@ -39,9 +39,13 @@
     - 타이포/컬러 1차 코드 반영(`Color.kt`, `Type.kt`, Home/Result, AppBar/TicketCard/BottomBar/BallChip)
     - 전/후 및 접근성 1.3x 스크린샷 증적 확보(`docs/assets/typography-refresh`)
     - Wear 원형 UI 타이포 밀도 가이드 확정(`26` 11장)
+  - Cycle-05 루틴 반영:
+    - `SplashGate` 코드 적용(콜드 900ms/웜 300ms 브리지)
+    - `motion_splash_shown`, `motion_splash_skip` 이벤트 실제 연결
+    - 스플래시 캡처 증적 확보(`splash_cold.png`, `splash_warm.png`)
+    - 품질 스냅샷 재검증(`app:ktlintCheck`, `detekt`, `testDebugUnitTest`, `assembleDebug`, `wear:assembleDebug`)
 - 미완료 작업
   - Wear OS 구현/실기기 검증 착수
-  - 스플래시 `motion_*` 이벤트 연결
   - 실기기 기반 Wear QA 증적 확보(P-004)
 - 블로커
   - 없음(현재 품질 게이트 Green, 플래키 여부는 관찰)

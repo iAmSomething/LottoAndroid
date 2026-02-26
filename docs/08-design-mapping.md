@@ -84,6 +84,8 @@
 - 스플래시:
   - 콜드 스타트: 브랜드 인트로(짧은 로고 스케일 + 페이드)
   - 웜 스타트: 축약 모션(즉시 홈 진입 우선)
+  - 구현 상태: `SplashGate` 적용(콜드 900ms / 웜 300ms)
+  - 증적: `docs/assets/typography-refresh/splash_cold.png`, `splash_warm.png`
 - 홈:
   - 상단 카드/CTA는 첫 진입 시 짧은 stagger reveal
   - 재진입 시 애니메이션 최소화(반복 피로 방지)

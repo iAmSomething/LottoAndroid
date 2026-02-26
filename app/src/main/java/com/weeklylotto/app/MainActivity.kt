@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.weeklylotto.app.di.AppGraph
+import com.weeklylotto.app.feature.splash.SplashGate
 import com.weeklylotto.app.ui.navigation.WeeklyLottoApp
 import com.weeklylotto.app.ui.navigation.deepLinkToRoute
 import com.weeklylotto.app.ui.theme.WeeklyLottoTheme
@@ -22,7 +23,9 @@ class MainActivity : ComponentActivity() {
         deepLinkUri = intent?.data
         setContent {
             WeeklyLottoTheme {
-                WeeklyLottoApp(initialRoute = deepLinkToRoute(deepLinkUri))
+                SplashGate {
+                    WeeklyLottoApp(initialRoute = deepLinkToRoute(deepLinkUri))
+                }
             }
         }
     }

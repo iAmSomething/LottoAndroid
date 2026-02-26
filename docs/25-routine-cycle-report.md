@@ -165,3 +165,31 @@
 1. Splash 화면 구현과 `motion_*` 이벤트 동시 연결
 2. Wear Home/Result 1차 화면 코드 착수
 3. 실기기(워치) 증적 수집 계획 확정(P-004)
+
+## 2026-02-26 Cycle-05
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 범위
+  - `feature/splash/SplashGate.kt` 신규 추가 및 `MainActivity` 진입 흐름 연결
+  - `motion_splash_shown`, `motion_splash_skip` 이벤트 연동
+- 품질 스냅샷
+  - `./scripts/check-splash-motion-gate.sh` 성공
+  - `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
+
+### 2) 진행도 진단
+- 개선점
+  - 문서에서 미연결이던 `motion_*` 이벤트가 실제 코드에 연결됨
+  - 스플래시 PR 게이트가 실제 스플래시 코드 존재 상황에서도 통과/실패를 판단 가능
+- 남은 갭
+  - Wear 실기기(소형/대형) 증적은 여전히 부재
+  - `motion_*`/`interaction_*` 선택 파라미터 값 enum 고정은 추가 정리 필요
+
+### 3) 증적
+- 스플래시 캡처:
+  - `docs/assets/typography-refresh/splash_cold.png`
+  - `docs/assets/typography-refresh/splash_warm.png`
+
+### 4) 다음 루틴 시작점
+1. Wear Home/Result 1차 화면 구현 착수
+2. 실기기 기반 P-004 증적 수집 계획 확정
+3. 이벤트 파라미터 값(enum) 표준화

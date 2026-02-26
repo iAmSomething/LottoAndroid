@@ -258,3 +258,8 @@
 - [x] R-010 컴포넌트 4종(AppBar/TicketCard/BottomBar/BallChip) 비주얼 통일 적용
 - [x] R-011 접근성 1.3x 폰트 스케일 QA(에뮬레이터 캡처 증적 확보)
 - [x] R-012 Wear 타이포 밀도 가이드(원형 UI 전용) 확정(`26` 11장)
+
+## S. 스플래시/모션 코드 구현(2026-02-26 Cycle-05)
+- [x] S-001 `SplashGate` 구현(콜드 900ms/웜 300ms 브리지)
+- [x] S-002 `motion_splash_shown`, `motion_splash_skip` 이벤트 연결
+- [x] S-003 스플래시 캡처 증적 수집(`docs/assets/typography-refresh/splash_cold.png`, `splash_warm.png`)

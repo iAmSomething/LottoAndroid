@@ -128,16 +128,17 @@
 ## 12. Cycle-03 계측 상태 업데이트 (2026-02-26)
 
 ### 12.1 연결 완료
+- `motion_splash_shown`: SplashGate 연결(cold/warm)
+- `motion_splash_skip`: SplashGate warm compact 경로 연결
 - `interaction_cta_press`: Home/Generator/Manage/Result 주요 CTA 경로 연결
 - `interaction_ball_lock_toggle`: Number Generator 잠금 토글 경로 연결
 - `interaction_sheet_apply`: Manage/Result 시트 적용 경로 연결
 
 ### 12.2 미연결
-- `motion_splash_shown`
-- `motion_splash_skip`
+- 없음(현재 문서 정의 이벤트 기준 전부 연결)
 
 ### 12.3 다음 적용 규칙
 - 스플래시 composable이 들어가는 PR에서는 `motion_*` 2종 이벤트 연결을 필수 게이트로 처리한다.
   - 자동 체크: `scripts/check-splash-motion-gate.sh`
   - CI 연동: `.github/workflows/android-ci.yml`, `.github/workflows/release-preflight.yml`
-- `interaction_*`는 공통 파라미터 키(`screen`, `component`, `action`)를 강제한다.
+- `motion_*`, `interaction_*` 모두 공통 파라미터 키(`screen`, `component`, `action`)를 유지하고, 값은 enum으로 고정한다.
