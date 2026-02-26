@@ -44,6 +44,17 @@ fi
 PASS_COUNT=0
 WARN_COUNT=0
 FAIL_COUNT=0
+SKIP_BUILD_DUE_TO_ENV_FAIL=0
+
+if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 && "$SKIP_ADB" -eq 1 ]]; then
+  echo "--require-physical-device cannot be used with --skip-adb."
+  exit 2
+fi
+
+if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 && "$RUN_BUILD_CI" -eq 1 ]]; then
+  echo "--require-physical-device is only supported with --with-build."
+  exit 2
+fi
 
 pass() {
   PASS_COUNT=$((PASS_COUNT + 1))
@@ -106,10 +117,12 @@ elif command -v adb >/dev/null 2>&1; then
     pass "ADB 연결 디바이스 ${DEVICE_COUNT}대 확인(실기기 ${PHYSICAL_DEVICE_COUNT}, 에뮬레이터 ${EMULATOR_DEVICE_COUNT})"
     if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 && "$PHYSICAL_DEVICE_COUNT" -lt 1 ]]; then
       fail "실기기 연결 필수 옵션 활성화됨(--require-physical-device), 현재 실기기 0대"
+      SKIP_BUILD_DUE_TO_ENV_FAIL=1
     fi
   else
     if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 ]]; then
       fail "실기기 연결 필수 옵션 활성화됨(--require-physical-device), 연결 디바이스 없음"
+      SKIP_BUILD_DUE_TO_ENV_FAIL=1
     else
       warn "ADB 연결 디바이스 없음(계측 테스트 자동 실행 불가)"
     fi
@@ -212,7 +225,9 @@ else
 fi
 
 section "품질 게이트"
-if [[ "$RUN_BUILD_LOCAL" -eq 1 ]]; then
+if [[ "$SKIP_BUILD_DUE_TO_ENV_FAIL" -eq 1 ]]; then
+  warn "실기기 필수 조건 미충족으로 품질 게이트 실행 생략"
+elif [[ "$RUN_BUILD_LOCAL" -eq 1 ]]; then
   if ./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:connectedDebugAndroidTest :app:assembleRelease; then
     pass "품질 게이트 통과(ktlint/detekt/unit/connected/release)"
   else

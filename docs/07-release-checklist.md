@@ -51,3 +51,4 @@
 ./scripts/release-preflight.sh --with-build --require-physical-device
 ```
 - 통과 조건: 실기기 1대 이상 연결 + 요약 `FAIL=0`
+- 실기기 미연결 시 품질게이트는 생략되고 즉시 실패(fail-fast)
