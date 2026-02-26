@@ -18,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -317,6 +319,15 @@ fun ManageScreen(
                     verticalArrangement = Arrangement.spacedBy(LottoDimens.CardGap),
                     contentPadding = PaddingValues(LottoDimens.ScreenPadding),
                 ) {
+                    if (uiState.tab == ManageTab.VAULT) {
+                        item {
+                            VaultSummaryCard(
+                                totalCount = filteredTickets.size,
+                                savedCount = filteredTickets.count { it.status == TicketStatus.SAVED },
+                                winningCount = filteredTickets.count { it.status == TicketStatus.WIN },
+                            )
+                        }
+                    }
                     items(filteredTickets, key = { it.id }) { bundle ->
                         val title = "${bundle.round.number}회 ${bundle.source.toSourceChipLabel()}"
                         val meta = "${bundle.games.size}게임 · ${bundle.createdAt.toDisplayDate()}"
@@ -356,6 +367,33 @@ fun ManageScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun VaultSummaryCard(
+    totalCount: Int,
+    savedCount: Int,
+    winningCount: Int,
+) {
+    Card(
+        shape = RoundedCornerShape(LottoDimens.CardRadius),
+        border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+        colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+    ) {
+        Column(
+            modifier = Modifier.padding(LottoDimens.ScreenPadding),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Text("보관함 요약", style = MaterialTheme.typography.titleSmall)
+            Text("총 ${totalCount}건", color = LottoColors.TextSecondary, style = MaterialTheme.typography.bodySmall)
+            Text("보관 상태 ${savedCount}건", color = LottoColors.TextSecondary, style = MaterialTheme.typography.bodySmall)
+            Text(
+                "당첨 상태 ${winningCount}건",
+                color = LottoColors.TextSecondary,
+                style = MaterialTheme.typography.bodySmall,
+            )
         }
     }
 }

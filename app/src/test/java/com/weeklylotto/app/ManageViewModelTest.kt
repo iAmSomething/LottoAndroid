@@ -169,12 +169,80 @@ class ManageViewModelTest {
             assertThat(viewModel.uiState.value.tickets).hasSize(beforeCount)
             assertThat(viewModel.uiState.value.feedbackMessage).isEqualTo("이미 이번 주에 동일 번호가 있습니다.")
         }
+
+    @Test
+    fun 이번주탭은_보관상태를_제외한다() =
+        runTest {
+            val today = LocalDate.now()
+            val currentRound =
+                Round(
+                    number = RoundEstimator.currentSalesRound(today),
+                    drawDate = RoundEstimator.nextDrawDate(today),
+                )
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets =
+                        listOf(
+                            ticket(id = 41L, round = currentRound, status = TicketStatus.PENDING),
+                            ticket(id = 42L, round = currentRound, status = TicketStatus.SAVED),
+                        ),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+
+            val weekIds = viewModel.filteredTickets().map { it.id }
+            assertThat(weekIds).containsExactly(41L)
+        }
+
+    @Test
+    fun 스캔탭은_QR_등록건만_노출한다() =
+        runTest {
+            val today = LocalDate.now()
+            val currentRound =
+                Round(
+                    number = RoundEstimator.currentSalesRound(today),
+                    drawDate = RoundEstimator.nextDrawDate(today),
+                )
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets =
+                        listOf(
+                            ticket(
+                                id = 51L,
+                                round = currentRound,
+                                status = TicketStatus.PENDING,
+                                source = TicketSource.QR_SCAN,
+                            ),
+                            ticket(
+                                id = 52L,
+                                round = currentRound,
+                                status = TicketStatus.PENDING,
+                                source = TicketSource.GENERATED,
+                            ),
+                            ticket(
+                                id = 53L,
+                                round = currentRound,
+                                status = TicketStatus.WIN,
+                                source = TicketSource.MANUAL,
+                            ),
+                        ),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+            viewModel.setTab(ManageTab.SCAN)
+
+            val scanIds = viewModel.filteredTickets().map { it.id }
+            assertThat(scanIds).containsExactly(51L)
+        }
 }
 
 private fun ticket(
     id: Long,
     round: Round,
     status: TicketStatus,
+    source: TicketSource = TicketSource.GENERATED,
 ): TicketBundle =
     TicketBundle(
         id = id,
@@ -187,7 +255,7 @@ private fun ticket(
                     numbers = listOf(3, 11, 14, 22, 31, 45).map(::LottoNumber),
                 ),
             ),
-        source = TicketSource.GENERATED,
+        source = source,
         status = status,
     )
 

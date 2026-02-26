@@ -141,6 +141,9 @@
   - Result 회차 변경 시트 UX 개선: 라디오 선택, 선택행 강조 배경, 하단 취소/적용 버튼으로 동선 명확화
   - ResultViewModel 회귀 테스트 보강: `selectRound`의 `fetchByRound` 경로와 선택 회차 유지 `refresh` 경로 검증 추가
   - 추가 검증: `compileDebugAndroidTestKotlin` + `assembleDebug` 재통과
+  - 번호관리 보관함 화면에 요약 카드 추가: 총 건수/보관 상태 건수/당첨 상태 건수 한눈에 확인
+  - 번호관리 탭 필터 회귀 테스트 보강: `이번주` 탭의 SAVED 제외 규칙, `스캔내역` 탭의 QR 전용 노출 규칙 추가
+  - 통합 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug` 통과
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
