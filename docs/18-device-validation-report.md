@@ -13,4 +13,4 @@
 - 문서 업데이트 생략: `./scripts/run-physical-device-validation.sh --skip-doc`
 
 ## 실행 이력
-- 아직 실기기 실행 이력이 없습니다.
+- 2026-02-26: 실기기 미연결로 실행 불가 (`[FAIL] No physical device connected. Connect one device and retry.`)

@@ -34,13 +34,13 @@
 - [x] 다음 스프린트 백로그 정리 (`16-next-sprint-backlog.md`)
 
 ## 5. 2026-02-25 사전 점검 결과
-- API 36 AVD에서 `connectedDebugAndroidTest` 7/7 통과(재실행 포함 검증)
+- API 36 AVD에서 `connectedDebugAndroidTest` 8/8 통과(재실행 포함 검증)
 - `ktlintCheck`, `detekt`, `testDebugUnitTest`, `assembleDebug`, `assembleRelease`는 통과
 - 배포 직전에는 실제 기기 1대 이상에서 계측 테스트를 1회 추가 검증 권장
 
 ## 6. 자동 검증 근거(추가)
-- `connectedDebugAndroidTest`: 7/7 통과
+- `connectedDebugAndroidTest`: 8/8 통과
 - 신규 계측: `MainNavigationInstrumentedTest`, `QrManualFlowInstrumentedTest`
-- 신규 단위: `SettingsViewModelTest`, `DefaultWidgetDataProviderTest`, `StatsViewModelTest`
+- 신규 단위: `SettingsViewModelTest`, `DefaultWidgetDataProviderTest`, `StatsViewModelTest`, `BallChipAccessibilityTest`, `TicketDetailShareFormatterTest`, `ColorContrastTest`
 - 당첨 API fallback: 공식 API 실패 시 미러 API로 1212회 로드 확인
 - CI preflight 모드(`--with-build-ci --skip-adb --require-signing`) 검증 통과

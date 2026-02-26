@@ -2,6 +2,7 @@
 
 ## 실행 일시
 - 2026-02-25
+- 2026-02-26 (최신)
 
 ## 실행 명령
 ```bash
@@ -23,7 +24,7 @@
 - 품질 게이트 통과
   - `:app:ktlintCheck`
   - `:app:testDebugUnitTest`
-  - `:app:connectedDebugAndroidTest` (7/7)
+  - `:app:connectedDebugAndroidTest` (8/8)
   - `:app:assembleRelease`
 - CI 모드 품질 게이트 통과
   - `./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing`
@@ -32,6 +33,7 @@
 1. 초기 실행: PASS 11 / WARN 1 / FAIL 0 (서명 값 미설정)
 2. `./scripts/setup-local-release-signing.sh` 적용
 3. 재실행: PASS 13 / WARN 0 / FAIL 0
+4. 기능/디자인/접근성 추가 반영 후 재실행(2026-02-26): PASS 13 / WARN 0 / FAIL 0 (`connectedDebugAndroidTest` 8/8)
 
 ## 후속 조치
 1. CI 환경에도 동일하게 `LOTTO_RELEASE_*` 시크릿 설정
