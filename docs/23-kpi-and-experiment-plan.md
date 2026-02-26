@@ -78,18 +78,18 @@
 | L-014 | 실험 운영 주기(최소 2주) 확정 | 5장 측정/운영 규칙 |
 | L-015 | 실패 실험 종료/기록 규칙 확정 | 5장 측정/운영 규칙 |
 
-## 8. EXP-05/06 이벤트 훅 점검 결과 (2026-02-26 Cycle-03)
+## 8. EXP-05/06 이벤트 훅 점검 결과 (2026-02-26 Cycle-07)
 | 이벤트 | 현재 연결 상태 | 누락 포인트 | 우선 반영 위치 |
 |---|---|---|---|
-| `motion_splash_shown` | 연결 | cold/warm 모드값 enum 고정 필요 | SplashGate |
-| `motion_splash_skip` | 연결 | skip 이유값 enum 고정 필요 | SplashGate |
-| `interaction_cta_press` | 연결(1차) | 이벤트별 선택 파라미터 확장 필요 | Home/Generator/Manage/Result 공통 CTA |
-| `interaction_ball_lock_toggle` | 연결(1차) | lock/unlock 상태값 enum 고정 필요 | Number Generator 잠금 토글 핸들러 |
-| `interaction_sheet_apply` | 연결(1차) | 시트 타입 enum 고정 필요 | Manage 필터/정렬 시트, Result 회차 변경 시트 |
+| `motion_splash_shown` | 연결 | 없음(action enum 고정 완료) | SplashGate |
+| `motion_splash_skip` | 연결 | 없음(action enum 고정 완료) | SplashGate |
+| `interaction_cta_press` | 연결 | 없음(action enum 고정 완료) | Home/Generator/Manage/Result 공통 CTA |
+| `interaction_ball_lock_toggle` | 연결 | 없음(action enum 고정 완료) | Number Generator 잠금 토글 핸들러 |
+| `interaction_sheet_apply` | 연결 | 없음(action enum 고정 완료) | Manage 필터/정렬 시트, Result 회차 변경 시트 |
 
 - 코드 기준 확인 결과: `AnalyticsLogger`/`LogcatAnalyticsLogger`가 도입되었고, DI(`AppGraph`)를 통해 주요 화면에서 `interaction_*` 로그를 수집 중이다.
 - 스플래시 PR 게이트 적용: `scripts/check-splash-motion-gate.sh`가 splash 소스 감지 시 `motion_splash_shown`/`motion_splash_skip` 누락을 실패 처리한다.
-- 즉시 실행 순서:
-  1. `motion_*` 파라미터(enum/action value) 고정
-  2. `interaction_*` 선택 파라미터(enum/action value) 고정
-  3. 실험 대시보드 집계를 위한 이벤트 샘플 로그 검증(누락/중복 점검)
+- Cycle-07 반영:
+  1. `AnalyticsActionValue` 도입으로 `action` 파라미터 값을 상수화
+  2. Home/Generator/Manage/Result/Splash에서 `action` 문자열 리터럴 제거
+  3. 대시보드 집계 시 action value drift 리스크 축소

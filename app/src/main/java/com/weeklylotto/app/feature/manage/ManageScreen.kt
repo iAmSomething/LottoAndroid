@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.domain.model.TicketStatus
+import com.weeklylotto.app.domain.service.AnalyticsActionValue
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.LottoTopAppBar
@@ -252,7 +253,7 @@ fun ManageScreen(
                                     mapOf(
                                         AnalyticsParamKey.SCREEN to "manage",
                                         AnalyticsParamKey.COMPONENT to "filter_sheet_custom_range",
-                                        AnalyticsParamKey.ACTION to "apply",
+                                        AnalyticsParamKey.ACTION to AnalyticsActionValue.APPLY,
                                         "range_start" to start.toString(),
                                         "range_end" to end.toString(),
                                     ),
@@ -285,7 +286,7 @@ fun ManageScreen(
                                     mapOf(
                                         AnalyticsParamKey.SCREEN to "manage",
                                         AnalyticsParamKey.COMPONENT to "filter_sheet",
-                                        AnalyticsParamKey.ACTION to "apply",
+                                        AnalyticsParamKey.ACTION to AnalyticsActionValue.APPLY,
                                         "status_count" to uiState.filter.statuses.size.toString(),
                                         "round_range" to (uiState.filter.roundRange?.toString() ?: "all"),
                                     ),
@@ -320,7 +321,7 @@ fun ManageScreen(
                                         mapOf(
                                             AnalyticsParamKey.SCREEN to "manage",
                                             AnalyticsParamKey.COMPONENT to "sort_sheet",
-                                            AnalyticsParamKey.ACTION to "apply",
+                                            AnalyticsParamKey.ACTION to AnalyticsActionValue.APPLY,
                                             "sort" to sort.name,
                                         ),
                                 )
@@ -383,7 +384,7 @@ fun ManageScreen(
                                 mapOf(
                                     AnalyticsParamKey.SCREEN to "manage",
                                     AnalyticsParamKey.COMPONENT to "move_sheet",
-                                    AnalyticsParamKey.ACTION to "apply",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.APPLY,
                                     "target_status" to "saved",
                                     "selected_count" to uiState.selectedIds.size.toString(),
                                 ),
@@ -424,7 +425,7 @@ fun ManageScreen(
                                 mapOf(
                                     AnalyticsParamKey.SCREEN to "manage",
                                     AnalyticsParamKey.COMPONENT to "edit_done",
-                                    AnalyticsParamKey.ACTION to "click",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                 ),
                         )
                         viewModel.toggleEditMode()
@@ -435,7 +436,7 @@ fun ManageScreen(
                                 mapOf(
                                     AnalyticsParamKey.SCREEN to "manage",
                                     AnalyticsParamKey.COMPONENT to "open_filter",
-                                    AnalyticsParamKey.ACTION to "click",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                 ),
                         )
                         viewModel.openFilterSheet()
@@ -452,7 +453,7 @@ fun ManageScreen(
                             mapOf(
                                 AnalyticsParamKey.SCREEN to "manage",
                                 AnalyticsParamKey.COMPONENT to "open_add_sheet",
-                                AnalyticsParamKey.ACTION to "click",
+                                AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                             ),
                     )
                     viewModel.openFabSheet()
@@ -551,7 +552,7 @@ fun ManageScreen(
                                         mapOf(
                                             AnalyticsParamKey.SCREEN to "manage",
                                             AnalyticsParamKey.COMPONENT to "open_qr_from_empty",
-                                            AnalyticsParamKey.ACTION to "click",
+                                            AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                         ),
                                 )
                                 onOpenQr()

@@ -27,3 +27,13 @@ object AnalyticsParamKey {
     const val COMPONENT = "component"
     const val ACTION = "action"
 }
+
+object AnalyticsActionValue {
+    const val CLICK = "click"
+    const val APPLY = "apply"
+    const val LOCK = "lock"
+    const val UNLOCK = "unlock"
+    const val COLD = "cold"
+    const val WARM = "warm"
+    const val COMPACT = "compact"
+}

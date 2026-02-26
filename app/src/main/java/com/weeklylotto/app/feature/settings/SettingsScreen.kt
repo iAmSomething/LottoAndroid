@@ -42,6 +42,7 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                     SettingsViewModel(
                         reminderConfigStore = AppGraph.reminderConfigStore,
                         reminderScheduler = AppGraph.reminderScheduler,
+                        motionPreferenceStore = AppGraph.motionPreferenceStore,
                     )
                 },
         )
@@ -103,6 +104,27 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                                 viewModel.setEnabled(enabled)
                             }
                         },
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                    ) {
+                        Text("모션 축소")
+                        Text(
+                            "애니메이션 시간 50% 축소, 변형 모션 최소화",
+                            color = LottoColors.TextSecondary,
+                            style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                    Switch(
+                        checked = uiState.reduceMotionEnabled,
+                        onCheckedChange = viewModel::setReduceMotionEnabled,
                     )
                 }
 

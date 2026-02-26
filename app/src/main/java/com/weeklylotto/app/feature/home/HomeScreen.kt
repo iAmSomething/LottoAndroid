@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
+import com.weeklylotto.app.domain.service.AnalyticsActionValue
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.LottoTopAppBar
@@ -78,7 +79,7 @@ fun HomeScreen(
                         mapOf(
                             AnalyticsParamKey.SCREEN to "home",
                             AnalyticsParamKey.COMPONENT to "settings",
-                            AnalyticsParamKey.ACTION to "click",
+                            AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                         ),
                 )
                 onClickSettings()
@@ -148,7 +149,7 @@ fun HomeScreen(
                                             mapOf(
                                                 AnalyticsParamKey.SCREEN to "home",
                                                 AnalyticsParamKey.COMPONENT to "cta_qr_scan",
-                                                AnalyticsParamKey.ACTION to "click",
+                                                AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                             ),
                                     )
                                     onClickQr()
@@ -185,7 +186,7 @@ fun HomeScreen(
                                             mapOf(
                                                 AnalyticsParamKey.SCREEN to "home",
                                                 AnalyticsParamKey.COMPONENT to "cta_generate_numbers",
-                                                AnalyticsParamKey.ACTION to "click",
+                                                AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                             ),
                                     )
                                     onClickGenerator()
@@ -227,7 +228,7 @@ fun HomeScreen(
                                             mapOf(
                                                 AnalyticsParamKey.SCREEN to "home",
                                                 AnalyticsParamKey.COMPONENT to "unseen_result_card",
-                                                AnalyticsParamKey.ACTION to "click",
+                                                AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                             ),
                                     )
                                     onClickResult()
@@ -328,7 +329,7 @@ fun HomeScreen(
                                         mapOf(
                                             AnalyticsParamKey.SCREEN to "home",
                                             AnalyticsParamKey.COMPONENT to "view_all_tickets",
-                                            AnalyticsParamKey.ACTION to "click",
+                                            AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                         ),
                                 )
                                 onClickManage()
@@ -377,7 +378,7 @@ fun HomeScreen(
                                     mapOf(
                                         AnalyticsParamKey.SCREEN to "home",
                                         AnalyticsParamKey.COMPONENT to "ticket_card",
-                                        AnalyticsParamKey.ACTION to "click",
+                                        AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                     ),
                             )
                             onClickManage()

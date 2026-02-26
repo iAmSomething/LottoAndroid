@@ -2,10 +2,13 @@ package com.weeklylotto.app
 
 import com.google.common.truth.Truth.assertThat
 import com.weeklylotto.app.domain.model.ReminderConfig
+import com.weeklylotto.app.domain.service.MotionPreferenceStore
 import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
 import com.weeklylotto.app.feature.settings.SettingsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -24,7 +27,8 @@ class SettingsViewModelTest {
             val initial = ReminderConfig(enabled = false)
             val store = FakeReminderConfigStore(initial)
             val scheduler = FakeReminderScheduler()
-            val viewModel = SettingsViewModel(store, scheduler)
+            val motionStore = FakeMotionPreferenceStore()
+            val viewModel = SettingsViewModel(store, scheduler, motionStore)
 
             advanceUntilIdle()
             viewModel.useFridayEveningSchedule()
@@ -46,7 +50,12 @@ class SettingsViewModelTest {
         runTest {
             val initial =
                 ReminderConfig(purchaseReminderDay = DayOfWeek.MONDAY, purchaseReminderTime = LocalTime.of(9, 0))
-            val viewModel = SettingsViewModel(FakeReminderConfigStore(initial), FakeReminderScheduler())
+            val viewModel =
+                SettingsViewModel(
+                    FakeReminderConfigStore(initial),
+                    FakeReminderScheduler(),
+                    FakeMotionPreferenceStore(),
+                )
 
             advanceUntilIdle()
             viewModel.useDefaultSchedule()
@@ -55,6 +64,25 @@ class SettingsViewModelTest {
             assertThat(config.purchaseReminderDay).isEqualTo(DayOfWeek.SATURDAY)
             assertThat(config.purchaseReminderTime).isEqualTo(LocalTime.of(15, 0))
             assertThat(config.resultReminderTime).isEqualTo(LocalTime.of(21, 0))
+        }
+
+    @Test
+    fun 모션축소_토글시_store에_즉시_저장된다() =
+        runTest {
+            val motionStore = FakeMotionPreferenceStore(initial = false)
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = motionStore,
+                )
+
+            advanceUntilIdle()
+            viewModel.setReduceMotionEnabled(true)
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.reduceMotionEnabled).isTrue()
+            assertThat(motionStore.savedValues).containsExactly(true)
         }
 }
 
@@ -80,5 +108,21 @@ private class FakeReminderScheduler : ReminderScheduler {
 
     override suspend fun cancelAll() {
         cancelCount += 1
+    }
+}
+
+private class FakeMotionPreferenceStore(
+    initial: Boolean = false,
+) : MotionPreferenceStore {
+    private val flow = MutableStateFlow(initial)
+    val savedValues: MutableList<Boolean> = mutableListOf()
+
+    override fun observeReduceMotionEnabled(): Flow<Boolean> = flow
+
+    override suspend fun loadReduceMotionEnabled(): Boolean = flow.value
+
+    override suspend fun saveReduceMotionEnabled(enabled: Boolean) {
+        savedValues += enabled
+        flow.value = enabled
     }
 }

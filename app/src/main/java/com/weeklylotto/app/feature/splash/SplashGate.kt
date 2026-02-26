@@ -2,6 +2,9 @@ package com.weeklylotto.app.feature.splash
 
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -27,8 +30,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.weeklylotto.app.di.AppGraph
+import com.weeklylotto.app.domain.service.AnalyticsActionValue
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
+import com.weeklylotto.app.ui.theme.LocalMotionSettings
 import com.weeklylotto.app.ui.theme.LottoColors
 import kotlinx.coroutines.delay
 
@@ -36,12 +41,13 @@ import kotlinx.coroutines.delay
 fun SplashGate(content: @Composable () -> Unit) {
     val context = LocalContext.current
     val analyticsLogger = AppGraph.analyticsLogger
+    val motionSettings = LocalMotionSettings.current
     val preferences = remember(context) { context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE) }
     var visible by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         val seenIntro = preferences.getBoolean(KEY_SEEN_INTRO, false)
-        val mode = if (seenIntro) "warm" else "cold"
+        val mode = if (seenIntro) AnalyticsActionValue.WARM else AnalyticsActionValue.COLD
         analyticsLogger.log(
             event = AnalyticsEvent.MOTION_SPLASH_SHOWN,
             params =
@@ -59,23 +65,46 @@ fun SplashGate(content: @Composable () -> Unit) {
                     mapOf(
                         AnalyticsParamKey.SCREEN to "splash",
                         AnalyticsParamKey.COMPONENT to "splash_gate",
-                        AnalyticsParamKey.ACTION to "compact",
+                        AnalyticsParamKey.ACTION to AnalyticsActionValue.COMPACT,
                     ),
             )
         } else {
             preferences.edit().putBoolean(KEY_SEEN_INTRO, true).apply()
         }
 
-        delay(if (seenIntro) WARM_DURATION_MS else COLD_DURATION_MS)
+        val rawDuration = if (seenIntro) WARM_DURATION_MS else COLD_DURATION_MS
+        delay(motionSettings.durationMillis(rawDuration.toInt(), minMillis = 80).toLong())
         visible = false
     }
+
+    val enterTransition: EnterTransition =
+        if (motionSettings.reduceMotionEnabled) {
+            fadeIn(animationSpec = tween(durationMillis = motionSettings.durationMillis(defaultMillis = 180)))
+        } else {
+            fadeIn(animationSpec = tween(durationMillis = 260)) +
+                scaleIn(
+                    initialScale = 0.985f,
+                    animationSpec = tween(durationMillis = 260),
+                )
+        }
+
+    val exitTransition: ExitTransition =
+        if (motionSettings.reduceMotionEnabled) {
+            fadeOut(animationSpec = tween(durationMillis = motionSettings.durationMillis(defaultMillis = 180)))
+        } else {
+            fadeOut(animationSpec = tween(durationMillis = 220)) +
+                scaleOut(
+                    targetScale = 1.01f,
+                    animationSpec = tween(durationMillis = 220),
+                )
+        }
 
     Box(modifier = Modifier.fillMaxSize()) {
         content()
         AnimatedVisibility(
             visible = visible,
-            enter = fadeIn() + scaleIn(initialScale = 0.985f),
-            exit = fadeOut() + scaleOut(targetScale = 1.01f),
+            enter = enterTransition,
+            exit = exitTransition,
         ) {
             Box(
                 modifier =

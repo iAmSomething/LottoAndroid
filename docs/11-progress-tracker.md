@@ -236,6 +236,10 @@
   - 워치→폰 핸드오프 최소 경로 구현: QR/결과/설정 딥링크를 워치에서 폰으로 실행(`androidx.wear:wear-remote-interactions:1.1.0`)
   - Wear 앱 라벨 정렬: `매주로또 워치`로 통일(`wear/src/main/res/values/strings.xml`)
   - 품질 게이트 재검증: `./gradlew :wear:assembleDebug` 및 `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
+  - Reduce Motion 실제 설정/동작 반영: `MotionPreferenceStore` + DataStore 영속화 + Settings 토글 + 앱 전역 반영(`LocalMotionSettings`)
+  - 모션 2차 코드 적용: `SplashGate` 축소 모드, `LottoBottomBar`/`BallChip` 애니메이션 피드백 적용
+  - 이벤트 action 값 상수화: `AnalyticsActionValue` 도입 후 Home/Generator/Manage/Result/Splash 리터럴 제거
+  - 통합 품질 게이트 재검증: `./gradlew :app:ktlintFormat :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Wear OS 실기기(소형/대형) 기준 UI/성능 검증
@@ -246,7 +250,7 @@
 - 다음 액션
   - 에뮬레이터 기준 `./scripts/release-final-check.sh` 정기 실행으로 회귀 감시 유지
   - 실기기 확보 시 `./scripts/release-final-check.sh --require-physical-device` 1회 통과 이력 확보
-  - W11 착수 항목(`M` 모션 코드 구현, `L` 인사이트 실험 이벤트 계측) 실행
+  - W11 착수 항목 중 잔여(`L` 인사이트 실험 이벤트 계측) 실행
   - W11 착수 항목에 Wear 실기기 증적(`P-004`) 확보를 최우선으로 병행
   - Figma 툴 호출 가능 상태에서 node `6:2` 기준 화면 밀도/간격 최종 동기화
 

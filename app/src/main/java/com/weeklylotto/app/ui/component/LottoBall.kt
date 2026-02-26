@@ -1,5 +1,8 @@
 package com.weeklylotto.app.ui.component
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -7,14 +10,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.weeklylotto.app.ui.theme.LocalMotionSettings
 import com.weeklylotto.app.ui.theme.LottoTypeTokens
 
 enum class BallState {
@@ -34,6 +40,8 @@ fun BallChip(
     size: androidx.compose.ui.unit.Dp = 24.dp,
     modifier: Modifier = Modifier,
 ) {
+    val motionSettings = LocalMotionSettings.current
+    val animationDuration = motionSettings.durationMillis(defaultMillis = 160)
     val value = number ?: 0
     val baseColor =
         when (value) {
@@ -71,6 +79,37 @@ fun BallChip(
             else -> Color.White
         }
 
+    val animatedBackground by
+        animateColorAsState(
+            targetValue = background,
+            animationSpec = tween(durationMillis = animationDuration),
+            label = "ballBackground",
+        )
+    val animatedBorderColor by
+        animateColorAsState(
+            targetValue = borderColor,
+            animationSpec = tween(durationMillis = animationDuration),
+            label = "ballBorder",
+        )
+    val animatedTextColor by
+        animateColorAsState(
+            targetValue = textColor,
+            animationSpec = tween(durationMillis = animationDuration),
+            label = "ballText",
+        )
+    val scaleTarget =
+        when (state) {
+            BallState.Hit -> 1.06f
+            BallState.Locked -> 1.03f
+            else -> 1f
+        }
+    val animatedScale by
+        animateFloatAsState(
+            targetValue = scaleTarget,
+            animationSpec = tween(durationMillis = animationDuration),
+            label = "ballScale",
+        )
+
     Box(
         modifier =
             modifier
@@ -78,13 +117,23 @@ fun BallChip(
                     contentDescription = buildBallChipAccessibilityLabel(number, state)
                 }
                 .size(size)
-                .background(background, CircleShape)
-                .border(width = if (state == BallState.Bonus) 2.dp else 1.dp, color = borderColor, shape = CircleShape),
+                .graphicsLayer {
+                    if (!motionSettings.reduceMotionEnabled) {
+                        scaleX = animatedScale
+                        scaleY = animatedScale
+                    }
+                }
+                .background(animatedBackground, CircleShape)
+                .border(
+                    width = if (state == BallState.Bonus) 2.dp else 1.dp,
+                    color = animatedBorderColor,
+                    shape = CircleShape,
+                ),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = number?.toString()?.padStart(2, '0') ?: "-",
-            color = textColor,
+            color = animatedTextColor,
             style = LottoTypeTokens.NumericBall,
             fontWeight = FontWeight.Bold,
         )

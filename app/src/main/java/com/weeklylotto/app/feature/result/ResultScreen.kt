@@ -39,6 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.domain.model.DrawRank
 import com.weeklylotto.app.domain.model.PrizeAmountPolicy
+import com.weeklylotto.app.domain.service.AnalyticsActionValue
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.BadgeTone
@@ -135,7 +136,7 @@ fun ResultScreen() {
                                     mapOf(
                                         AnalyticsParamKey.SCREEN to "result",
                                         AnalyticsParamKey.COMPONENT to "round_sheet",
-                                        AnalyticsParamKey.ACTION to "apply",
+                                        AnalyticsParamKey.ACTION to AnalyticsActionValue.APPLY,
                                         "selected_round" to (pendingRound?.toString() ?: ""),
                                     ),
                             )
@@ -165,7 +166,7 @@ fun ResultScreen() {
                             mapOf(
                                 AnalyticsParamKey.SCREEN to "result",
                                 AnalyticsParamKey.COMPONENT to "open_round_sheet_top",
-                                AnalyticsParamKey.ACTION to "click",
+                                AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                             ),
                     )
                     openRoundSheet()
@@ -176,7 +177,7 @@ fun ResultScreen() {
                             mapOf(
                                 AnalyticsParamKey.SCREEN to "result",
                                 AnalyticsParamKey.COMPONENT to "refresh_top",
-                                AnalyticsParamKey.ACTION to "click",
+                                AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                             ),
                     )
                     viewModel.refresh()
@@ -243,7 +244,7 @@ fun ResultScreen() {
                                     mapOf(
                                         AnalyticsParamKey.SCREEN to "result",
                                         AnalyticsParamKey.COMPONENT to "refresh_error",
-                                        AnalyticsParamKey.ACTION to "click",
+                                        AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                     ),
                             )
                             viewModel.refresh()
@@ -260,7 +261,7 @@ fun ResultScreen() {
                                         mapOf(
                                             AnalyticsParamKey.SCREEN to "result",
                                             AnalyticsParamKey.COMPONENT to "load_latest_from_error",
-                                            AnalyticsParamKey.ACTION to "click",
+                                            AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                         ),
                                 )
                                 viewModel.loadLatestFromError()
@@ -353,7 +354,7 @@ fun ResultScreen() {
                                         mapOf(
                                             AnalyticsParamKey.SCREEN to "result",
                                             AnalyticsParamKey.COMPONENT to "open_round_sheet_list",
-                                            AnalyticsParamKey.ACTION to "click",
+                                            AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                         ),
                                 )
                                 openRoundSheet()

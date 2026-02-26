@@ -221,3 +221,37 @@
 1. Wear 실기기 증적 수집(P-004) 또는 실기기 확보 전까지 에뮬레이터 스크린샷/로그 축적
 2. 모션 2차 코드 적용(`G03`, `INT-01`~`INT-05`)
 3. Reduce Motion 실제 설정/동작 반영(`G06`)
+
+## 2026-02-26 Cycle-07
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 범위
+  - Reduce Motion 설정 저장소/전역 컨텍스트 추가(`MotionPreferenceStore`, `DataStoreMotionPreferenceStore`, `LocalMotionSettings`)
+  - 설정 화면에 `모션 축소` 토글 추가 및 즉시 저장 연동
+  - 스플래시/하단탭/번호볼에 모션 축소 규칙 및 애니메이션 2차 반영
+  - `AnalyticsActionValue` 도입으로 `action` 파라미터 문자열 상수화
+- 품질 스냅샷
+  - `./gradlew :app:ktlintFormat :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
+
+### 2) 진행도 진단
+- 개선점
+  - High 항목 `G06`(Reduce Motion 실제 동작)이 코드 기준으로 완료
+  - `G03` 상호작용 모션 2차가 컴포넌트 단위(`LottoBottomBar`, `BallChip`)로 반영됨
+  - 이벤트 파라미터 `action`의 값 드리프트 리스크를 상수화로 축소
+- 남은 갭
+  - `G03`의 INT-01/03/04 전체 범위는 추가 적용 필요
+  - `P-004` 실기기(소형/대형) 증적은 여전히 미수집
+
+### 3) 증적
+- 코드:
+  - `app/src/main/java/com/weeklylotto/app/domain/service/MotionPreferenceStore.kt`
+  - `app/src/main/java/com/weeklylotto/app/data/local/DataStoreMotionPreferenceStore.kt`
+  - `app/src/main/java/com/weeklylotto/app/ui/theme/Motion.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/splash/SplashGate.kt`
+  - `app/src/main/java/com/weeklylotto/app/ui/component/LottoBottomBar.kt`
+  - `app/src/main/java/com/weeklylotto/app/ui/component/LottoBall.kt`
+
+### 4) 다음 루틴 시작점
+1. 모션 2차 잔여 범위(INT-01/03/04) 화면 반영
+2. 실험 연계(`EXP-05/06`) 샘플 로그 검증 및 대시보드 점검
+3. Wear 실기기 증적(P-004) 수집 계획 유지

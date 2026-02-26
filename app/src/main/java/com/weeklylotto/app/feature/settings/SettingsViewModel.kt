@@ -3,6 +3,7 @@ package com.weeklylotto.app.feature.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weeklylotto.app.domain.model.ReminderConfig
+import com.weeklylotto.app.domain.service.MotionPreferenceStore
 import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,12 +16,14 @@ import java.time.LocalTime
 
 data class SettingsUiState(
     val config: ReminderConfig = ReminderConfig(),
+    val reduceMotionEnabled: Boolean = false,
     val message: String? = null,
 )
 
 class SettingsViewModel(
     private val reminderConfigStore: ReminderConfigStore,
     private val reminderScheduler: ReminderScheduler,
+    private val motionPreferenceStore: MotionPreferenceStore,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
@@ -28,7 +31,13 @@ class SettingsViewModel(
     init {
         viewModelScope.launch {
             val savedConfig = reminderConfigStore.load()
-            _uiState.update { it.copy(config = savedConfig) }
+            val reduceMotionEnabled = motionPreferenceStore.loadReduceMotionEnabled()
+            _uiState.update {
+                it.copy(
+                    config = savedConfig,
+                    reduceMotionEnabled = reduceMotionEnabled,
+                )
+            }
         }
     }
 
@@ -51,6 +60,13 @@ class SettingsViewModel(
     fun setEnabled(enabled: Boolean) {
         _uiState.update {
             it.copy(config = it.config.copy(enabled = enabled))
+        }
+    }
+
+    fun setReduceMotionEnabled(enabled: Boolean) {
+        _uiState.update { it.copy(reduceMotionEnabled = enabled) }
+        viewModelScope.launch {
+            motionPreferenceStore.saveReduceMotionEnabled(enabled)
         }
     }
 

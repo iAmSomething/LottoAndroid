@@ -142,3 +142,30 @@
   - 자동 체크: `scripts/check-splash-motion-gate.sh`
   - CI 연동: `.github/workflows/android-ci.yml`, `.github/workflows/release-preflight.yml`
 - `motion_*`, `interaction_*` 모두 공통 파라미터 키(`screen`, `component`, `action`)를 유지하고, 값은 enum으로 고정한다.
+
+## 13. Cycle-07 코드 반영 (2026-02-26)
+
+### 13.1 Reduce Motion 실제 적용
+- 설정 경로:
+  - `SettingsScreen`에 `모션 축소` 토글 추가
+  - `SettingsViewModel`에서 즉시 저장
+  - `DataStoreMotionPreferenceStore`로 영속화
+- 앱 전역 적용:
+  - `MainActivity`에서 reduce motion 값을 observe
+  - `LocalMotionSettings`를 통해 화면/컴포넌트에 전달
+
+### 13.2 모션 2차 적용 컴포넌트
+- `SplashGate`
+  - 모션 축소 시 duration 50% 적용
+  - scale transform 제거(페이드 중심)
+- `LottoBottomBar`
+  - 탭 활성/비활성 tint + alpha + scale 피드백 적용
+  - 모션 축소 시 scale 생략
+- `BallChip`
+  - 상태 전환 색상 애니메이션(배경/테두리/텍스트)
+  - `HIT/LOCK` 상태 scale 피드백 적용
+  - 모션 축소 시 scale 생략
+
+### 13.3 이벤트 action 값 enum 고정
+- `AnalyticsActionValue`를 도입해 `click/apply/lock/unlock/cold/warm/compact`를 상수화
+- Home/Generator/Manage/Result/Splash에서 리터럴 제거

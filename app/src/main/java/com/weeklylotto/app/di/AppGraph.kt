@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.weeklylotto.app.BuildConfig
 import com.weeklylotto.app.data.analytics.LogcatAnalyticsLogger
+import com.weeklylotto.app.data.local.DataStoreMotionPreferenceStore
 import com.weeklylotto.app.data.local.DataStoreReminderConfigStore
 import com.weeklylotto.app.data.local.DataStoreResultViewTracker
 import com.weeklylotto.app.data.local.WeeklyLottoDatabase
@@ -19,6 +20,7 @@ import com.weeklylotto.app.data.repository.WorkManagerReminderScheduler
 import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.AnalyticsLogger
+import com.weeklylotto.app.domain.service.MotionPreferenceStore
 import com.weeklylotto.app.domain.service.NumberGenerator
 import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
@@ -113,6 +115,13 @@ object AppGraph {
             return checkNotNull(analyticsLoggerInternal)
         }
 
+    private var motionPreferenceStoreInternal: MotionPreferenceStore? = null
+    val motionPreferenceStore: MotionPreferenceStore
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(motionPreferenceStoreInternal)
+        }
+
     fun init(context: Context) {
         if (initialized) {
             return
@@ -152,6 +161,7 @@ object AppGraph {
             val reminderScheduler = WorkManagerReminderScheduler(appContext)
             val reminderConfigStore = DataStoreReminderConfigStore(appContext)
             val resultViewTracker = DataStoreResultViewTracker(appContext)
+            val motionPreferenceStore = DataStoreMotionPreferenceStore(appContext)
             val widgetDataProvider = DefaultWidgetDataProvider(ticketRepository, drawRepository, resultEvaluator)
             val qrParser = QrTicketParser()
             val analyticsLogger = LogcatAnalyticsLogger()
@@ -164,6 +174,7 @@ object AppGraph {
             reminderSchedulerInternal = reminderScheduler
             reminderConfigStoreInternal = reminderConfigStore
             resultViewTrackerInternal = resultViewTracker
+            motionPreferenceStoreInternal = motionPreferenceStore
             widgetDataProviderInternal = widgetDataProvider
             qrTicketParserInternal = qrParser
             analyticsLoggerInternal = analyticsLogger

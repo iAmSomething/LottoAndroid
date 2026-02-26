@@ -269,3 +269,12 @@
 - [x] T-002 워치→폰 핸드오프 최소 경로 구현(QR/Result/Settings 딥링크 오픈)
 - [x] T-003 Wear 원형 UI 번호볼/요약 카드/토글 설정 UI 반영(정보 밀도 기준 적용)
 - [x] T-004 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug`)
+
+## U. 모션 2차 + Reduce Motion 코드 반영(2026-02-26 Cycle-07)
+- [x] U-001 `MotionPreferenceStore` 도입 및 DataStore 영속화(`DataStoreMotionPreferenceStore`)
+- [x] U-002 설정 화면에 `모션 축소` 토글 추가 및 즉시 저장 반영(`SettingsViewModel/SettingsScreen`)
+- [x] U-003 앱 전역 모션 컨텍스트 도입(`LocalMotionSettings`) 및 `MainActivity` 연동
+- [x] U-004 `SplashGate` Reduce Motion 규칙 반영(시간 50% 축소, scale transform 최소화)
+- [x] U-005 상호작용 모션 2차 적용(`LottoBottomBar`, `BallChip` animateColor/scale)
+- [x] U-006 `interaction_*`, `motion_*` action 값 상수화(`AnalyticsActionValue`) 및 화면 이벤트 반영
+- [x] U-007 품질 스냅샷 재검증(`./gradlew :app:ktlintFormat :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug`)

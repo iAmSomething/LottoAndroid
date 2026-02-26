@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.domain.model.LottoNumber
+import com.weeklylotto.app.domain.service.AnalyticsActionValue
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.BallChip
@@ -163,7 +164,7 @@ fun NumberGeneratorScreen() {
                                                     mapOf(
                                                         AnalyticsParamKey.SCREEN to "generator",
                                                         AnalyticsParamKey.COMPONENT to "number_ball",
-                                                        AnalyticsParamKey.ACTION to if (number in game.lockedNumbers) "unlock" else "lock",
+                                                        AnalyticsParamKey.ACTION to if (number in game.lockedNumbers) AnalyticsActionValue.UNLOCK else AnalyticsActionValue.LOCK,
                                                         "slot" to game.slot.name,
                                                         "number" to number.value.toString(),
                                                     ),
@@ -307,7 +308,7 @@ fun NumberGeneratorScreen() {
                                     mapOf(
                                         AnalyticsParamKey.SCREEN to "generator",
                                         AnalyticsParamKey.COMPONENT to "manual_apply",
-                                        AnalyticsParamKey.ACTION to "click",
+                                        AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                     ),
                             )
                             val raw = selectedManualNumber?.toString() ?: manualInput
@@ -352,7 +353,7 @@ fun NumberGeneratorScreen() {
                                 mapOf(
                                     AnalyticsParamKey.SCREEN to "generator",
                                     AnalyticsParamKey.COMPONENT to "regenerate_except_locked",
-                                    AnalyticsParamKey.ACTION to "click",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                 ),
                         )
                         viewModel.regenerateExceptLocked()
@@ -369,7 +370,7 @@ fun NumberGeneratorScreen() {
                                 mapOf(
                                     AnalyticsParamKey.SCREEN to "generator",
                                     AnalyticsParamKey.COMPONENT to "save_weekly_ticket",
-                                    AnalyticsParamKey.ACTION to "click",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                 ),
                         )
                         viewModel.saveCurrentAsWeeklyTicket()
