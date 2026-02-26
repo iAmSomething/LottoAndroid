@@ -133,6 +133,9 @@
   - 복사 도메인 로직 구현: 과거 회차 티켓을 이번주 회차로 복제(`source=MANUAL`, `status=PENDING`) 저장
   - 동일 회차 복사 차단 및 사용자 피드백 메시지(토스트) 상태 연동
   - 회귀 테스트 보강: `ManageViewModelTest`에 복사 성공/동일회차 차단 시나리오 추가
+  - 복사 중복 저장 방지: 이번주에 동일 번호 세트가 이미 있으면 저장 차단 및 안내 문구 노출
+  - 회귀 테스트 추가: `ManageViewModelTest`에 동일 번호 중복 차단 케이스 추가
+  - 추가 컴파일 게이트 재확인: `assembleDebug`, `compileDebugAndroidTestKotlin` 통과
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)

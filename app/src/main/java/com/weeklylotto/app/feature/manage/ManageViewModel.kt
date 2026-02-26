@@ -205,8 +205,19 @@ class ManageViewModel(
 
         val today = LocalDate.now()
         val currentRoundNumber = RoundEstimator.currentSalesRound(today)
-        if (source.round.number == currentRoundNumber) {
-            _uiState.update { it.copy(feedbackMessage = "이미 이번 주 회차 번호입니다.") }
+        val sourceSignature = source.toGameSignature()
+        val duplicateExists =
+            uiState.value.tickets.any { bundle ->
+                bundle.round.number == currentRoundNumber && bundle.toGameSignature() == sourceSignature
+            }
+        val validationError =
+            when {
+                source.round.number == currentRoundNumber -> "이미 이번 주 회차 번호입니다."
+                duplicateExists -> "이미 이번 주에 동일 번호가 있습니다."
+                else -> null
+            }
+        if (validationError != null) {
+            _uiState.update { it.copy(feedbackMessage = validationError) }
             return
         }
 
@@ -253,3 +264,8 @@ class ManageViewModel(
         }
     }
 }
+
+private fun TicketBundle.toGameSignature(): List<List<Int>> =
+    games
+        .sortedBy { it.slot.name }
+        .map { game -> game.numbers.map { it.value }.sorted() }

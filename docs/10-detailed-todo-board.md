@@ -23,6 +23,7 @@
 - [x] B-008 판매 회차 기준 통일(다음 추첨 회차 기준으로 홈/번호관리/저장 동기화)
 - [x] B-009 번호관리 편집모드 이동 기능 구현(선택 번호 `SAVED` 상태 전환 + 보관함 탭 반영)
 - [x] B-010 티켓 상세 `이번주로 복사` 기능 구현(과거 회차 → 이번주 회차 복제 저장)
+- [x] B-011 티켓 상세 복사 중복 방지(이번주 동일 번호 존재 시 저장 차단)
 
 ## C. QR 등록
 - [x] C-001 QR URL 파서(2포맷) 구현
@@ -85,6 +86,7 @@
 - [x] H-014 계측 회귀 안정화: `WeeklySaveFlowInstrumentedTest`의 Espresso back 의존 제거(Compose dispatcher back으로 전환)
 - [x] H-015 번호관리 이동 플로우 회귀 테스트 추가(`ManageViewModelTest`, `RoomTicketRepositoryIntegrationTest`)
 - [x] H-016 티켓 상세 복사 플로우 회귀 테스트 추가(`ManageViewModelTest` 복사 성공/차단 케이스)
+- [x] H-017 티켓 상세 복사 중복 차단 회귀 테스트 추가(`ManageViewModelTest` 동일 번호 중복 방지)
 
 ## I. 릴리즈 준비
 - [x] I-001 스토어 메타데이터 작성

@@ -137,6 +137,38 @@ class ManageViewModelTest {
             assertThat(viewModel.uiState.value.tickets).hasSize(beforeCount)
             assertThat(viewModel.uiState.value.feedbackMessage).isEqualTo("이미 이번 주 회차 번호입니다.")
         }
+
+    @Test
+    fun 동일번호가_이번주에_이미있으면_복사를_차단한다() =
+        runTest {
+            val today = LocalDate.now()
+            val currentRound =
+                Round(
+                    number = RoundEstimator.currentSalesRound(today),
+                    drawDate = RoundEstimator.nextDrawDate(today),
+                )
+            val oldRound =
+                Round(
+                    number = (currentRound.number - 3).coerceAtLeast(1),
+                    drawDate = today.minusDays(21),
+                )
+            val sourceFromOldRound = ticket(id = 31L, round = oldRound, status = TicketStatus.SAVED)
+            val sameNumbersInCurrentRound = ticket(id = 32L, round = currentRound, status = TicketStatus.PENDING)
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets = listOf(sourceFromOldRound, sameNumbersInCurrentRound),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+            val beforeCount = viewModel.uiState.value.tickets.size
+
+            viewModel.copyTicketToCurrentRound(sourceFromOldRound.id)
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.tickets).hasSize(beforeCount)
+            assertThat(viewModel.uiState.value.feedbackMessage).isEqualTo("이미 이번 주에 동일 번호가 있습니다.")
+        }
 }
 
 private fun ticket(
