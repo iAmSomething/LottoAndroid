@@ -1,5 +1,6 @@
 package com.weeklylotto.app.feature.manage
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -64,7 +65,7 @@ import com.weeklylotto.app.ui.theme.LottoDimens
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 @Suppress("CyclomaticComplexMethod")
 fun ManageScreen(
@@ -569,6 +570,7 @@ fun ManageScreen(
                     if (uiState.tab == ManageTab.VAULT) {
                         item {
                             VaultSummaryCard(
+                                modifier = Modifier.animateItem(),
                                 totalCount = filteredTickets.size,
                                 savedCount = filteredTickets.count { it.status == TicketStatus.SAVED },
                                 winningCount = filteredTickets.count { it.status == TicketStatus.WIN },
@@ -578,6 +580,7 @@ fun ManageScreen(
                     if (uiState.tab == ManageTab.SCAN && scanSummary != null) {
                         item {
                             ScanSummaryCard(
+                                modifier = Modifier.animateItem(),
                                 totalCount = scanSummary.totalCount,
                                 currentRoundCount = scanSummary.currentRoundCount,
                                 latestRound = scanSummary.latestRound,
@@ -598,7 +601,7 @@ fun ManageScreen(
                                 "${bundle.games.size}게임 · ${bundle.createdAt.toDisplayDate()}"
                             }
 
-                        Column {
+                        Column(modifier = Modifier.animateItem()) {
                             if (uiState.editMode) {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
@@ -639,11 +642,13 @@ fun ManageScreen(
 
 @Composable
 private fun VaultSummaryCard(
+    modifier: Modifier = Modifier,
     totalCount: Int,
     savedCount: Int,
     winningCount: Int,
 ) {
     Card(
+        modifier = modifier,
         shape = RoundedCornerShape(LottoDimens.CardRadius),
         border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
         colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
@@ -666,11 +671,13 @@ private fun VaultSummaryCard(
 
 @Composable
 private fun ScanSummaryCard(
+    modifier: Modifier = Modifier,
     totalCount: Int,
     currentRoundCount: Int,
     latestRound: Int?,
 ) {
     Card(
+        modifier = modifier,
         shape = RoundedCornerShape(LottoDimens.CardRadius),
         border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
         colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),

@@ -278,3 +278,11 @@
 - [x] U-005 상호작용 모션 2차 적용(`LottoBottomBar`, `BallChip` animateColor/scale)
 - [x] U-006 `interaction_*`, `motion_*` action 값 상수화(`AnalyticsActionValue`) 및 화면 이벤트 반영
 - [x] U-007 품질 스냅샷 재검증(`./gradlew :app:ktlintFormat :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug`)
+
+## V. 모션 2차 잔여 범위 적용(2026-02-26 Cycle-08)
+- [x] V-001 CTA press/release 공통 모디파이어 도입(`motionClickable`)
+- [x] V-002 Home 핵심 CTA 카드/텍스트 액션에 press feedback 반영
+- [x] V-003 Result 회차 시트 선택행/회차 변경 액션에 press feedback 반영
+- [x] V-004 Manage/Home 리스트 카드 전이 애니메이션 반영(`Modifier.animateItem`)
+- [x] V-005 `TicketCard` 클릭 경로를 모션 공통 모디파이어로 통일
+- [x] V-006 품질 스냅샷 재검증(`./gradlew :app:ktlintFormat :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` + `:wear:assembleDebug`)

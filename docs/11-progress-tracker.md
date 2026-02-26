@@ -240,6 +240,10 @@
   - 모션 2차 코드 적용: `SplashGate` 축소 모드, `LottoBottomBar`/`BallChip` 애니메이션 피드백 적용
   - 이벤트 action 값 상수화: `AnalyticsActionValue` 도입 후 Home/Generator/Manage/Result/Splash 리터럴 제거
   - 통합 품질 게이트 재검증: `./gradlew :app:ktlintFormat :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
+  - 모션 잔여 범위 반영: `motionClickable` 공통 모디파이어 도입, Home/Result CTA 및 시트 선택행 press feedback 적용
+  - 리스트 전이 보강: Home/Manage 티켓 카드/요약 카드에 `Modifier.animateItem` 적용
+  - `TicketCard` 클릭 경로를 모션 공통 모디파이어로 통일해 press 피드백 일관성 확보
+  - 품질 게이트 재검증: `./gradlew :app:ktlintFormat :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` + `:wear:assembleDebug` 성공
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Wear OS 실기기(소형/대형) 기준 UI/성능 검증

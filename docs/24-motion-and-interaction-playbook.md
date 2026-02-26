@@ -169,3 +169,22 @@
 ### 13.3 이벤트 action 값 enum 고정
 - `AnalyticsActionValue`를 도입해 `click/apply/lock/unlock/cold/warm/compact`를 상수화
 - Home/Generator/Manage/Result/Splash에서 리터럴 제거
+
+## 14. Cycle-08 코드 반영 (2026-02-26)
+
+### 14.1 INT-01 버튼/CTA press feedback 확대
+- 공통 모디파이어 `motionClickable` 도입
+  - pressed 시 scale `0.98`
+  - Reduce Motion 활성 시 transform 생략
+- 적용 경로:
+  - Home CTA 카드(QR/번호생성/미확인결과/전체보기)
+  - Result 회차 변경 텍스트 액션
+  - `TicketCard` 클릭 경로 공통화
+
+### 14.2 INT-04 시트 선택행 press feedback 보강
+- Result 회차 변경 시트의 라운드 선택 행에 `motionClickable` 적용
+- 선택 + press 피드백을 함께 제공해 터치 확인성을 강화
+
+### 14.3 INT-03 리스트/카드 전이 보강
+- Home/Manage의 티켓 카드 및 요약 카드에 `Modifier.animateItem` 적용
+- 목록 변경/정렬 시 카드 배치 전이를 자연스럽게 처리

@@ -1,7 +1,7 @@
 package com.weeklylotto.app.feature.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +34,7 @@ import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.StatusBadge
 import com.weeklylotto.app.ui.component.TicketCard
+import com.weeklylotto.app.ui.component.motionClickable
 import com.weeklylotto.app.ui.format.toBadgeTone
 import com.weeklylotto.app.ui.format.toSourceChipLabel
 import com.weeklylotto.app.ui.format.toStatusLabel
@@ -45,6 +46,7 @@ import com.weeklylotto.app.ui.theme.LottoTypeTokens
 import java.time.format.TextStyle
 import java.util.Locale
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     onClickGenerator: () -> Unit,
@@ -142,7 +144,7 @@ fun HomeScreen(
                         modifier =
                             Modifier
                                 .weight(1f)
-                                .clickable {
+                                .motionClickable {
                                     analyticsLogger.log(
                                         event = AnalyticsEvent.INTERACTION_CTA_PRESS,
                                         params =
@@ -179,7 +181,7 @@ fun HomeScreen(
                         modifier =
                             Modifier
                                 .weight(1f)
-                                .clickable {
+                                .motionClickable {
                                     analyticsLogger.log(
                                         event = AnalyticsEvent.INTERACTION_CTA_PRESS,
                                         params =
@@ -221,7 +223,7 @@ fun HomeScreen(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .clickable {
+                                .motionClickable {
                                     analyticsLogger.log(
                                         event = AnalyticsEvent.INTERACTION_CTA_PRESS,
                                         params =
@@ -322,7 +324,7 @@ fun HomeScreen(
                         color = LottoColors.Primary,
                         style = MaterialTheme.typography.bodySmall,
                         modifier =
-                            Modifier.clickable {
+                            Modifier.motionClickable {
                                 analyticsLogger.log(
                                     event = AnalyticsEvent.INTERACTION_CTA_PRESS,
                                     params =
@@ -361,29 +363,31 @@ fun HomeScreen(
             } else {
                 items(uiState.bundles.take(2), key = { it.id }) { bundle ->
                     val firstGame = bundle.games.firstOrNull()
-                    TicketCard(
-                        title = "${firstGame?.slot?.name ?: "A"} 게임 (${bundle.source.toSourceChipLabel()})",
-                        numbers = firstGame?.numbers?.map { it.value }.orEmpty(),
-                        badge = {
-                            StatusBadge(
-                                label = bundle.status.toStatusLabel(),
-                                tone = bundle.status.toBadgeTone(),
-                            )
-                        },
-                        meta = "${bundle.round.number}회 · ${bundle.games.size}게임",
-                        onClick = {
-                            analyticsLogger.log(
-                                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
-                                params =
-                                    mapOf(
-                                        AnalyticsParamKey.SCREEN to "home",
-                                        AnalyticsParamKey.COMPONENT to "ticket_card",
-                                        AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
-                                    ),
-                            )
-                            onClickManage()
-                        },
-                    )
+                    Column(modifier = Modifier.animateItem()) {
+                        TicketCard(
+                            title = "${firstGame?.slot?.name ?: "A"} 게임 (${bundle.source.toSourceChipLabel()})",
+                            numbers = firstGame?.numbers?.map { it.value }.orEmpty(),
+                            badge = {
+                                StatusBadge(
+                                    label = bundle.status.toStatusLabel(),
+                                    tone = bundle.status.toBadgeTone(),
+                                )
+                            },
+                            meta = "${bundle.round.number}회 · ${bundle.games.size}게임",
+                            onClick = {
+                                analyticsLogger.log(
+                                    event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                    params =
+                                        mapOf(
+                                            AnalyticsParamKey.SCREEN to "home",
+                                            AnalyticsParamKey.COMPONENT to "ticket_card",
+                                            AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
+                                        ),
+                                )
+                                onClickManage()
+                            },
+                        )
+                    }
                 }
             }
         }

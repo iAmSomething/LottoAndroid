@@ -1,7 +1,6 @@
 package com.weeklylotto.app.ui.component
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.weeklylotto.app.ui.theme.LottoColors
@@ -36,9 +33,7 @@ fun TicketCard(
                 .fillMaxWidth()
                 .let { base ->
                     if (onClick != null) {
-                        base
-                            .semantics { role = Role.Button }
-                            .clickable(onClick = onClick)
+                        base.motionClickable(onClick = onClick, role = Role.Button)
                     } else {
                         base
                     }

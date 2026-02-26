@@ -1,7 +1,6 @@
 package com.weeklylotto.app.feature.result
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -47,6 +46,7 @@ import com.weeklylotto.app.ui.component.BallChip
 import com.weeklylotto.app.ui.component.BallState
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.StatusBadge
+import com.weeklylotto.app.ui.component.motionClickable
 import com.weeklylotto.app.ui.format.toWonLabel
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
@@ -105,7 +105,7 @@ fun ResultScreen() {
                                     color = if (selected) LottoColors.Border.copy(alpha = 0.35f) else Color.Transparent,
                                     shape = RoundedCornerShape(12.dp),
                                 )
-                                .clickable {
+                                .motionClickable {
                                     pendingRound = round
                                 }
                                 .padding(horizontal = 6.dp, vertical = 8.dp),
@@ -347,7 +347,7 @@ fun ResultScreen() {
                         color = LottoColors.Primary,
                         style = MaterialTheme.typography.bodySmall,
                         modifier =
-                            Modifier.clickable {
+                            Modifier.motionClickable {
                                 analyticsLogger.log(
                                     event = AnalyticsEvent.INTERACTION_CTA_PRESS,
                                     params =

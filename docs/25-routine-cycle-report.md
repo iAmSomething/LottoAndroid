@@ -255,3 +255,36 @@
 1. 모션 2차 잔여 범위(INT-01/03/04) 화면 반영
 2. 실험 연계(`EXP-05/06`) 샘플 로그 검증 및 대시보드 점검
 3. Wear 실기기 증적(P-004) 수집 계획 유지
+
+## 2026-02-26 Cycle-08
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 범위
+  - `motionClickable` 공통 모디파이어 추가(press/release scale 피드백)
+  - Home 핵심 CTA 카드/텍스트 및 Result 회차 시트 선택행에 피드백 적용
+  - Home/Manage 목록 카드 전이에 `Modifier.animateItem` 적용
+  - `TicketCard` 클릭 경로를 모션 공통 모디파이어로 통일
+- 품질 스냅샷
+  - `./gradlew :app:ktlintFormat :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` 성공
+  - `./gradlew :wear:assembleDebug` 성공
+
+### 2) 진행도 진단
+- 개선점
+  - `G03`의 잔여 범위였던 INT-01/03/04를 핵심 화면 기준으로 코드 반영
+  - Reduce Motion 설정과 상호작용 피드백이 동일한 공통 모디파이어 경로로 정렬
+- 남은 갭
+  - `P-004` 실기기(소형/대형) 증적은 여전히 미수집
+  - 모션 2차의 전 화면 적용은 후속 루틴에서 확대 가능
+
+### 3) 증적
+- 코드:
+  - `app/src/main/java/com/weeklylotto/app/ui/component/MotionClickable.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/home/HomeScreen.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/result/ResultScreen.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/manage/ManageScreen.kt`
+  - `app/src/main/java/com/weeklylotto/app/ui/component/TicketCard.kt`
+
+### 4) 다음 루틴 시작점
+1. `P-004` 실기기 증적 확보 경로 유지
+2. 실험 대시보드에서 `interaction_*` 이벤트 샘플 검증
+3. 모션 2차 적용 범위를 QR/ManualAdd/Settings 화면으로 확장
