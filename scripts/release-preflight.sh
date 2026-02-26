@@ -9,6 +9,8 @@ RUN_BUILD_CI=0
 SKIP_ADB=0
 REQUIRE_SIGNING=0
 REQUIRE_PHYSICAL_DEVICE=0
+TARGET_ANDROID_SERIAL="${ANDROID_SERIAL:-}"
+SKIP_BUILD_DUE_TO_ENV_FAIL=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -27,9 +29,18 @@ while [[ $# -gt 0 ]]; do
     --require-physical-device)
       REQUIRE_PHYSICAL_DEVICE=1
       ;;
+    --android-serial)
+      if [[ $# -lt 2 ]]; then
+        echo "Missing value for --android-serial"
+        echo "Usage: $0 [--with-build|--with-build-ci] [--skip-adb] [--require-signing] [--require-physical-device] [--android-serial <serial>]"
+        exit 2
+      fi
+      TARGET_ANDROID_SERIAL="$2"
+      shift
+      ;;
     *)
       echo "Unknown option: $1"
-      echo "Usage: $0 [--with-build|--with-build-ci] [--skip-adb] [--require-signing] [--require-physical-device]"
+      echo "Usage: $0 [--with-build|--with-build-ci] [--skip-adb] [--require-signing] [--require-physical-device] [--android-serial <serial>]"
       exit 2
       ;;
   esac
@@ -41,11 +52,6 @@ if [[ "$RUN_BUILD_LOCAL" -eq 1 && "$RUN_BUILD_CI" -eq 1 ]]; then
   exit 2
 fi
 
-PASS_COUNT=0
-WARN_COUNT=0
-FAIL_COUNT=0
-SKIP_BUILD_DUE_TO_ENV_FAIL=0
-
 if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 && "$SKIP_ADB" -eq 1 ]]; then
   echo "--require-physical-device cannot be used with --skip-adb."
   exit 2
@@ -55,6 +61,20 @@ if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 && "$RUN_BUILD_CI" -eq 1 ]]; then
   echo "--require-physical-device is only supported with --with-build."
   exit 2
 fi
+
+if [[ -n "$TARGET_ANDROID_SERIAL" && "$RUN_BUILD_CI" -eq 1 ]]; then
+  echo "--android-serial is only supported with --with-build."
+  exit 2
+fi
+
+if [[ -n "$TARGET_ANDROID_SERIAL" && "$SKIP_ADB" -eq 1 ]]; then
+  echo "--android-serial cannot be used with --skip-adb."
+  exit 2
+fi
+
+PASS_COUNT=0
+WARN_COUNT=0
+FAIL_COUNT=0
 
 pass() {
   PASS_COUNT=$((PASS_COUNT + 1))
@@ -113,11 +133,38 @@ elif command -v adb >/dev/null 2>&1; then
   DEVICE_COUNT="$(adb devices | awk 'NR>1 && $2=="device" {count++} END {print count+0}')"
   PHYSICAL_DEVICE_COUNT="$(adb devices | awk 'NR>1 && $2=="device" && $1 !~ /^emulator-/ {count++} END {print count+0}')"
   EMULATOR_DEVICE_COUNT="$(adb devices | awk 'NR>1 && $2=="device" && $1 ~ /^emulator-/ {count++} END {print count+0}')"
+  PHYSICAL_SERIAL_LIST="$(adb devices | awk 'NR>1 && $2=="device" && $1 !~ /^emulator-/ {print $1}')"
+
   if [[ "$DEVICE_COUNT" -ge 1 ]]; then
     pass "ADB 연결 디바이스 ${DEVICE_COUNT}대 확인(실기기 ${PHYSICAL_DEVICE_COUNT}, 에뮬레이터 ${EMULATOR_DEVICE_COUNT})"
+
+    if [[ -n "$TARGET_ANDROID_SERIAL" ]]; then
+      if adb devices | awk 'NR>1 && $2=="device" {print $1}' | grep -qx "$TARGET_ANDROID_SERIAL"; then
+        pass "지정된 테스트 대상 serial 확인(${TARGET_ANDROID_SERIAL})"
+      else
+        fail "지정된 serial이 연결 상태가 아님: ${TARGET_ANDROID_SERIAL}"
+        SKIP_BUILD_DUE_TO_ENV_FAIL=1
+      fi
+    fi
+
     if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 && "$PHYSICAL_DEVICE_COUNT" -lt 1 ]]; then
       fail "실기기 연결 필수 옵션 활성화됨(--require-physical-device), 현재 실기기 0대"
       SKIP_BUILD_DUE_TO_ENV_FAIL=1
+    fi
+
+    if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 && "$PHYSICAL_DEVICE_COUNT" -ge 1 ]]; then
+      if [[ -z "$TARGET_ANDROID_SERIAL" ]]; then
+        if [[ "$PHYSICAL_DEVICE_COUNT" -eq 1 ]]; then
+          TARGET_ANDROID_SERIAL="$PHYSICAL_SERIAL_LIST"
+          pass "실기기 테스트 대상 자동 선택(${TARGET_ANDROID_SERIAL})"
+        else
+          fail "실기기 ${PHYSICAL_DEVICE_COUNT}대 감지됨. --android-serial <serial>로 대상을 지정하세요."
+          SKIP_BUILD_DUE_TO_ENV_FAIL=1
+        fi
+      elif ! grep -qx "$TARGET_ANDROID_SERIAL" <<< "$PHYSICAL_SERIAL_LIST"; then
+        fail "지정된 serial(${TARGET_ANDROID_SERIAL})은 실기기가 아님(에뮬레이터 또는 미연결)"
+        SKIP_BUILD_DUE_TO_ENV_FAIL=1
+      fi
     fi
   else
     if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 ]]; then
@@ -228,7 +275,13 @@ section "품질 게이트"
 if [[ "$SKIP_BUILD_DUE_TO_ENV_FAIL" -eq 1 ]]; then
   warn "실기기 필수 조건 미충족으로 품질 게이트 실행 생략"
 elif [[ "$RUN_BUILD_LOCAL" -eq 1 ]]; then
-  if ./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:connectedDebugAndroidTest :app:assembleRelease; then
+  if [[ -n "$TARGET_ANDROID_SERIAL" ]]; then
+    if ANDROID_SERIAL="$TARGET_ANDROID_SERIAL" ./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:connectedDebugAndroidTest :app:assembleRelease; then
+      pass "품질 게이트 통과(ktlint/detekt/unit/connected/release, serial=${TARGET_ANDROID_SERIAL})"
+    else
+      fail "품질 게이트 실패(Gradle 로그 확인 필요, serial=${TARGET_ANDROID_SERIAL})"
+    fi
+  elif ./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:connectedDebugAndroidTest :app:assembleRelease; then
     pass "품질 게이트 통과(ktlint/detekt/unit/connected/release)"
   else
     fail "품질 게이트 실패(Gradle 로그 확인 필요)"

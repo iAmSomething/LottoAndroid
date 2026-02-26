@@ -96,6 +96,7 @@
 - [x] I-012 `release-preflight.sh --with-build` 로컬 품질게이트에 `detekt` 포함
 - [x] I-013 프리플라이트 실기기 엄격 모드(`--require-physical-device`) 추가
 - [x] I-014 실기기 엄격 모드 fail-fast(미충족 시 품질게이트 생략) 적용
+- [x] I-015 프리플라이트 테스트 대상 serial 지정 옵션(`--android-serial`) 추가
 
 ## J. 디자인 스펙 정렬(`/Volumes/무제/design_spec_android_lotto.md`)
 - [x] J-001 토큰(색상/간격/타이포) 1차 반영

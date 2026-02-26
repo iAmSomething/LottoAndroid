@@ -42,6 +42,13 @@
 - 실기기 조건 미충족 시 품질게이트를 실행하지 않고 fail-fast
 - `--skip-adb`, `--with-build-ci`와 동시 사용 불가
 
+### 3-1-b. 테스트 대상 serial 지정(선택)
+```bash
+./scripts/release-preflight.sh --with-build --android-serial <adb-serial>
+```
+- 다중 디바이스 연결 시 특정 단말만 대상으로 `connectedDebugAndroidTest` 실행
+- `--require-physical-device`와 함께 쓰면 “지정 serial이 실기기인지”까지 검증
+
 ## 3-1-1. CI 프리플라이트(ADB 없이)
 ```bash
 ./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing
