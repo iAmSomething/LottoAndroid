@@ -6,6 +6,7 @@
 - 현재 상태: Figma MCP 호출 한도 이슈로 노드 메타데이터/스크린샷 직접 수집은 보류
 - 최근 확인: 2026-02-26 재시도 시 동일 한도 응답(플랜 업그레이드 안내)
 - 대응: 저장소 `design/*.svg`를 기준 구현 완료 후, Figma 접근 가능 시 간격/타이포/밀도 차이를 최종 보정
+- 오프라인 대응: `docs/19-offline-design-qa-checklist.md` 기준으로 스크린샷 대조 QA 수행
 
 ## 0-1. 추가 레퍼런스(Compose 스펙 문서)
 - 파일: `/Volumes/무제/design_spec_android_lotto.md`

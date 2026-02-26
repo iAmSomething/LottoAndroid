@@ -100,6 +100,7 @@
   - 공유 텍스트 포맷터 추가(회차/출처/상태/게임 번호) 및 단위 테스트(`TicketDetailShareFormatterTest`)
   - 테마 색상 콘트라스트(WCAG AA 4.5:1) 자동 검증 테스트 추가(`ColorContrastTest`)
   - 앱 아이콘 브랜딩 리뉴얼: adaptive icon foreground/background 개선 + Android 13 themed icon용 monochrome 추가
+  - Figma MCP 호출 제한 대응용 오프라인 디자인 QA 체크리스트 추가(`19-offline-design-qa-checklist.md`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
