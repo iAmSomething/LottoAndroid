@@ -53,6 +53,7 @@
 17. 번호관리 빠른 액션(A02) 반영 후 재검증(2026-02-26): 단위/계측/릴리즈 점검 재실행 PASS 15 / WARN 0 / FAIL 0 유지
 18. stats CTA 계측 샘플 루틴 검증(2026-02-26): `run-analytics-sample-check.sh --serial emulator-5554` 실행으로 계측 3/3 + `verify-analytics-events --profile stats-cta` PASS (`docs/assets/distribution/analytics_sample_check_2026-02-26.md`)
 19. 배포 주기 점검 루틴 검증(2026-02-26): `firebase-distribution-routine-check.sh` 실행으로 CI preflight PASS + Firebase dry-run PASS (`docs/assets/distribution/firebase_routine_local_2026-02-26.md`)
+20. 배포 주기 점검 CI 실행 증적(2026-02-26): `Firebase Distribution Routine` run `22436650122` 성공 + artifact 회수(`docs/assets/distribution/firebase_routine_ci_22436650122.md`)
 
 ## 후속 조치
 1. CI 환경에도 동일하게 `LOTTO_RELEASE_*` 시크릿 설정

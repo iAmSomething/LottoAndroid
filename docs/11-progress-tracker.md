@@ -152,16 +152,23 @@
     - 배포 주기 점검 래퍼 추가: `scripts/firebase-distribution-routine-check.sh` (CI preflight + Firebase dry-run 체인)
     - 주간 스케줄 워크플로우 추가: `.github/workflows/firebase-distribution-routine.yml` (매주 UTC 월요일 01:00 + 수동 실행)
     - 로컬 주기 점검 실검증: `firebase-distribution-routine-check.sh ... --report-file` PASS (`docs/assets/distribution/firebase_routine_local_2026-02-26.md`)
+  - Cycle-37 루틴 반영:
+    - 배포 루틴 워크플로 원격 반영 완료: PR #2 merge(`384aac36165e15e5319142ffce2c0863c27cb091`)
+    - 첫 CI 실행 증적 확보: `Firebase Distribution Routine` run `22436650122` 성공(`workflow_dispatch`)
+    - 아티팩트 회수/저장: `docs/assets/distribution/firebase_routine_ci_22436650122.md`, `docs/assets/distribution/firebase_routine_ci_run_2026-02-26.md`
+  - Cycle-38 루틴 반영:
+    - Figma node `6:2` 직접 대조 재시도: `get_design_context(fileKey=DY43CuXVwQwlqakFfR2yM1,nodeId=6:2)` 호출
+    - 결과: seat 한도 응답으로 실패(Starter/View 플랜의 MCP tool call limit), 블로커 유지
 - 미완료 작업
   - 실기기 기반 Wear QA 증적 확보(P-004)
   - Figma 원본 노드 기준 정밀 픽셀 매핑(호출 가능 시 `node 6:2` 최종 동기화)
 - 블로커
   - 실기기 미보유로 `P-004`(Wear 실기기 증적) 즉시 해소 불가
-  - Figma MCP 플랜 호출 한도 초과로 node `6:2` 직접 대조 불가(오프라인 QA 기준 유지)
+  - Figma MCP 플랜 호출 한도 초과로 node `6:2` 직접 대조 불가(2026-02-26 재시도 동일, 오프라인 QA 기준 유지)
 - 다음 액션
   - 실기기 확보 시 `P-004` 증적(워치 소형/대형) 1회 확보
   - Figma node `6:2` 기준 간격/밀도 최종 보정 후 디자인 정렬 상태 `Green` 전환
-  - 배포/계측 주기 점검 루틴 유지(`release-preflight` + `firebase-distribution` + `run-analytics-sample-check`) 및 `firebase-distribution-routine` 스케줄 실행 모니터링
+  - 배포/계측 주기 점검 루틴 유지(`release-preflight` + `firebase-distribution` + `run-analytics-sample-check`) 및 첫 스케줄 실행(2026-03-02 01:00 UTC) 결과 모니터링
 
 ## 2026-02-25
 - 완료 작업
