@@ -4,15 +4,24 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
-if ! command -v rg >/dev/null 2>&1; then
-  echo "[FAIL] rg command is required for splash motion gate check."
-  exit 1
+if command -v rg >/dev/null 2>&1; then
+  FILE_LIST_CMD=(rg --files app/src/main/java)
+  FIND_SPLASH_CMD=(rg -i '(splash.*\.kt$|/splash/.*\.kt$)')
+  SEARCH_CMD=(rg -n)
+else
+  FILE_LIST_CMD=(find app/src/main/java -type f -name "*.kt")
 fi
 
 SPLASH_FILES=()
-while IFS= read -r line; do
-  [[ -n "$line" ]] && SPLASH_FILES+=("$line")
-done < <(rg --files app/src/main/java | rg -i '(splash.*\.kt$|/splash/.*\.kt$)' || true)
+if command -v rg >/dev/null 2>&1; then
+  while IFS= read -r line; do
+    [[ -n "$line" ]] && SPLASH_FILES+=("$line")
+  done < <("${FILE_LIST_CMD[@]}" | "${FIND_SPLASH_CMD[@]}" || true)
+else
+  while IFS= read -r line; do
+    [[ "$line" =~ [Ss]plash.*\.kt$ || "$line" =~ /splash/.*\.kt$ ]] && SPLASH_FILES+=("$line")
+  done < <("${FILE_LIST_CMD[@]}" || true)
+fi
 
 if [[ "${#SPLASH_FILES[@]}" -eq 0 ]]; then
   echo "[PASS] No splash source detected. motion_* gate skipped."
@@ -22,12 +31,16 @@ fi
 HAS_SHOWN=0
 HAS_SKIP=0
 
-if rg -n "(MOTION_SPLASH_SHOWN|motion_splash_shown)" "${SPLASH_FILES[@]}" >/dev/null 2>&1; then
-  HAS_SHOWN=1
+if command -v rg >/dev/null 2>&1; then
+  "${SEARCH_CMD[@]}" "(MOTION_SPLASH_SHOWN|motion_splash_shown)" "${SPLASH_FILES[@]}" >/dev/null 2>&1 && HAS_SHOWN=1
+else
+  grep -En "(MOTION_SPLASH_SHOWN|motion_splash_shown)" "${SPLASH_FILES[@]}" >/dev/null 2>&1 && HAS_SHOWN=1
 fi
 
-if rg -n "(MOTION_SPLASH_SKIP|motion_splash_skip)" "${SPLASH_FILES[@]}" >/dev/null 2>&1; then
-  HAS_SKIP=1
+if command -v rg >/dev/null 2>&1; then
+  "${SEARCH_CMD[@]}" "(MOTION_SPLASH_SKIP|motion_splash_skip)" "${SPLASH_FILES[@]}" >/dev/null 2>&1 && HAS_SKIP=1
+else
+  grep -En "(MOTION_SPLASH_SKIP|motion_splash_skip)" "${SPLASH_FILES[@]}" >/dev/null 2>&1 && HAS_SKIP=1
 fi
 
 if [[ "$HAS_SHOWN" -eq 1 && "$HAS_SKIP" -eq 1 ]]; then
