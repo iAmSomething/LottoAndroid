@@ -39,6 +39,7 @@
 6. 실기기 엄격 모드 검증(2026-02-26): PASS 13 / WARN 0 / FAIL 1 (`--require-physical-device`, 실기기 0대로 의도된 실패)
 7. 실기기 엄격 모드 fail-fast 보강(2026-02-26): 실기기 0대일 때 품질게이트 생략 + 즉시 FAIL 유지 확인
 8. serial 지정 모드 검증(2026-02-26): `--android-serial emulator-5554` 실행 시 PASS 14 / WARN 0 / FAIL 0
+9. 엄격+serial 조합 검증(2026-02-26): `--require-physical-device --android-serial emulator-5554` 실행 시 FAIL 1(의도된 실패)
 
 ## 후속 조치
 1. CI 환경에도 동일하게 `LOTTO_RELEASE_*` 시크릿 설정
