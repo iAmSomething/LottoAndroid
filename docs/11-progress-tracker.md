@@ -19,7 +19,12 @@
   - 코드 진행 스냅샷 검증:
     - `assembleDebug` 성공
     - `testDebugUnitTest` 연속 재실행 Green 확인
+    - `wear:assembleDebug` 성공
   - 즉시 조치 작업 생성(`10-detailed-todo-board.md` O-001~O-004)
+  - Cycle-02 루틴 반영:
+    - 기획/구현 상태 분리 기준 정립(`10` P-001, `25` Cycle-02)
+    - 스프린트 백로그를 구현 중심으로 재정렬(`16-next-sprint-backlog.md`)
+    - 모션 적용 우선 맵/이벤트 계측 포인트 보강(`24-motion-and-interaction-playbook.md`)
 - 미완료 작업
   - Wear OS 구현/실기기 검증 착수
   - 실험 이벤트 로깅 체계 구현
