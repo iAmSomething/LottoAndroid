@@ -148,6 +148,10 @@
   - 스캔내역 카드 메타 고도화: `스캔 등록 yyyy.MM.dd HH:mm · N게임` 형태로 정보 밀도 보강
   - 스캔 요약 계산 회귀 테스트 추가: `scanSummary()`의 총건수/이번주건수/최신회차 검증
   - 통합 품질 게이트 재검증: 동일 게이트 전부 재통과(`ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug`)
+  - 수동추가 저장 경로 중복 방지 적용: 이번주 동일 번호 존재 시 저장 차단 + 에러 문구 노출
+  - 가져오기 저장 경로 중복 방지 적용: 이번주 동일 번호 존재 시 저장 차단 + 에러 문구 노출
+  - 신규 단위 테스트 추가: `ManualAddViewModelTest`, `ImportViewModelTest`(중복 차단/정상 저장)
+  - 통합 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug` 재통과
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)

@@ -14,6 +14,7 @@ import com.weeklylotto.app.domain.repository.TicketRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -32,7 +33,7 @@ class ImportViewModel(
     val uiState: StateFlow<ImportUiState> = _uiState.asStateFlow()
 
     fun onInputChanged(value: String) {
-        _uiState.update { it.copy(input = value, saved = false) }
+        _uiState.update { it.copy(input = value, saved = false, error = null) }
     }
 
     fun parse() {
@@ -53,6 +54,18 @@ class ImportViewModel(
         val numbers = uiState.value.parsedNumbers
         if (numbers.size != 6) return
         viewModelScope.launch {
+            val targetSignature = numbers.sorted()
+            val hasDuplicate =
+                ticketRepository
+                    .observeCurrentRoundTickets()
+                    .first()
+                    .flatMap { it.games }
+                    .any { game -> game.numbers.map { it.value }.sorted() == targetSignature }
+            if (hasDuplicate) {
+                _uiState.update { it.copy(saved = false, error = "이미 이번 주에 동일 번호가 있습니다.") }
+                return@launch
+            }
+
             val today = LocalDate.now()
             val drawDate = RoundEstimator.nextDrawDate(today)
             ticketRepository.save(
@@ -70,7 +83,7 @@ class ImportViewModel(
                         ),
                 ),
             )
-            _uiState.update { it.copy(saved = true) }
+            _uiState.update { it.copy(saved = true, error = null) }
         }
     }
 

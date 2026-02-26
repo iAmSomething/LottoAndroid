@@ -109,6 +109,9 @@ fun ManualAddScreen(onBack: () -> Unit) {
                 Button(onClick = viewModel::autoFill, modifier = Modifier.weight(1f)) { Text("자동 채우기") }
                 Button(onClick = viewModel::clear, modifier = Modifier.weight(1f)) { Text("초기화") }
             }
+            uiState.error?.let { message ->
+                Text(text = message, color = LottoColors.DangerText)
+            }
             Button(
                 onClick = viewModel::save,
                 enabled = uiState.selected.size == 6,
