@@ -313,6 +313,54 @@ class ManageViewModelTest {
             assertThat(viewModel.uiState.value.filter.statuses).isEmpty()
             assertThat(viewModel.uiState.value.filter.roundRange).isEqualTo(targetRange)
         }
+
+    @Test
+    fun 회차필터_직접범위를_적용하면_해당구간만_노출한다() =
+        runTest {
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets =
+                        listOf(
+                            ticket(
+                                id = 71L,
+                                round = Round(1001, LocalDate.of(2025, 1, 4)),
+                                status = TicketStatus.PENDING,
+                            ),
+                            ticket(
+                                id = 72L,
+                                round = Round(1005, LocalDate.of(2025, 2, 1)),
+                                status = TicketStatus.WIN,
+                            ),
+                            ticket(
+                                id = 73L,
+                                round = Round(1011, LocalDate.of(2025, 3, 15)),
+                                status = TicketStatus.LOSE,
+                            ),
+                        ),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+            viewModel.setTab(ManageTab.VAULT)
+            viewModel.setRoundRange(1003..1010)
+
+            val filteredIds = viewModel.filteredTickets().map { it.id }
+            assertThat(filteredIds).containsExactly(72L)
+        }
+
+    @Test
+    fun 전체필터_초기화는_상태와_회차를_모두_해제한다() =
+        runTest {
+            val repository = ManageFakeTicketRepository(tickets = emptyList())
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            viewModel.toggleStatusFilter(TicketStatus.WIN)
+            viewModel.setRoundRange(1000..1010)
+            viewModel.clearFilter()
+
+            assertThat(viewModel.uiState.value.filter.statuses).isEmpty()
+            assertThat(viewModel.uiState.value.filter.roundRange).isNull()
+        }
 }
 
 private fun ticket(

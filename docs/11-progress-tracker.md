@@ -157,6 +157,10 @@
   - 상태 필터 단독 초기화 액션 추가(`clearStatusFilters`) 및 WEEK 전환 시 필터 정규화 적용
   - 필터 회귀 테스트 추가: WEEK 전환 시 SAVED 제거, 상태필터 초기화가 회차필터를 유지하는지 검증
   - 통합 품질 게이트 재검증: 동일 게이트 전부 재통과(`ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug`)
+  - 번호관리 회차 필터 확장: 시작/끝 회차 직접 입력 필드 + 유효성 검사(빈값/숫자/범위 역전) + 범위 적용 버튼 추가
+  - 필터 초기화 동작 보강: 초기화 시 직접 입력값/오류 문구까지 함께 리셋
+  - 회차 필터 회귀 테스트 추가: 직접 입력 범위 필터 적용 결과 및 전체필터 초기화(상태+회차 해제) 검증
+  - 통합 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug` 재통과
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)

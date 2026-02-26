@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.AlertDialog
@@ -29,6 +30,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -37,9 +39,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
@@ -88,6 +93,13 @@ fun ManageScreen(
                 recent10Range = recent10Range,
             )
         }
+    var customRangeStart by remember(uiState.isFilterSheetOpen, uiState.filter.roundRange) {
+        mutableStateOf(uiState.filter.roundRange?.first?.toString().orEmpty())
+    }
+    var customRangeEnd by remember(uiState.isFilterSheetOpen, uiState.filter.roundRange) {
+        mutableStateOf(uiState.filter.roundRange?.last?.toString().orEmpty())
+    }
+    var customRangeError by remember(uiState.isFilterSheetOpen) { mutableStateOf<String?>(null) }
 
     if (uiState.isFabSheetOpen) {
         ModalBottomSheet(
@@ -184,11 +196,73 @@ fun ManageScreen(
                         label = { Text("최근 10회") },
                     )
                 }
+                Text("직접 입력", style = MaterialTheme.typography.bodySmall, color = LottoColors.TextMuted)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = customRangeStart,
+                        onValueChange = {
+                            customRangeStart = it.filter(Char::isDigit).take(4)
+                            customRangeError = null
+                        },
+                        label = { Text("시작 회차") },
+                        modifier = Modifier.weight(1f),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true,
+                    )
+                    OutlinedTextField(
+                        value = customRangeEnd,
+                        onValueChange = {
+                            customRangeEnd = it.filter(Char::isDigit).take(4)
+                            customRangeError = null
+                        },
+                        label = { Text("끝 회차") },
+                        modifier = Modifier.weight(1f),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true,
+                    )
+                }
+                customRangeError?.let { message ->
+                    Text(
+                        text = message,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = LottoColors.DangerText,
+                    )
+                }
+                Button(
+                    onClick = {
+                        val start = customRangeStart.toIntOrNull()
+                        val end = customRangeEnd.toIntOrNull()
+                        val errorMessage =
+                            when {
+                                customRangeStart.isBlank() || customRangeEnd.isBlank() -> "시작/끝 회차를 모두 입력하세요."
+                                start == null || end == null -> "회차는 숫자로 입력하세요."
+                                start <= 0 || end <= 0 -> "회차는 1 이상이어야 합니다."
+                                start > end -> "시작 회차가 끝 회차보다 클 수 없습니다."
+                                else -> null
+                            }
+                        if (errorMessage != null) {
+                            customRangeError = errorMessage
+                        } else {
+                            viewModel.setRoundRange(start!!..end!!)
+                            customRangeError = null
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("직접 입력 범위 적용")
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    TextButton(onClick = viewModel::clearFilter) { Text("초기화") }
+                    TextButton(
+                        onClick = {
+                            viewModel.clearFilter()
+                            customRangeStart = ""
+                            customRangeEnd = ""
+                            customRangeError = null
+                        },
+                    ) { Text("초기화") }
                     Button(onClick = viewModel::closeFilterSheet) { Text("적용") }
                 }
             }
