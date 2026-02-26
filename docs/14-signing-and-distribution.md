@@ -123,3 +123,27 @@
 - 서비스 계정 JSON은 git에 커밋하지 않는다.
 - `google-services.json`, `*firebase-adminsdk*.json`은 `.gitignore`로 제외한다.
 - 배포 노트는 `--release-notes` 또는 `--release-notes-file`로 명시 가능하다.
+
+### 6-4. GitHub Actions CI/CD 체인
+- 워크플로우:
+  - PR/머지 품질게이트: `.github/workflows/release-preflight.yml`
+  - Firebase 자동 배포: `.github/workflows/firebase-distribution.yml`
+- 트리거 체인:
+  1. `push` → PR 생성
+  2. PR에서 `Release Preflight` 통과
+  3. PR merge 후 `main` push 발생
+  4. `Release Preflight` 성공 시 `Firebase Distribution` 자동 실행
+  5. Firebase App Distribution 그룹으로 release APK 배포
+
+### 6-5. GitHub Secrets (필수)
+- 릴리즈 서명:
+  - `LOTTO_RELEASE_STORE_FILE_BASE64`
+  - `LOTTO_RELEASE_STORE_PASSWORD`
+  - `LOTTO_RELEASE_KEY_ALIAS`
+  - `LOTTO_RELEASE_KEY_PASSWORD`
+- Firebase 배포:
+  - `FIREBASE_PROJECT_ID` (예: `lottoeveryday`)
+  - `FIREBASE_APP_ID` (예: `1:1083851357764:android:2da8bc877b0e7c89b94611`)
+  - `FIREBASE_TESTER_GROUP_ALIAS` (예: `suyeoni`)
+  - `FIREBASE_TESTER_GROUP_DISPLAY_NAME` (선택, 예: `수연이`)
+  - `FIREBASE_SERVICE_ACCOUNT_JSON_BASE64` (서비스계정 JSON base64)
