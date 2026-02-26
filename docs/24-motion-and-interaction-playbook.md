@@ -104,3 +104,23 @@
 | M-018 | EXP-06 실험 기준 정의 | `23-kpi-and-experiment-plan.md` EXP-06 |
 | M-019 | 모션 QA 리포트 기준 정의 | 7장 QA 체크리스트 |
 | M-020 | 릴리즈 게이트 반영 기준 정의 | 5장 성능/접근성 목표, 7장 QA |
+
+## 11. Cycle-02 구현 매핑 (2026-02-26)
+
+### 11.1 우선 적용 화면
+- App 시작 구간: SPL-01/02(브랜드 인트로 + 로딩 브리지)
+- Home: INT-01(핵심 CTA), INT-03(리포트 카드 진입)
+- Number Generator: INT-02(BallChip 선택/잠금), INT-01(저장 CTA)
+- Manage: INT-03(리스트 삭제/이동), INT-04(필터/정렬 시트)
+- Result: INT-04(회차 선택 시트), INT-02(적중 상태 강조)
+- 하단 내비게이션: INT-05(탭 전환/활성 아이콘)
+
+### 11.2 이벤트 계측 포인트
+- SPL-01/02: `motion_splash_shown`, `motion_splash_skip`
+- Home/Generator/Manage 공통 CTA: `interaction_cta_press`
+- BallChip 상태 전이: `interaction_ball_lock_toggle`
+- 시트 적용 액션: `interaction_sheet_apply`
+
+### 11.3 현재 코드 갭
+- 모션 스펙은 문서화되었지만, 실제 `AnimatedVisibility/Crossfade/AnimatedContent` 적용 범위는 제한적
+- 다음 루틴에서 코드 반영 증적(화면별 적용 위치 + 테스트/스크린샷)을 반드시 남긴다
