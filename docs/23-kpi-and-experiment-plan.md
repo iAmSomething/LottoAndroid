@@ -78,17 +78,17 @@
 | L-014 | 실험 운영 주기(최소 2주) 확정 | 5장 측정/운영 규칙 |
 | L-015 | 실패 실험 종료/기록 규칙 확정 | 5장 측정/운영 규칙 |
 
-## 8. EXP-05/06 이벤트 훅 점검 결과 (2026-02-26)
+## 8. EXP-05/06 이벤트 훅 점검 결과 (2026-02-26 Cycle-03)
 | 이벤트 | 현재 연결 상태 | 누락 포인트 | 우선 반영 위치 |
 |---|---|---|---|
 | `motion_splash_shown` | 미연결 | 스플래시 화면/콜드·웜 분기 이벤트 호출 없음 | 앱 시작 스플래시 composable 진입 시점 |
 | `motion_splash_skip` | 미연결 | 스킵/축약 조건 이벤트 호출 없음 | 웜 스타트 축약 경로 |
-| `interaction_cta_press` | 미연결 | 핵심 CTA 클릭 로그 공통 훅 없음 | Home CTA, Generator 저장/재생성, Manage 주요 액션 |
-| `interaction_ball_lock_toggle` | 미연결 | BallChip 잠금 토글 이벤트 미연결 | Number Generator 잠금 토글 핸들러 |
-| `interaction_sheet_apply` | 미연결 | 시트 적용 버튼 이벤트 미연결 | Manage 필터/정렬 시트, Result 회차 변경 시트 |
+| `interaction_cta_press` | 연결(1차) | 이벤트별 선택 파라미터 확장 필요 | Home/Generator/Manage/Result 공통 CTA |
+| `interaction_ball_lock_toggle` | 연결(1차) | lock/unlock 상태값 enum 고정 필요 | Number Generator 잠금 토글 핸들러 |
+| `interaction_sheet_apply` | 연결(1차) | 시트 타입 enum 고정 필요 | Manage 필터/정렬 시트, Result 회차 변경 시트 |
 
-- 코드 기준 확인 결과: 앱 내 사용자 이벤트 수집 인터페이스(예: `AnalyticsLogger`)가 아직 정의되지 않았고, 위젯 갱신 로그(`WidgetRefreshHistoryLogger`)만 존재한다.
+- 코드 기준 확인 결과: `AnalyticsLogger`/`LogcatAnalyticsLogger`가 도입되었고, DI(`AppGraph`)를 통해 주요 화면에서 `interaction_*` 로그를 수집 중이다.
 - 즉시 실행 순서:
-  1. `AnalyticsLogger` 인터페이스 + `LogcatAnalyticsLogger` 도입(디버그 기본 구현)
-  2. `interaction_cta_press`와 `interaction_sheet_apply` 먼저 연결
-  3. 스플래시 구현 시점에 `motion_*` 2종 연결
+  1. `motion_splash_shown`, `motion_splash_skip`를 스플래시 구현과 동시에 연결
+  2. `interaction_*` 선택 파라미터(enum/action value) 고정
+  3. 실험 대시보드 집계를 위한 이벤트 샘플 로그 검증(누락/중복 점검)

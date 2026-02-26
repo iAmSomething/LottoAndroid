@@ -124,3 +124,18 @@
 ### 11.3 현재 코드 갭
 - 모션 스펙은 문서화되었지만, 실제 `AnimatedVisibility/Crossfade/AnimatedContent` 적용 범위는 제한적
 - 다음 루틴에서 코드 반영 증적(화면별 적용 위치 + 테스트/스크린샷)을 반드시 남긴다
+
+## 12. Cycle-03 계측 상태 업데이트 (2026-02-26)
+
+### 12.1 연결 완료
+- `interaction_cta_press`: Home/Generator/Manage/Result 주요 CTA 경로 연결
+- `interaction_ball_lock_toggle`: Number Generator 잠금 토글 경로 연결
+- `interaction_sheet_apply`: Manage/Result 시트 적용 경로 연결
+
+### 12.2 미연결
+- `motion_splash_shown`
+- `motion_splash_skip`
+
+### 12.3 다음 적용 규칙
+- 스플래시 composable이 들어가는 PR에서는 `motion_*` 2종 이벤트 연결을 필수 게이트로 처리한다.
+- `interaction_*`는 공통 파라미터 키(`screen`, `component`, `action`)를 강제한다.

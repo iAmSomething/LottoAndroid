@@ -3,6 +3,7 @@ package com.weeklylotto.app.di
 import android.content.Context
 import androidx.room.Room
 import com.weeklylotto.app.BuildConfig
+import com.weeklylotto.app.data.analytics.LogcatAnalyticsLogger
 import com.weeklylotto.app.data.local.DataStoreReminderConfigStore
 import com.weeklylotto.app.data.local.DataStoreResultViewTracker
 import com.weeklylotto.app.data.local.WeeklyLottoDatabase
@@ -17,6 +18,7 @@ import com.weeklylotto.app.data.repository.RoomTicketRepository
 import com.weeklylotto.app.data.repository.WorkManagerReminderScheduler
 import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
+import com.weeklylotto.app.domain.service.AnalyticsLogger
 import com.weeklylotto.app.domain.service.NumberGenerator
 import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
@@ -104,6 +106,13 @@ object AppGraph {
             return checkNotNull(qrTicketParserInternal)
         }
 
+    private var analyticsLoggerInternal: AnalyticsLogger? = null
+    val analyticsLogger: AnalyticsLogger
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(analyticsLoggerInternal)
+        }
+
     fun init(context: Context) {
         if (initialized) {
             return
@@ -145,6 +154,7 @@ object AppGraph {
             val resultViewTracker = DataStoreResultViewTracker(appContext)
             val widgetDataProvider = DefaultWidgetDataProvider(ticketRepository, drawRepository, resultEvaluator)
             val qrParser = QrTicketParser()
+            val analyticsLogger = LogcatAnalyticsLogger()
 
             widgetRefreshSchedulerInternal = refreshScheduler
             ticketRepositoryInternal = ticketRepository
@@ -156,6 +166,7 @@ object AppGraph {
             resultViewTrackerInternal = resultViewTracker
             widgetDataProviderInternal = widgetDataProvider
             qrTicketParserInternal = qrParser
+            analyticsLoggerInternal = analyticsLogger
         }
     }
 }

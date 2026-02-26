@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.domain.model.TicketStatus
+import com.weeklylotto.app.domain.service.AnalyticsEvent
+import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.StatusBadge
 import com.weeklylotto.app.ui.component.TicketCard
@@ -70,6 +72,7 @@ fun ManageScreen(
     onOpenImport: () -> Unit,
     onOpenTicketDetail: (Long) -> Unit,
 ) {
+    val analyticsLogger = AppGraph.analyticsLogger
     val viewModel =
         viewModel<ManageViewModel>(
             factory =
@@ -243,6 +246,17 @@ fun ManageScreen(
                         if (errorMessage != null) {
                             customRangeError = errorMessage
                         } else {
+                            analyticsLogger.log(
+                                event = AnalyticsEvent.INTERACTION_SHEET_APPLY,
+                                params =
+                                    mapOf(
+                                        AnalyticsParamKey.SCREEN to "manage",
+                                        AnalyticsParamKey.COMPONENT to "filter_sheet_custom_range",
+                                        AnalyticsParamKey.ACTION to "apply",
+                                        "range_start" to start.toString(),
+                                        "range_end" to end.toString(),
+                                    ),
+                            )
                             viewModel.setRoundRange(start!!..end!!)
                             customRangeError = null
                         }
@@ -263,7 +277,22 @@ fun ManageScreen(
                             customRangeError = null
                         },
                     ) { Text("초기화") }
-                    Button(onClick = viewModel::closeFilterSheet) { Text("적용") }
+                    Button(
+                        onClick = {
+                            analyticsLogger.log(
+                                event = AnalyticsEvent.INTERACTION_SHEET_APPLY,
+                                params =
+                                    mapOf(
+                                        AnalyticsParamKey.SCREEN to "manage",
+                                        AnalyticsParamKey.COMPONENT to "filter_sheet",
+                                        AnalyticsParamKey.ACTION to "apply",
+                                        "status_count" to uiState.filter.statuses.size.toString(),
+                                        "round_range" to (uiState.filter.roundRange?.toString() ?: "all"),
+                                    ),
+                            )
+                            viewModel.closeFilterSheet()
+                        },
+                    ) { Text("적용") }
                 }
             }
         }
@@ -284,7 +313,19 @@ fun ManageScreen(
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         FilterChip(
                             selected = uiState.sort == sort,
-                            onClick = { viewModel.setSort(sort) },
+                            onClick = {
+                                analyticsLogger.log(
+                                    event = AnalyticsEvent.INTERACTION_SHEET_APPLY,
+                                    params =
+                                        mapOf(
+                                            AnalyticsParamKey.SCREEN to "manage",
+                                            AnalyticsParamKey.COMPONENT to "sort_sheet",
+                                            AnalyticsParamKey.ACTION to "apply",
+                                            "sort" to sort.name,
+                                        ),
+                                )
+                                viewModel.setSort(sort)
+                            },
                             label = { Text(sort.toSortLabel()) },
                         )
                         Text(
@@ -335,7 +376,20 @@ fun ManageScreen(
                     color = LottoColors.TextMuted,
                 )
                 Button(
-                    onClick = viewModel::moveSelectedToVault,
+                    onClick = {
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_SHEET_APPLY,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "manage",
+                                    AnalyticsParamKey.COMPONENT to "move_sheet",
+                                    AnalyticsParamKey.ACTION to "apply",
+                                    "target_status" to "saved",
+                                    "selected_count" to uiState.selectedIds.size.toString(),
+                                ),
+                        )
+                        viewModel.moveSelectedToVault()
+                    },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text("보관함으로 이동")
@@ -364,8 +418,26 @@ fun ManageScreen(
                     },
                 onRightClick = {
                     if (uiState.editMode) {
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "manage",
+                                    AnalyticsParamKey.COMPONENT to "edit_done",
+                                    AnalyticsParamKey.ACTION to "click",
+                                ),
+                        )
                         viewModel.toggleEditMode()
                     } else {
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "manage",
+                                    AnalyticsParamKey.COMPONENT to "open_filter",
+                                    AnalyticsParamKey.ACTION to "click",
+                                ),
+                        )
                         viewModel.openFilterSheet()
                     }
                 },
@@ -373,7 +445,18 @@ fun ManageScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = viewModel::openFabSheet,
+                onClick = {
+                    analyticsLogger.log(
+                        event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                        params =
+                            mapOf(
+                                AnalyticsParamKey.SCREEN to "manage",
+                                AnalyticsParamKey.COMPONENT to "open_add_sheet",
+                                AnalyticsParamKey.ACTION to "click",
+                            ),
+                    )
+                    viewModel.openFabSheet()
+                },
                 containerColor = LottoColors.Accent,
                 contentColor = LottoColors.TextPrimary,
                 modifier = Modifier.size(LottoDimens.FabSize),
@@ -460,7 +543,20 @@ fun ManageScreen(
                 ) {
                     Text("저장된 번호가 없습니다.", color = LottoColors.TextSecondary)
                     if (uiState.tab == ManageTab.SCAN) {
-                        Button(onClick = onOpenQr) { Text("스캔 열기") }
+                        Button(
+                            onClick = {
+                                analyticsLogger.log(
+                                    event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                    params =
+                                        mapOf(
+                                            AnalyticsParamKey.SCREEN to "manage",
+                                            AnalyticsParamKey.COMPONENT to "open_qr_from_empty",
+                                            AnalyticsParamKey.ACTION to "click",
+                                        ),
+                                )
+                                onOpenQr()
+                            },
+                        ) { Text("스캔 열기") }
                     }
                 }
             } else {

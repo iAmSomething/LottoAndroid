@@ -39,6 +39,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.domain.model.DrawRank
 import com.weeklylotto.app.domain.model.PrizeAmountPolicy
+import com.weeklylotto.app.domain.service.AnalyticsEvent
+import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.BadgeTone
 import com.weeklylotto.app.ui.component.BallChip
 import com.weeklylotto.app.ui.component.BallState
@@ -54,6 +56,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 @Suppress("CyclomaticComplexMethod")
 fun ResultScreen() {
+    val analyticsLogger = AppGraph.analyticsLogger
     val viewModel =
         viewModel<ResultViewModel>(
             factory =
@@ -125,6 +128,16 @@ fun ResultScreen() {
                     }
                     Button(
                         onClick = {
+                            analyticsLogger.log(
+                                event = AnalyticsEvent.INTERACTION_SHEET_APPLY,
+                                params =
+                                    mapOf(
+                                        AnalyticsParamKey.SCREEN to "result",
+                                        AnalyticsParamKey.COMPONENT to "round_sheet",
+                                        AnalyticsParamKey.ACTION to "apply",
+                                        "selected_round" to (pendingRound?.toString() ?: ""),
+                                    ),
+                            )
                             pendingRound?.let(viewModel::selectRound)
                             isRoundSheetOpen = false
                         },
@@ -145,8 +158,26 @@ fun ResultScreen() {
             rightActionText = uiState.drawResult?.round?.number?.let { "${it}회" } ?: "새로고침",
             onRightClick = {
                 if (uiState.drawResult != null) {
+                    analyticsLogger.log(
+                        event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                        params =
+                            mapOf(
+                                AnalyticsParamKey.SCREEN to "result",
+                                AnalyticsParamKey.COMPONENT to "open_round_sheet_top",
+                                AnalyticsParamKey.ACTION to "click",
+                            ),
+                    )
                     openRoundSheet()
                 } else {
+                    analyticsLogger.log(
+                        event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                        params =
+                            mapOf(
+                                AnalyticsParamKey.SCREEN to "result",
+                                AnalyticsParamKey.COMPONENT to "refresh_top",
+                                AnalyticsParamKey.ACTION to "click",
+                            ),
+                    )
                     viewModel.refresh()
                 }
             },
@@ -203,11 +234,37 @@ fun ResultScreen() {
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
-                    Button(onClick = viewModel::refresh) {
+                    Button(
+                        onClick = {
+                            analyticsLogger.log(
+                                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                params =
+                                    mapOf(
+                                        AnalyticsParamKey.SCREEN to "result",
+                                        AnalyticsParamKey.COMPONENT to "refresh_error",
+                                        AnalyticsParamKey.ACTION to "click",
+                                    ),
+                            )
+                            viewModel.refresh()
+                        },
+                    ) {
                         Text("다시 시도")
                     }
                     if (uiState.selectedRound != null) {
-                        TextButton(onClick = viewModel::loadLatestFromError) {
+                        TextButton(
+                            onClick = {
+                                analyticsLogger.log(
+                                    event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                    params =
+                                        mapOf(
+                                            AnalyticsParamKey.SCREEN to "result",
+                                            AnalyticsParamKey.COMPONENT to "load_latest_from_error",
+                                            AnalyticsParamKey.ACTION to "click",
+                                        ),
+                                )
+                                viewModel.loadLatestFromError()
+                            },
+                        ) {
                             Text("최신 회차 조회")
                         }
                     }
@@ -287,7 +344,19 @@ fun ResultScreen() {
                         text = "회차 변경",
                         color = LottoColors.Primary,
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.clickable { openRoundSheet() },
+                        modifier =
+                            Modifier.clickable {
+                                analyticsLogger.log(
+                                    event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                    params =
+                                        mapOf(
+                                            AnalyticsParamKey.SCREEN to "result",
+                                            AnalyticsParamKey.COMPONENT to "open_round_sheet_list",
+                                            AnalyticsParamKey.ACTION to "click",
+                                        ),
+                                )
+                                openRoundSheet()
+                            },
                     )
                 }
             }

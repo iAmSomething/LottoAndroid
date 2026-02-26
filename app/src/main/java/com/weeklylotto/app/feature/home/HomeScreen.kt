@@ -28,6 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
+import com.weeklylotto.app.domain.service.AnalyticsEvent
+import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.StatusBadge
 import com.weeklylotto.app.ui.component.TicketCard
@@ -49,6 +51,7 @@ fun HomeScreen(
     onClickSettings: () -> Unit,
     onClickQr: () -> Unit,
 ) {
+    val analyticsLogger = AppGraph.analyticsLogger
     val viewModel =
         viewModel<HomeViewModel>(
             factory =
@@ -67,7 +70,18 @@ fun HomeScreen(
         LottoTopAppBar(
             title = "매주로또",
             rightActionText = "설정",
-            onRightClick = onClickSettings,
+            onRightClick = {
+                analyticsLogger.log(
+                    event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                    params =
+                        mapOf(
+                            AnalyticsParamKey.SCREEN to "home",
+                            AnalyticsParamKey.COMPONENT to "settings",
+                            AnalyticsParamKey.ACTION to "click",
+                        ),
+                )
+                onClickSettings()
+            },
         )
 
         LazyColumn(
@@ -123,7 +137,21 @@ fun HomeScreen(
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(LottoDimens.CardGap)) {
                     Card(
-                        modifier = Modifier.weight(1f).clickable { onClickQr() },
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .clickable {
+                                    analyticsLogger.log(
+                                        event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                        params =
+                                            mapOf(
+                                                AnalyticsParamKey.SCREEN to "home",
+                                                AnalyticsParamKey.COMPONENT to "cta_qr_scan",
+                                                AnalyticsParamKey.ACTION to "click",
+                                            ),
+                                    )
+                                    onClickQr()
+                                },
                         shape = RoundedCornerShape(LottoDimens.CardRadius),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                         colors = CardDefaults.cardColors(containerColor = LottoColors.PrimaryDark),
@@ -146,7 +174,21 @@ fun HomeScreen(
                         }
                     }
                     Card(
-                        modifier = Modifier.weight(1f).clickable { onClickGenerator() },
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .clickable {
+                                    analyticsLogger.log(
+                                        event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                        params =
+                                            mapOf(
+                                                AnalyticsParamKey.SCREEN to "home",
+                                                AnalyticsParamKey.COMPONENT to "cta_generate_numbers",
+                                                AnalyticsParamKey.ACTION to "click",
+                                            ),
+                                    )
+                                    onClickGenerator()
+                                },
                         shape = RoundedCornerShape(LottoDimens.CardRadius),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                         colors = CardDefaults.cardColors(containerColor = LottoColors.Accent),
@@ -174,7 +216,21 @@ fun HomeScreen(
             if (uiState.hasUnseenResult && uiState.unseenRound != null) {
                 item {
                     Card(
-                        modifier = Modifier.fillMaxWidth().clickable { onClickResult() },
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    analyticsLogger.log(
+                                        event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                        params =
+                                            mapOf(
+                                                AnalyticsParamKey.SCREEN to "home",
+                                                AnalyticsParamKey.COMPONENT to "unseen_result_card",
+                                                AnalyticsParamKey.ACTION to "click",
+                                            ),
+                                    )
+                                    onClickResult()
+                                },
                         shape = RoundedCornerShape(LottoDimens.CardRadius),
                         border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
                         colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
@@ -263,7 +319,19 @@ fun HomeScreen(
                         text = "전체보기",
                         color = LottoColors.Primary,
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.clickable { onClickManage() },
+                        modifier =
+                            Modifier.clickable {
+                                analyticsLogger.log(
+                                    event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                    params =
+                                        mapOf(
+                                            AnalyticsParamKey.SCREEN to "home",
+                                            AnalyticsParamKey.COMPONENT to "view_all_tickets",
+                                            AnalyticsParamKey.ACTION to "click",
+                                        ),
+                                )
+                                onClickManage()
+                            },
                     )
                 }
             }
@@ -301,7 +369,18 @@ fun HomeScreen(
                             )
                         },
                         meta = "${bundle.round.number}회 · ${bundle.games.size}게임",
-                        onClick = onClickManage,
+                        onClick = {
+                            analyticsLogger.log(
+                                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                params =
+                                    mapOf(
+                                        AnalyticsParamKey.SCREEN to "home",
+                                        AnalyticsParamKey.COMPONENT to "ticket_card",
+                                        AnalyticsParamKey.ACTION to "click",
+                                    ),
+                            )
+                            onClickManage()
+                        },
                     )
                 }
             }

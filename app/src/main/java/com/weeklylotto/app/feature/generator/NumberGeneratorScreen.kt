@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.domain.model.LottoNumber
+import com.weeklylotto.app.domain.service.AnalyticsEvent
+import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.BallChip
 import com.weeklylotto.app.ui.component.BallState
 import com.weeklylotto.app.ui.component.LottoTopAppBar
@@ -55,6 +57,7 @@ import com.weeklylotto.app.ui.theme.LottoDimens
 @Suppress("CyclomaticComplexMethod")
 fun NumberGeneratorScreen() {
     val context = LocalContext.current
+    val analyticsLogger = AppGraph.analyticsLogger
     val viewModel =
         viewModel<NumberGeneratorViewModel>(
             factory =
@@ -152,7 +155,21 @@ fun NumberGeneratorScreen() {
                                     number = number.value,
                                     state = if (number in game.lockedNumbers) BallState.Locked else BallState.Selected,
                                     size = LottoDimens.BallSizeLarge,
-                                    modifier = Modifier.clickable { viewModel.toggleNumberLock(game.slot, number) },
+                                    modifier =
+                                        Modifier.clickable {
+                                            analyticsLogger.log(
+                                                event = AnalyticsEvent.INTERACTION_BALL_LOCK_TOGGLE,
+                                                params =
+                                                    mapOf(
+                                                        AnalyticsParamKey.SCREEN to "generator",
+                                                        AnalyticsParamKey.COMPONENT to "number_ball",
+                                                        AnalyticsParamKey.ACTION to if (number in game.lockedNumbers) "unlock" else "lock",
+                                                        "slot" to game.slot.name,
+                                                        "number" to number.value.toString(),
+                                                    ),
+                                            )
+                                            viewModel.toggleNumberLock(game.slot, number)
+                                        },
                                 )
                             }
                         }
@@ -284,6 +301,15 @@ fun NumberGeneratorScreen() {
                     )
                     Button(
                         onClick = {
+                            analyticsLogger.log(
+                                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                params =
+                                    mapOf(
+                                        AnalyticsParamKey.SCREEN to "generator",
+                                        AnalyticsParamKey.COMPONENT to "manual_apply",
+                                        AnalyticsParamKey.ACTION to "click",
+                                    ),
+                            )
                             val raw = selectedManualNumber?.toString() ?: manualInput
                             viewModel.applyManualNumber(uiState.selectedSlot, raw)
                         },
@@ -319,13 +345,35 @@ fun NumberGeneratorScreen() {
                 )
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { viewModel.regenerateExceptLocked() },
+                    onClick = {
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "generator",
+                                    AnalyticsParamKey.COMPONENT to "regenerate_except_locked",
+                                    AnalyticsParamKey.ACTION to "click",
+                                ),
+                        )
+                        viewModel.regenerateExceptLocked()
+                    },
                 ) {
                     Text("잠금 제외 랜덤 재생성")
                 }
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { viewModel.saveCurrentAsWeeklyTicket() },
+                    onClick = {
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "generator",
+                                    AnalyticsParamKey.COMPONENT to "save_weekly_ticket",
+                                    AnalyticsParamKey.ACTION to "click",
+                                ),
+                        )
+                        viewModel.saveCurrentAsWeeklyTicket()
+                    },
                 ) {
                     Text("이번 주 번호로 저장하기")
                 }

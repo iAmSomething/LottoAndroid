@@ -25,9 +25,15 @@
     - 기획/구현 상태 분리 기준 정립(`10` P-001, `25` Cycle-02)
     - 스프린트 백로그를 구현 중심으로 재정렬(`16-next-sprint-backlog.md`)
     - 모션 적용 우선 맵/이벤트 계측 포인트 보강(`24-motion-and-interaction-playbook.md`)
+  - Cycle-03 루틴 반영:
+    - analytics 이벤트 수집 인터페이스 도입 상태 확인(`AnalyticsLogger`, `LogcatAnalyticsLogger`, `AppGraph`)
+    - `interaction_*` 이벤트 훅 연결 현황 확인(Home/Generator/Manage/Result)
+    - `motion_*` 미연결 갭 문서 동기화(`23` 8장, `24` 12장, `25` Cycle-03)
+    - `interaction_*` 공통 파라미터 키(`screen`, `component`, `action`) 코드 스키마 1차 적용
+    - 품질 스냅샷 재검증(`app:assembleDebug`, `app:testDebugUnitTest`, `wear:assembleDebug` 성공)
 - 미완료 작업
   - Wear OS 구현/실기기 검증 착수
-  - 실험 이벤트 로깅 체계 구현
+  - 스플래시 `motion_*` 이벤트 연결
 - 블로커
   - 없음(현재 품질 게이트 Green, 플래키 여부는 관찰)
 - 다음 액션

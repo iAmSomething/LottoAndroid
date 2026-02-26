@@ -237,3 +237,10 @@
 - [x] P-003 모션 적용 우선 맵 문서화(스플래시/CTA/BallChip/시트/탭 중심)
 - [ ] P-004 실기기 증적 확보: Wear 소형/대형 2종에서 첫 렌더/스크롤/터치 검증 로그 수집
 - [x] P-005 EXP-05/06 이벤트 훅 연결 점검: `motion_*`, `interaction_*` 누락 포인트 식별
+
+## Q. 루틴 점검 즉시 조치(2026-02-26 Cycle-03)
+- [x] Q-001 `AnalyticsLogger`/`LogcatAnalyticsLogger` 도입 상태 확인 및 DI 연결 점검
+- [x] Q-002 `interaction_*` 이벤트 훅 연결 상태 확인(Home/Generator/Manage/Result)
+- [x] Q-003 `motion_*` 이벤트 미연결 상태 문서 반영(`23`, `24`, `25`)
+- [x] Q-004 `interaction_*` 공통 파라미터 스키마(`screen/component/action`) 정의 및 보드 반영
+- [ ] Q-005 스플래시 구현 PR 게이트에 `motion_*` 연결 조건 추가
