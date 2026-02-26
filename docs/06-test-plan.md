@@ -54,7 +54,8 @@
 
 ### 번호관리 상세
 - 상세 화면 공유 텍스트 포맷(회차/출처/상태/게임 번호) 검증
-- 자동 검증: `TicketDetailShareFormatterTest`
+- 상태/출처/모드 라벨 매핑 일관성 검증
+- 자동 검증: `TicketDetailShareFormatterTest`, `LottoUiLabelsTest`
 
 ## 3. 합격 기준
 - 핵심 유즈케이스 회귀 실패 0건

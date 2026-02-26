@@ -41,6 +41,7 @@ import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.ui.component.BallChip
 import com.weeklylotto.app.ui.component.BallState
 import com.weeklylotto.app.ui.component.LottoTopAppBar
+import com.weeklylotto.app.ui.format.toModeLabel
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
@@ -124,11 +125,7 @@ fun NumberGeneratorScreen() {
                                 style = MaterialTheme.typography.titleSmall,
                             )
                             Text(
-                                when (game.mode) {
-                                    com.weeklylotto.app.domain.model.GameMode.AUTO -> "자동"
-                                    com.weeklylotto.app.domain.model.GameMode.MANUAL -> "수동"
-                                    com.weeklylotto.app.domain.model.GameMode.SEMI_AUTO -> "반자동"
-                                },
+                                game.mode.toModeLabel(),
                                 color = LottoColors.Primary,
                                 style = MaterialTheme.typography.bodySmall,
                             )

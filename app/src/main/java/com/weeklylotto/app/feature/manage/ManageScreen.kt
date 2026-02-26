@@ -38,12 +38,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
-import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
-import com.weeklylotto.app.ui.component.BadgeTone
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.StatusBadge
 import com.weeklylotto.app.ui.component.TicketCard
+import com.weeklylotto.app.ui.format.toBadgeTone
+import com.weeklylotto.app.ui.format.toSourceChipLabel
+import com.weeklylotto.app.ui.format.toStatusLabel
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
@@ -131,7 +132,7 @@ fun ManageScreen(
                         FilterChip(
                             selected = status in uiState.filter.statuses,
                             onClick = { viewModel.toggleStatusFilter(status) },
-                            label = { Text(status.toBadgeLabel()) },
+                            label = { Text(status.toStatusLabel()) },
                         )
                     }
                 }
@@ -286,7 +287,7 @@ fun ManageScreen(
                     contentPadding = PaddingValues(LottoDimens.ScreenPadding),
                 ) {
                     items(filteredTickets, key = { it.id }) { bundle ->
-                        val title = "${bundle.round.number}회 ${bundle.source.toSourceLabel()}"
+                        val title = "${bundle.round.number}회 ${bundle.source.toSourceChipLabel()}"
                         val meta = "${bundle.games.size}게임 · ${bundle.createdAt.toDisplayDate()}"
 
                         Column {
@@ -307,7 +308,7 @@ fun ManageScreen(
                                 numbers = bundle.games.firstOrNull()?.numbers?.map { it.value }.orEmpty(),
                                 badge = {
                                     StatusBadge(
-                                        label = bundle.status.toBadgeLabel(),
+                                        label = bundle.status.toStatusLabel(),
                                         tone = bundle.status.toBadgeTone(),
                                     )
                                 },
@@ -327,27 +328,6 @@ fun ManageScreen(
         }
     }
 }
-
-private fun TicketStatus.toBadgeLabel(): String =
-    when (this) {
-        TicketStatus.WIN -> "당첨"
-        TicketStatus.LOSE -> "낙첨"
-        TicketStatus.PENDING -> "대기"
-    }
-
-private fun TicketStatus.toBadgeTone(): BadgeTone =
-    when (this) {
-        TicketStatus.WIN -> BadgeTone.Success
-        TicketStatus.LOSE -> BadgeTone.Neutral
-        TicketStatus.PENDING -> BadgeTone.Accent
-    }
-
-private fun TicketSource.toSourceLabel(): String =
-    when (this) {
-        TicketSource.GENERATED -> "자동"
-        TicketSource.QR_SCAN -> "QR"
-        TicketSource.MANUAL -> "수동"
-    }
 
 private fun java.time.Instant.toDisplayDate(): String {
     val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")

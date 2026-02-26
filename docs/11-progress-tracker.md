@@ -102,6 +102,8 @@
   - 앱 아이콘 브랜딩 리뉴얼: adaptive icon foreground/background 개선 + Android 13 themed icon용 monochrome 추가
   - Figma MCP 호출 제한 대응용 오프라인 디자인 QA 체크리스트 추가(`19-offline-design-qa-checklist.md`)
   - 릴리즈 프리플라이트 최신 재실행(2026-02-26): PASS 13 / WARN 0 / FAIL 0, `connectedDebugAndroidTest` 8/8
+  - 상태/출처/모드 라벨 변환 로직 공통화(`ui/format/LottoUiLabels.kt`)로 화면 간 문구 불일치 리스크 제거
+  - 상세 화면 게임 메타 문구를 enum name 대신 사용자 문구로 교정(`모드: 자동/수동/반자동`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)

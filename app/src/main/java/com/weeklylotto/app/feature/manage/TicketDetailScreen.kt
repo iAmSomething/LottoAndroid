@@ -22,12 +22,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
-import com.weeklylotto.app.domain.model.GameMode
 import com.weeklylotto.app.domain.model.TicketBundle
-import com.weeklylotto.app.domain.model.TicketSource
-import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.TicketCard
+import com.weeklylotto.app.ui.format.toModeLabel
+import com.weeklylotto.app.ui.format.toSourceDisplayLabel
+import com.weeklylotto.app.ui.format.toStatusLabel
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import java.time.ZoneId
@@ -101,7 +101,7 @@ fun TicketDetailScreen(
                 TicketCard(
                     title = "${game.slot} 게임",
                     numbers = game.numbers.map { it.value },
-                    meta = "모드: ${game.mode}",
+                    meta = "모드: ${game.mode.toModeLabel()}",
                 )
             }
         }
@@ -120,37 +120,16 @@ internal fun buildTicketShareText(
         listOf(
             "매주로또 티켓 공유",
             "회차: 제 ${ticket.round.number}회 (추첨일 ${ticket.round.drawDate.format(drawDateFormatter)})",
-            "출처: ${ticket.source.toKoreanLabel()}",
-            "상태: ${ticket.status.toKoreanLabel()}",
+            "출처: ${ticket.source.toSourceDisplayLabel()}",
+            "상태: ${ticket.status.toStatusLabel()}",
             "등록일: $createdAtText",
         )
 
     val gameLines =
         ticket.games.map { game ->
             val numbers = game.numbers.joinToString(", ") { it.value.toString().padStart(2, '0') }
-            "${game.slot} 게임(${game.mode.toKoreanLabel()}): $numbers"
+            "${game.slot} 게임(${game.mode.toModeLabel()}): $numbers"
         }
 
     return (headerLines + "" + gameLines).joinToString(separator = "\n")
 }
-
-private fun TicketSource.toKoreanLabel(): String =
-    when (this) {
-        TicketSource.GENERATED -> "번호 생성"
-        TicketSource.QR_SCAN -> "QR 스캔"
-        TicketSource.MANUAL -> "수동 입력"
-    }
-
-private fun TicketStatus.toKoreanLabel(): String =
-    when (this) {
-        TicketStatus.PENDING -> "대기"
-        TicketStatus.WIN -> "당첨"
-        TicketStatus.LOSE -> "낙첨"
-    }
-
-private fun GameMode.toKoreanLabel(): String =
-    when (this) {
-        GameMode.AUTO -> "자동"
-        GameMode.MANUAL -> "수동"
-        GameMode.SEMI_AUTO -> "반자동"
-    }
