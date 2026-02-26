@@ -285,6 +285,34 @@ class ManageViewModelTest {
             assertThat(summary.currentRoundCount).isEqualTo(1)
             assertThat(summary.latestRound).isEqualTo(currentRoundNumber)
         }
+
+    @Test
+    fun WEEK탭으로_전환하면_SAVED_상태필터는_제거된다() =
+        runTest {
+            val repository = ManageFakeTicketRepository(tickets = emptyList())
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            viewModel.toggleStatusFilter(TicketStatus.SAVED)
+            viewModel.setTab(ManageTab.VAULT)
+            viewModel.setTab(ManageTab.WEEK)
+
+            assertThat(viewModel.uiState.value.filter.statuses).doesNotContain(TicketStatus.SAVED)
+        }
+
+    @Test
+    fun 상태필터_초기화는_회차필터를_유지한다() =
+        runTest {
+            val repository = ManageFakeTicketRepository(tickets = emptyList())
+            val viewModel = ManageViewModel(ticketRepository = repository)
+            val targetRange = 1000..1010
+
+            viewModel.setRoundRange(targetRange)
+            viewModel.toggleStatusFilter(TicketStatus.WIN)
+            viewModel.clearStatusFilters()
+
+            assertThat(viewModel.uiState.value.filter.statuses).isEmpty()
+            assertThat(viewModel.uiState.value.filter.roundRange).isEqualTo(targetRange)
+        }
 }
 
 private fun ticket(

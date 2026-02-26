@@ -152,6 +152,11 @@
   - 가져오기 저장 경로 중복 방지 적용: 이번주 동일 번호 존재 시 저장 차단 + 에러 문구 노출
   - 신규 단위 테스트 추가: `ManualAddViewModelTest`, `ImportViewModelTest`(중복 차단/정상 저장)
   - 통합 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug` 재통과
+  - 번호관리 필터 UX 개선: `전체` 상태 칩, 활성 필터 개수(`필터 N`), 적용 중 요약 문구 표시 추가
+  - 탭별 상태 칩 정렬: WEEK 탭은 `SAVED` 제외, VAULT/SCAN 탭은 전체 상태 노출
+  - 상태 필터 단독 초기화 액션 추가(`clearStatusFilters`) 및 WEEK 전환 시 필터 정규화 적용
+  - 필터 회귀 테스트 추가: WEEK 전환 시 SAVED 제거, 상태필터 초기화가 회차필터를 유지하는지 검증
+  - 통합 품질 게이트 재검증: 동일 게이트 전부 재통과(`ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)

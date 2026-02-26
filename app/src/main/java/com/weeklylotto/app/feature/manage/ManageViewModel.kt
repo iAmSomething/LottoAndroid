@@ -62,11 +62,18 @@ class ManageViewModel(
 
     fun setTab(tab: ManageTab) {
         _uiState.update {
+            val normalizedStatuses =
+                if (tab == ManageTab.WEEK) {
+                    it.filter.statuses - TicketStatus.SAVED
+                } else {
+                    it.filter.statuses
+                }
             it.copy(
                 tab = tab,
                 selectedIds = emptySet(),
                 editMode = false,
                 isMoveSheetOpen = false,
+                filter = it.filter.copy(statuses = normalizedStatuses),
             )
         }
     }
@@ -132,6 +139,12 @@ class ManageViewModel(
                     if (contains(status)) remove(status) else add(status)
                 }
             state.copy(filter = state.filter.copy(statuses = updated))
+        }
+    }
+
+    fun clearStatusFilters() {
+        _uiState.update { state ->
+            state.copy(filter = state.filter.copy(statuses = emptySet()))
         }
     }
 

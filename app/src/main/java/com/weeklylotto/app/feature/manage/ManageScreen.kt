@@ -1,6 +1,7 @@
 package com.weeklylotto.app.feature.manage
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -35,6 +37,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -71,10 +74,20 @@ fun ManageScreen(
         )
     val uiState by viewModel.uiState.collectAsState()
     val filteredTickets = viewModel.filteredTickets()
+    val activeFilterCount = uiState.filter.statuses.size + if (uiState.filter.roundRange != null) 1 else 0
+    val availableStatuses = remember(uiState.tab) { filterStatusesForTab(uiState.tab) }
     val scanSummary = if (uiState.tab == ManageTab.SCAN) viewModel.scanSummary() else null
     val latestRound = uiState.tickets.maxOfOrNull { it.round.number } ?: 1
     val recent5Range = (latestRound - 4).coerceAtLeast(1)..latestRound
     val recent10Range = (latestRound - 9).coerceAtLeast(1)..latestRound
+    val filterSummary =
+        remember(uiState.filter, recent5Range, recent10Range) {
+            buildFilterSummary(
+                filter = uiState.filter,
+                recent5Range = recent5Range,
+                recent10Range = recent10Range,
+            )
+        }
 
     if (uiState.isFabSheetOpen) {
         ModalBottomSheet(
@@ -128,9 +141,24 @@ fun ManageScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text("필터", style = MaterialTheme.typography.titleMedium)
+                if (filterSummary != null) {
+                    Text(
+                        text = "적용 중: $filterSummary",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = LottoColors.TextMuted,
+                    )
+                }
                 Text("상태", style = MaterialTheme.typography.bodySmall, color = LottoColors.TextMuted)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    TicketStatus.entries.forEach { status ->
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    FilterChip(
+                        selected = uiState.filter.statuses.isEmpty(),
+                        onClick = viewModel::clearStatusFilters,
+                        label = { Text("전체") },
+                    )
+                    availableStatuses.forEach { status ->
                         FilterChip(
                             selected = status in uiState.filter.statuses,
                             onClick = { viewModel.toggleStatusFilter(status) },
@@ -217,7 +245,14 @@ fun ManageScreen(
         topBar = {
             LottoTopAppBar(
                 title = "번호관리",
-                rightActionText = if (uiState.editMode) "완료" else "필터",
+                rightActionText =
+                    if (uiState.editMode) {
+                        "완료"
+                    } else if (activeFilterCount > 0) {
+                        "필터 $activeFilterCount"
+                    } else {
+                        "필터"
+                    },
                 onRightClick = {
                     if (uiState.editMode) {
                         viewModel.toggleEditMode()
@@ -459,4 +494,32 @@ private fun java.time.Instant.toDisplayDate(): String {
 private fun java.time.Instant.toDisplayDateTime(): String {
     val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")
     return formatter.format(atZone(ZoneId.systemDefault()))
+}
+
+private fun filterStatusesForTab(tab: ManageTab): List<TicketStatus> =
+    when (tab) {
+        ManageTab.WEEK -> listOf(TicketStatus.PENDING, TicketStatus.WIN, TicketStatus.LOSE)
+        ManageTab.VAULT -> listOf(TicketStatus.SAVED, TicketStatus.WIN, TicketStatus.LOSE, TicketStatus.PENDING)
+        ManageTab.SCAN -> listOf(TicketStatus.PENDING, TicketStatus.WIN, TicketStatus.LOSE, TicketStatus.SAVED)
+    }
+
+private fun buildFilterSummary(
+    filter: ManageFilter,
+    recent5Range: IntRange,
+    recent10Range: IntRange,
+): String? {
+    val parts = mutableListOf<String>()
+    if (filter.statuses.isNotEmpty()) {
+        parts += filter.statuses.joinToString("/") { it.toStatusLabel() }
+    }
+    filter.roundRange?.let { range ->
+        val label =
+            when (range) {
+                recent5Range -> "최근 5회"
+                recent10Range -> "최근 10회"
+                else -> "${range.first}~${range.last}회"
+            }
+        parts += label
+    }
+    return parts.takeIf { it.isNotEmpty() }?.joinToString(", ")
 }
