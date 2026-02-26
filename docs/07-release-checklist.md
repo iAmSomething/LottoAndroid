@@ -7,6 +7,7 @@
 - [x] `./gradlew :app:connectedDebugAndroidTest` (실기기/에뮬레이터 필수)
 - [x] 실기기 재검증 자동화 명령 준비(`./scripts/run-physical-device-validation.sh`)
 - [x] 프리플라이트 실기기 엄격 모드 추가(`./scripts/release-preflight.sh --with-build --require-physical-device`)
+- [x] 배포 전 최종 점검 래퍼 추가(`./scripts/release-final-check.sh`)
 - [x] 크래시 재현 케이스 점검 (계측 테스트 재실행 + 수동 instrumentation 확인)
 - [x] `./scripts/release-preflight.sh --with-build` 실행 및 리포트 저장(`17-release-preflight-report.md`)
 - [x] CI 프리플라이트 워크플로우 추가(`.github/workflows/release-preflight.yml`)
@@ -46,13 +47,21 @@
 - 당첨 API fallback: 공식 API 실패 시 미러 API로 1212회 로드 확인
 - CI preflight 모드(`--with-build-ci --skip-adb --require-signing`) 검증 통과
 
-## 7. 최종 배포 직전 필수 명령
+## 7. 최종 배포 직전 실행 명령
+1. 공통(자동 대상 선택: 실기기 우선, 없으면 에뮬레이터)
 ```bash
-./scripts/release-preflight.sh --with-build --require-physical-device
+./scripts/release-final-check.sh
+```
+- 통과 조건: 요약 `FAIL=0`
+- 실기기 없을 때는 에뮬레이터 검증으로 진행되며, 실기기 검증은 `pending`으로 남김
+- ADB 디바이스가 전혀 없으면 CI-only fallback(`--with-build-ci --skip-adb --require-signing`)으로 자동 전환
+
+2. 스토어 제출 직전(실기기 필수 강제)
+```bash
+./scripts/release-final-check.sh --require-physical-device
 ```
 - 통과 조건: 실기기 1대 이상 연결 + 요약 `FAIL=0`
-- 실기기 미연결 시 품질게이트는 생략되고 즉시 실패(fail-fast)
-- 다중 실기기 연결 시 권장:
+- 다중 실기기 연결 시:
 ```bash
-./scripts/release-preflight.sh --with-build --require-physical-device --android-serial <adb-serial>
+./scripts/release-final-check.sh --require-physical-device --serial <adb-serial>
 ```

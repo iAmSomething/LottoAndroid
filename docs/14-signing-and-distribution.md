@@ -33,14 +33,25 @@
 - 점검 범위: JDK/ADB, 버전, 스크린샷 세트, 서명 값, 품질 게이트
 - 최신 실행 기록: `17-release-preflight-report.md`
 
+### 3-1-0. 최종 점검 래퍼(실행 우선 권장)
+```bash
+./scripts/release-final-check.sh
+```
+- 실기기 1대가 연결되어 있으면 자동으로 실기기 엄격 모드를 사용
+- 실기기가 없으면 에뮬레이터 1대를 자동 선택해 검증 진행
+- ADB 디바이스가 없으면 CI-only fallback(`--with-build-ci --skip-adb --require-signing`)으로 자동 전환
+- 검증 이력은 `18-device-validation-report.md`에 자동 기록
+
 ### 3-1-a. 최종 배포 직전(실기기 필수)
 ```bash
-./scripts/release-preflight.sh --with-build --require-physical-device
+./scripts/release-final-check.sh --require-physical-device
 ```
 - 실기기 1대 이상이 연결되지 않으면 실패(`FAIL > 0`)하도록 강제
 - 에뮬레이터만 연결된 상태의 오검증을 방지
-- 실기기 조건 미충족 시 품질게이트를 실행하지 않고 fail-fast
-- `--skip-adb`, `--with-build-ci`와 동시 사용 불가
+- 다중 실기기 환경에서 특정 단말 지정:
+```bash
+./scripts/release-final-check.sh --require-physical-device --serial <adb-serial>
+```
 
 ### 3-1-b. 테스트 대상 serial 지정(선택)
 ```bash

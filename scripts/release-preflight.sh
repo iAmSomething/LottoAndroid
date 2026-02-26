@@ -115,6 +115,73 @@ extract_prop_from_file() {
   awk -F '=' -v k="$key" '$1==k {print substr($0, index($0, "=")+1)}' "$file" | tail -n 1
 }
 
+run_connected_test_with_retry() {
+  local serial="$1"
+  local attempt=1
+
+  while [[ "$attempt" -le 2 ]]; do
+    local log_file
+    local status
+    log_file="$(mktemp)"
+
+    if [[ -n "$serial" ]]; then
+      ANDROID_SERIAL="$serial" ./gradlew :app:connectedDebugAndroidTest 2>&1 | tee "$log_file"
+      status="${PIPESTATUS[0]}"
+    else
+      ./gradlew :app:connectedDebugAndroidTest 2>&1 | tee "$log_file"
+      status="${PIPESTATUS[0]}"
+    fi
+
+    if [[ "$status" -eq 0 ]]; then
+      rm -f "$log_file"
+      return 0
+    fi
+
+    if [[ "$attempt" -ge 2 ]]; then
+      rm -f "$log_file"
+      return "$status"
+    fi
+
+    if grep -Eq "Process crashed|Starting 0 tests|failed to complete startup" "$log_file"; then
+      warn "connectedDebugAndroidTest 일시 실패 감지(프로세스 시작/ANR). 1회 재시도"
+      if command -v adb >/dev/null 2>&1; then
+        if [[ -n "$serial" ]]; then
+          adb -s "$serial" wait-for-device >/dev/null 2>&1 || true
+        else
+          adb wait-for-device >/dev/null 2>&1 || true
+        fi
+      fi
+      sleep 3
+      attempt=$((attempt + 1))
+      rm -f "$log_file"
+      continue
+    fi
+
+    rm -f "$log_file"
+    return "$status"
+  done
+
+  return 1
+}
+
+run_local_quality_gate() {
+  local serial="$1"
+
+  if ! ./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest; then
+    return 1
+  fi
+
+  if ! run_connected_test_with_retry "$serial"; then
+    return 1
+  fi
+
+  if ! ./gradlew :app:assembleRelease; then
+    return 1
+  fi
+
+  return 0
+}
+
 section "환경"
 if command -v java >/dev/null 2>&1; then
   JAVA_MAJOR="$(java -version 2>&1 | awk -F '[\".]' '/version/ {print $2; exit}')"
@@ -275,14 +342,14 @@ section "품질 게이트"
 if [[ "$SKIP_BUILD_DUE_TO_ENV_FAIL" -eq 1 ]]; then
   warn "실기기 필수 조건 미충족으로 품질 게이트 실행 생략"
 elif [[ "$RUN_BUILD_LOCAL" -eq 1 ]]; then
-  if [[ -n "$TARGET_ANDROID_SERIAL" ]]; then
-    if ANDROID_SERIAL="$TARGET_ANDROID_SERIAL" ./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:connectedDebugAndroidTest :app:assembleRelease; then
+  if run_local_quality_gate "$TARGET_ANDROID_SERIAL"; then
+    if [[ -n "$TARGET_ANDROID_SERIAL" ]]; then
       pass "품질 게이트 통과(ktlint/detekt/unit/connected/release, serial=${TARGET_ANDROID_SERIAL})"
     else
-      fail "품질 게이트 실패(Gradle 로그 확인 필요, serial=${TARGET_ANDROID_SERIAL})"
+      pass "품질 게이트 통과(ktlint/detekt/unit/connected/release)"
     fi
-  elif ./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:connectedDebugAndroidTest :app:assembleRelease; then
-    pass "품질 게이트 통과(ktlint/detekt/unit/connected/release)"
+  elif [[ -n "$TARGET_ANDROID_SERIAL" ]]; then
+    fail "품질 게이트 실패(Gradle 로그 확인 필요, serial=${TARGET_ANDROID_SERIAL})"
   else
     fail "품질 게이트 실패(Gradle 로그 확인 필요)"
   fi

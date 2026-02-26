@@ -98,6 +98,9 @@
 - [x] I-014 실기기 엄격 모드 fail-fast(미충족 시 품질게이트 생략) 적용
 - [x] I-015 프리플라이트 테스트 대상 serial 지정 옵션(`--android-serial`) 추가
 - [x] I-016 엄격+serial 조합 검증(에뮬레이터 지정 시 의도된 실패 확인)
+- [x] I-017 최종 점검 래퍼(`release-final-check.sh`) 추가: 실기기 우선, 미보유 시 에뮬레이터 fallback 지원
+- [x] I-018 에뮬레이터/무기기 환경 fallback 보강(`release-final-check.sh`: CI-only 자동 전환)
+- [x] I-019 에뮬레이터 시작 ANR 대응 프리플라이트 보강(`connectedDebugAndroidTest` 1회 자동 재시도)
 
 ## J. 디자인 스펙 정렬(`/Volumes/무제/design_spec_android_lotto.md`)
 - [x] J-001 토큰(색상/간격/타이포) 1차 반영
@@ -109,3 +112,4 @@
 - [x] J-007 Figma/스펙 기준 간격·타이포 픽셀 보정(컴포넌트/핵심 화면)
 - [x] J-008 Ticket 상세 화면 공유 액션 및 공유 텍스트 포맷 구현
 - [x] J-009 Figma 호출 제한 대응 오프라인 디자인 QA 체크리스트 문서화
+- [x] J-010 QR 카메라 바인딩 안정화(라이프사이클 destroyed 가드, 콜백 최신화)로 계측 크래시 리스크 완화

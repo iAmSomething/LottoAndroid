@@ -111,13 +111,21 @@
   - 실기기 엄격 모드 fail-fast 적용: 실기기 미충족 시 품질게이트 생략 후 즉시 실패
   - 프리플라이트 `--android-serial` 옵션 추가(다중 디바이스 환경에서 테스트 대상 고정)
   - 엄격+serial 조합 검증: 지정 serial이 에뮬레이터인 경우 의도된 실패 확인
+  - 최종 점검 래퍼 스크립트 추가(`scripts/release-final-check.sh`): 실기기 우선, 미연결 시 에뮬레이터 fallback
+  - 실기기 미보유 기준 운영 문서 동기화(`07-release-checklist.md`, `14-signing-and-distribution.md`, `18-device-validation-report.md`)
+  - 무기기 환경 fallback 보강: `release-final-check.sh`가 ADB 디바이스 미연결 시 CI-only 게이트로 자동 전환
+  - 에뮬레이터 간헐 startup ANR 대응: `release-preflight.sh`의 `connectedDebugAndroidTest` 1회 자동 재시도 추가
+  - QR 카메라 바인딩 안정화: destroyed lifecycle 상태 가드 + callback 최신 상태 참조로 크래시 완화(`CameraScannerPreview.kt`)
+  - 무기기 최종 점검 검증 통과: `./scripts/release-final-check.sh` → CI-only fallback PASS(13/0/0)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
 - 블로커
   - Figma MCP 호출 한도(노드 직접 대조 불가)
+  - 실기기 미보유(에뮬레이터 fallback으로 개발/사전 점검은 진행 가능)
 - 다음 액션
-  - 실기기 1대에서 `connectedDebugAndroidTest` 1회 추가 검증
+  - 에뮬레이터 기준 `./scripts/release-final-check.sh` 정기 실행으로 회귀 감시 유지
+  - 실기기 확보 시 `./scripts/release-final-check.sh --require-physical-device` 1회 통과 이력 확보
   - Figma 툴 호출 가능 상태에서 node `6:2` 기준 화면 밀도/간격 최종 동기화
 
 ## 상태 요약

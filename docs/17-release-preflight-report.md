@@ -8,6 +8,9 @@
 ```bash
 ./scripts/release-preflight.sh --with-build
 ```
+```bash
+./scripts/release-final-check.sh
+```
 
 ## 결과 요약
 - PASS: 13
@@ -40,6 +43,9 @@
 7. 실기기 엄격 모드 fail-fast 보강(2026-02-26): 실기기 0대일 때 품질게이트 생략 + 즉시 FAIL 유지 확인
 8. serial 지정 모드 검증(2026-02-26): `--android-serial emulator-5554` 실행 시 PASS 14 / WARN 0 / FAIL 0
 9. 엄격+serial 조합 검증(2026-02-26): `--require-physical-device --android-serial emulator-5554` 실행 시 FAIL 1(의도된 실패)
+10. 에뮬레이터 간헐 이슈 관찰(2026-02-26): API 36 AVD에서 `connectedDebugAndroidTest`가 간헐적으로 `Process crashed / failed to complete startup`로 0건 실행 실패
+11. 프리플라이트 보강(2026-02-26): `connectedDebugAndroidTest`에 시작/ANR 계열 실패 감지 시 1회 자동 재시도 로직 추가
+12. 무기기 환경 fallback 검증(2026-02-26): `./scripts/release-final-check.sh` 실행 시 CI-only fallback 자동 전환 PASS(`--with-build-ci --skip-adb --require-signing`)
 
 ## 후속 조치
 1. CI 환경에도 동일하게 `LOTTO_RELEASE_*` 시크릿 설정
@@ -49,5 +55,5 @@
 2. GitHub Actions `release-preflight.yml`에서 `--with-build-ci --skip-adb --require-signing` 실행 유지
 3. 배포 직전 아래 명령으로 최종 재검증
 ```bash
-./scripts/release-preflight.sh --with-build --require-physical-device
+./scripts/release-final-check.sh --require-physical-device
 ```
