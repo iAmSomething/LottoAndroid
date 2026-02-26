@@ -39,6 +39,12 @@ data class ManageUiState(
     val feedbackMessage: String? = null,
 )
 
+data class ScanSummary(
+    val totalCount: Int,
+    val currentRoundCount: Int,
+    val latestRound: Int?,
+)
+
 @Suppress("TooManyFunctions")
 class ManageViewModel(
     private val ticketRepository: TicketRepository,
@@ -262,6 +268,16 @@ class ManageViewModel(
         } else {
             statusFiltered.filter { it.round.number in range }
         }
+    }
+
+    fun scanSummary(): ScanSummary {
+        val currentRound = RoundEstimator.currentSalesRound(LocalDate.now())
+        val scanTickets = uiState.value.tickets.filter { it.source == TicketSource.QR_SCAN }
+        return ScanSummary(
+            totalCount = scanTickets.size,
+            currentRoundCount = scanTickets.count { it.round.number == currentRound },
+            latestRound = scanTickets.maxOfOrNull { it.round.number },
+        )
     }
 }
 

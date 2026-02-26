@@ -236,6 +236,55 @@ class ManageViewModelTest {
             val scanIds = viewModel.filteredTickets().map { it.id }
             assertThat(scanIds).containsExactly(51L)
         }
+
+    @Test
+    fun 스캔요약은_총건수_이번주건수_최신회차를_반환한다() =
+        runTest {
+            val today = LocalDate.now()
+            val currentRoundNumber = RoundEstimator.currentSalesRound(today)
+            val currentRound =
+                Round(
+                    number = currentRoundNumber,
+                    drawDate = RoundEstimator.nextDrawDate(today),
+                )
+            val oldRound =
+                Round(
+                    number = (currentRoundNumber - 2).coerceAtLeast(1),
+                    drawDate = today.minusDays(14),
+                )
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets =
+                        listOf(
+                            ticket(
+                                id = 61L,
+                                round = currentRound,
+                                status = TicketStatus.PENDING,
+                                source = TicketSource.QR_SCAN,
+                            ),
+                            ticket(
+                                id = 62L,
+                                round = oldRound,
+                                status = TicketStatus.WIN,
+                                source = TicketSource.QR_SCAN,
+                            ),
+                            ticket(
+                                id = 63L,
+                                round = currentRound,
+                                status = TicketStatus.PENDING,
+                                source = TicketSource.GENERATED,
+                            ),
+                        ),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+            val summary = viewModel.scanSummary()
+
+            assertThat(summary.totalCount).isEqualTo(2)
+            assertThat(summary.currentRoundCount).isEqualTo(1)
+            assertThat(summary.latestRound).isEqualTo(currentRoundNumber)
+        }
 }
 
 private fun ticket(

@@ -71,6 +71,7 @@ fun ManageScreen(
         )
     val uiState by viewModel.uiState.collectAsState()
     val filteredTickets = viewModel.filteredTickets()
+    val scanSummary = if (uiState.tab == ManageTab.SCAN) viewModel.scanSummary() else null
     val latestRound = uiState.tickets.maxOfOrNull { it.round.number } ?: 1
     val recent5Range = (latestRound - 4).coerceAtLeast(1)..latestRound
     val recent10Range = (latestRound - 9).coerceAtLeast(1)..latestRound
@@ -328,9 +329,28 @@ fun ManageScreen(
                             )
                         }
                     }
+                    if (uiState.tab == ManageTab.SCAN && scanSummary != null) {
+                        item {
+                            ScanSummaryCard(
+                                totalCount = scanSummary.totalCount,
+                                currentRoundCount = scanSummary.currentRoundCount,
+                                latestRound = scanSummary.latestRound,
+                            )
+                        }
+                    }
                     items(filteredTickets, key = { it.id }) { bundle ->
-                        val title = "${bundle.round.number}회 ${bundle.source.toSourceChipLabel()}"
-                        val meta = "${bundle.games.size}게임 · ${bundle.createdAt.toDisplayDate()}"
+                        val title =
+                            if (uiState.tab == ManageTab.SCAN) {
+                                "${bundle.round.number}회 QR 스캔"
+                            } else {
+                                "${bundle.round.number}회 ${bundle.source.toSourceChipLabel()}"
+                            }
+                        val meta =
+                            if (uiState.tab == ManageTab.SCAN) {
+                                "스캔 등록 ${bundle.createdAt.toDisplayDateTime()} · ${bundle.games.size}게임"
+                            } else {
+                                "${bundle.games.size}게임 · ${bundle.createdAt.toDisplayDate()}"
+                            }
 
                         Column {
                             if (uiState.editMode) {
@@ -398,7 +418,45 @@ private fun VaultSummaryCard(
     }
 }
 
+@Composable
+private fun ScanSummaryCard(
+    totalCount: Int,
+    currentRoundCount: Int,
+    latestRound: Int?,
+) {
+    Card(
+        shape = RoundedCornerShape(LottoDimens.CardRadius),
+        border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+        colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+    ) {
+        Column(
+            modifier = Modifier.padding(LottoDimens.ScreenPadding),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Text("스캔내역 요약", style = MaterialTheme.typography.titleSmall)
+            latestRound?.let { round ->
+                Text(
+                    "최신 스캔 회차 ${round}회",
+                    color = LottoColors.TextSecondary,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+            Text("총 ${totalCount}건", color = LottoColors.TextSecondary, style = MaterialTheme.typography.bodySmall)
+            Text(
+                "이번주 스캔 ${currentRoundCount}건",
+                color = LottoColors.TextSecondary,
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+    }
+}
+
 private fun java.time.Instant.toDisplayDate(): String {
     val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+    return formatter.format(atZone(ZoneId.systemDefault()))
+}
+
+private fun java.time.Instant.toDisplayDateTime(): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")
     return formatter.format(atZone(ZoneId.systemDefault()))
 }

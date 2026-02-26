@@ -144,6 +144,10 @@
   - 번호관리 보관함 화면에 요약 카드 추가: 총 건수/보관 상태 건수/당첨 상태 건수 한눈에 확인
   - 번호관리 탭 필터 회귀 테스트 보강: `이번주` 탭의 SAVED 제외 규칙, `스캔내역` 탭의 QR 전용 노출 규칙 추가
   - 통합 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug` 통과
+  - 번호관리 스캔내역 화면에 요약 카드 추가: 총 스캔/이번주 스캔/최신 스캔 회차 즉시 확인
+  - 스캔내역 카드 메타 고도화: `스캔 등록 yyyy.MM.dd HH:mm · N게임` 형태로 정보 밀도 보강
+  - 스캔 요약 계산 회귀 테스트 추가: `scanSummary()`의 총건수/이번주건수/최신회차 검증
+  - 통합 품질 게이트 재검증: 동일 게이트 전부 재통과(`ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
