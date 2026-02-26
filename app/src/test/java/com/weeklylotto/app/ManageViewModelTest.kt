@@ -22,6 +22,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
+import java.time.Instant
 import java.time.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -83,6 +84,59 @@ class ManageViewModelTest {
 
         assertThat(viewModel.uiState.value.isMoveSheetOpen).isFalse()
     }
+
+    @Test
+    fun 과거회차_티켓은_이번주로_복사된다() =
+        runTest {
+            val today = LocalDate.now()
+            val currentRoundNumber = RoundEstimator.currentSalesRound(today)
+            val oldRound =
+                Round(
+                    number = (currentRoundNumber - 2).coerceAtLeast(1),
+                    drawDate = today.minusDays(10),
+                )
+            val oldTicket = ticket(id = 7L, round = oldRound, status = TicketStatus.SAVED)
+            val repository = ManageFakeTicketRepository(tickets = listOf(oldTicket))
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+            viewModel.copyTicketToCurrentRound(oldTicket.id)
+            advanceUntilIdle()
+
+            val currentRoundTickets =
+                viewModel.uiState.value.tickets.filter { it.round.number == currentRoundNumber }
+
+            assertThat(currentRoundTickets).hasSize(1)
+            assertThat(currentRoundTickets.first().source).isEqualTo(TicketSource.MANUAL)
+            assertThat(currentRoundTickets.first().status).isEqualTo(TicketStatus.PENDING)
+            assertThat(currentRoundTickets.first().createdAt).isAtLeast(oldTicket.createdAt)
+            assertThat(viewModel.uiState.value.feedbackMessage).isEqualTo("이번 주 번호로 복사했습니다.")
+        }
+
+    @Test
+    fun 같은회차_티켓복사는_차단된다() =
+        runTest {
+            val today = LocalDate.now()
+            val currentRound =
+                Round(
+                    number = RoundEstimator.currentSalesRound(today),
+                    drawDate = RoundEstimator.nextDrawDate(today),
+                )
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets = listOf(ticket(id = 11L, round = currentRound, status = TicketStatus.PENDING)),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+            val beforeCount = viewModel.uiState.value.tickets.size
+
+            viewModel.copyTicketToCurrentRound(11L)
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.tickets).hasSize(beforeCount)
+            assertThat(viewModel.uiState.value.feedbackMessage).isEqualTo("이미 이번 주 회차 번호입니다.")
+        }
 }
 
 private fun ticket(
@@ -93,6 +147,7 @@ private fun ticket(
     TicketBundle(
         id = id,
         round = round,
+        createdAt = Instant.now(),
         games =
             listOf(
                 LottoGame(
@@ -108,6 +163,7 @@ private class ManageFakeTicketRepository(
     tickets: List<TicketBundle>,
 ) : TicketRepository {
     private val bundles = MutableStateFlow(tickets)
+    private var nextId: Long = (tickets.maxOfOrNull { it.id } ?: 0L) + 1L
 
     override fun observeAllTickets(): Flow<List<TicketBundle>> = bundles.asStateFlow()
 
@@ -117,7 +173,15 @@ private class ManageFakeTicketRepository(
         bundles.map { list -> list.filter { it.round.number == round.number } }
 
     override suspend fun save(bundle: TicketBundle) {
-        bundles.update { list -> list + bundle }
+        bundles.update { list ->
+            val resolved =
+                if (bundle.id > 0L) {
+                    bundle
+                } else {
+                    bundle.copy(id = nextId++)
+                }
+            list + resolved
+        }
     }
 
     override suspend fun update(bundle: TicketBundle) {

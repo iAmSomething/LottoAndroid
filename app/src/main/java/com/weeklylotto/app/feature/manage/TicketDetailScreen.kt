@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -49,6 +49,12 @@ fun TicketDetailScreen(
     val uiState by viewModel.uiState.collectAsState()
     val ticket = uiState.tickets.firstOrNull { it.id == ticketId }
 
+    LaunchedEffect(uiState.feedbackMessage) {
+        val message = uiState.feedbackMessage ?: return@LaunchedEffect
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        viewModel.clearFeedbackMessage()
+    }
+
     Column(
         modifier =
             Modifier
@@ -57,8 +63,10 @@ fun TicketDetailScreen(
     ) {
         LottoTopAppBar(
             title = "${ticket?.round?.number ?: "-"}회 상세",
-            rightActionText = "닫기",
-            onRightClick = onBack,
+            rightActionText = "공유",
+            onRightClick = {
+                ticket?.let { shareTicket(context, it) }
+            },
         )
 
         if (ticket == null) {
@@ -73,29 +81,7 @@ fun TicketDetailScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Text("게임", style = MaterialTheme.typography.titleMedium)
-                    Button(
-                        onClick = {
-                            val shareText = buildTicketShareText(ticket)
-                            val shareIntent =
-                                Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_TEXT, shareText)
-                                }
-                            runCatching {
-                                context.startActivity(Intent.createChooser(shareIntent, "티켓 공유"))
-                            }.onFailure {
-                                Toast.makeText(context, "공유 가능한 앱을 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
-                            }
-                        },
-                    ) {
-                        Text("공유")
-                    }
-                }
+                Text("게임", style = MaterialTheme.typography.titleMedium)
             }
             items(ticket.games) { game ->
                 TicketCard(
@@ -104,7 +90,40 @@ fun TicketDetailScreen(
                     meta = "모드: ${game.mode.toModeLabel()}",
                 )
             }
+            item {
+                Button(
+                    onClick = { viewModel.copyTicketToCurrentRound(ticketId) },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("이번주로 복사")
+                }
+            }
+            item {
+                Button(
+                    onClick = onBack,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("닫기")
+                }
+            }
         }
+    }
+}
+
+private fun shareTicket(
+    context: android.content.Context,
+    ticket: TicketBundle,
+) {
+    val shareText = buildTicketShareText(ticket)
+    val shareIntent =
+        Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, shareText)
+        }
+    runCatching {
+        context.startActivity(Intent.createChooser(shareIntent, "티켓 공유"))
+    }.onFailure {
+        Toast.makeText(context, "공유 가능한 앱을 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
     }
 }
 

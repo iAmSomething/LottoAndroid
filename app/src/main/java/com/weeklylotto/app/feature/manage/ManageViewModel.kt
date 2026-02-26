@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
 
 enum class ManageTab {
@@ -35,6 +36,7 @@ data class ManageUiState(
     val isMoveSheetOpen: Boolean = false,
     val isDeleteDialogOpen: Boolean = false,
     val tickets: List<TicketBundle> = emptyList(),
+    val feedbackMessage: String? = null,
 )
 
 @Suppress("TooManyFunctions")
@@ -61,6 +63,10 @@ class ManageViewModel(
                 isMoveSheetOpen = false,
             )
         }
+    }
+
+    fun clearFeedbackMessage() {
+        _uiState.update { it.copy(feedbackMessage = null) }
     }
 
     fun toggleEditMode() {
@@ -184,8 +190,42 @@ class ManageViewModel(
                     selectedIds = emptySet(),
                     editMode = false,
                     isMoveSheetOpen = false,
+                    feedbackMessage = "보관함으로 이동했습니다.",
                 )
             }
+        }
+    }
+
+    fun copyTicketToCurrentRound(ticketId: Long) {
+        val source = uiState.value.tickets.firstOrNull { it.id == ticketId }
+        if (source == null) {
+            _uiState.update { it.copy(feedbackMessage = "티켓을 찾을 수 없습니다.") }
+            return
+        }
+
+        val today = LocalDate.now()
+        val currentRoundNumber = RoundEstimator.currentSalesRound(today)
+        if (source.round.number == currentRoundNumber) {
+            _uiState.update { it.copy(feedbackMessage = "이미 이번 주 회차 번호입니다.") }
+            return
+        }
+
+        val copiedBundle =
+            source.copy(
+                id = 0L,
+                round =
+                    source.round.copy(
+                        number = currentRoundNumber,
+                        drawDate = RoundEstimator.nextDrawDate(today),
+                    ),
+                source = TicketSource.MANUAL,
+                status = TicketStatus.PENDING,
+                createdAt = Instant.now(),
+            )
+
+        viewModelScope.launch {
+            ticketRepository.save(copiedBundle)
+            _uiState.update { it.copy(feedbackMessage = "이번 주 번호로 복사했습니다.") }
         }
     }
 
