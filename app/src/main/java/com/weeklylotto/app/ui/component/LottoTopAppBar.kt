@@ -13,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.weeklylotto.app.ui.theme.LottoColors
@@ -47,12 +50,19 @@ fun LottoTopAppBar(
                 modifier = Modifier.weight(1f),
             )
             if (rightActionText != null) {
+                val actionModifier =
+                    Modifier
+                        .semantics {
+                            if (onRightClick != null) {
+                                role = Role.Button
+                            }
+                        }.clickable(enabled = onRightClick != null) { onRightClick?.invoke() }
                 Text(
                     text = rightActionText,
                     color = Color.White.copy(alpha = 0.9f),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.clickable(enabled = onRightClick != null) { onRightClick?.invoke() },
+                    modifier = actionModifier,
                 )
             }
         }

@@ -11,6 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,6 +74,9 @@ fun BallChip(
     Box(
         modifier =
             modifier
+                .semantics(mergeDescendants = true) {
+                    contentDescription = buildBallChipAccessibilityLabel(number, state)
+                }
                 .size(size)
                 .background(background, CircleShape)
                 .border(width = if (state == BallState.Bonus) 2.dp else 1.dp, color = borderColor, shape = CircleShape),
@@ -98,4 +103,22 @@ fun LottoBall(
         size = 28.dp,
         modifier = modifier.alpha(if (highlighted) 1f else 0.9f),
     )
+}
+
+internal fun buildBallChipAccessibilityLabel(
+    number: Int?,
+    state: BallState,
+): String {
+    if (number == null) return "미입력 번호"
+
+    val formattedNumber = number.toString().padStart(2, '0')
+    return when (state) {
+        BallState.Bonus -> "보너스 번호 $formattedNumber"
+        BallState.Locked -> "번호 $formattedNumber 고정됨"
+        BallState.Hit -> "번호 $formattedNumber 당첨 일치"
+        BallState.Muted -> "번호 $formattedNumber 비강조"
+        BallState.Normal,
+        BallState.Selected,
+        -> "번호 $formattedNumber"
+    }
 }

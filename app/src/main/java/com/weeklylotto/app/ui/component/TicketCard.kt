@@ -14,6 +14,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
@@ -31,7 +34,13 @@ fun TicketCard(
             Modifier
                 .fillMaxWidth()
                 .let { base ->
-                    if (onClick != null) base.clickable(onClick = onClick) else base
+                    if (onClick != null) {
+                        base
+                            .semantics { role = Role.Button }
+                            .clickable(onClick = onClick)
+                    } else {
+                        base
+                    }
                 },
         shape = RoundedCornerShape(LottoDimens.CardRadius),
         border = BorderStroke(width = 1.dp, color = LottoColors.Border),
