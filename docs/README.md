@@ -40,6 +40,7 @@
 - `22-prioritization-matrix.md`: 고도화 우선순위 점수/실행 권고
 - `23-kpi-and-experiment-plan.md`: KPI 목표/실험 설계/성공 기준
 - `24-motion-and-interaction-playbook.md`: 스플래시/내부 모션 규격/QA 기준
+- `25-routine-cycle-report.md`: 사이클 단위 코드/품질/UX 진단 리포트
 
 ## 운영 규칙
 1. 작업 시작 전 `09`, `10`, `11`을 먼저 확인한다.

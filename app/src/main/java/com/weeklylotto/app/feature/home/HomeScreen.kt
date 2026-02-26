@@ -34,6 +34,7 @@ import com.weeklylotto.app.ui.component.TicketCard
 import com.weeklylotto.app.ui.format.toBadgeTone
 import com.weeklylotto.app.ui.format.toSourceChipLabel
 import com.weeklylotto.app.ui.format.toStatusLabel
+import com.weeklylotto.app.ui.format.toWonLabel
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
@@ -44,12 +45,21 @@ import java.util.Locale
 fun HomeScreen(
     onClickGenerator: () -> Unit,
     onClickManage: () -> Unit,
+    onClickResult: () -> Unit,
     onClickSettings: () -> Unit,
     onClickQr: () -> Unit,
 ) {
     val viewModel =
         viewModel<HomeViewModel>(
-            factory = SingleViewModelFactory { HomeViewModel(AppGraph.ticketRepository) },
+            factory =
+                SingleViewModelFactory {
+                    HomeViewModel(
+                        ticketRepository = AppGraph.ticketRepository,
+                        drawRepository = AppGraph.drawRepository,
+                        resultEvaluator = AppGraph.resultEvaluator,
+                        resultViewTracker = AppGraph.resultViewTracker,
+                    )
+                },
         )
     val uiState by viewModel.uiState.collectAsState()
 
@@ -155,6 +165,83 @@ fun HomeScreen(
                                 text = "스마트 랜덤 추출",
                                 color = LottoColors.TextSecondary,
                                 style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (uiState.hasUnseenResult && uiState.unseenRound != null) {
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth().clickable { onClickResult() },
+                        shape = RoundedCornerShape(LottoDimens.CardRadius),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                        colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                    ) {
+                        Row(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(LottoDimens.ScreenPadding),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(
+                                    text = "미확인 결과",
+                                    color = LottoColors.Primary,
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.Black,
+                                )
+                                Text(
+                                    text = "${uiState.unseenRound}회 결과를 아직 확인하지 않았습니다.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = LottoColors.TextSecondary,
+                                )
+                            }
+                            Text(
+                                text = "확인",
+                                color = LottoColors.Primary,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Black,
+                            )
+                        }
+                    }
+                }
+            }
+
+            uiState.weeklyReport?.let { report ->
+                item {
+                    Card(
+                        shape = RoundedCornerShape(LottoDimens.CardRadius),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                        colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(LottoDimens.ScreenPadding),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            Text(
+                                text = "${report.round}회 주간 리포트",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Black,
+                            )
+                            Text(
+                                text = "구매 ${report.totalGames}게임 · 당첨 ${report.winningGames}게임",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = LottoColors.TextSecondary,
+                            )
+                            Text(
+                                text = "구매 ${report.totalPurchaseAmount.toWonLabel()} / 당첨 ${report.totalWinningAmount.toWonLabel()}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = LottoColors.TextSecondary,
+                            )
+                            Text(
+                                text = "순이익 ${report.netProfitAmount.toWonLabel()}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = if (report.netProfitAmount >= 0) LottoColors.Primary else LottoColors.TextPrimary,
+                                fontWeight = FontWeight.Black,
                             )
                         }
                     }

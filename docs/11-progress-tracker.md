@@ -15,11 +15,16 @@
   - 스플래시/상호작용 고도화 작업 보드 추가(`10-detailed-todo-board.md` M-001~M-020)
   - 디자인/테스트/일정/백로그 문서에 모션 항목 연계 반영
   - `00`, `05`, `06`, `09`, `10`, `16`, `README` 고도화 계획 반영
+  - 루틴 사이클 리포트 추가(`25-routine-cycle-report.md`)
+  - 코드 진행 스냅샷 검증:
+    - `assembleDebug` 성공
+    - `testDebugUnitTest` 연속 재실행 Green 확인
+  - 즉시 조치 작업 생성(`10-detailed-todo-board.md` O-001~O-004)
 - 미완료 작업
   - Wear OS 구현/실기기 검증 착수
   - 실험 이벤트 로깅 체계 구현
 - 블로커
-  - 없음(기획 단계)
+  - 없음(현재 품질 게이트 Green, 플래키 여부는 관찰)
 - 다음 액션
   - `22` 상위 항목부터 `10`의 K/L 섹션 순차 착수
   - 2주 단위 KPI 리뷰 루틴 실행
@@ -194,6 +199,14 @@
   - 고도화 문서 세트 확정: `20-wearos-integration-plan.md`, `21-product-enhancement-ideas.md`, `22-prioritization-matrix.md`, `23-kpi-and-experiment-plan.md`, `24-motion-and-interaction-playbook.md`
   - K/L/M 상세 TODO를 문서 산출물 기준으로 완료 처리(`10-detailed-todo-board.md` K-001~K-020, L-001~L-015, M-001~M-020)
   - Wear 모듈 기초 스캐폴딩 추가(`:wear`, 기본 Activity/Manifest/테마/문자열)
+  - Home 리텐션 기능 1차 구현: 미확인 결과 배지 카드 추가(최신 결과 미확인 회차 강조 + 결과화면 바로가기)
+  - Home 주간 리포트 카드 구현: 최신 결과 기준 구매/당첨/순이익 요약 노출
+  - Result 확인 회차 추적 추가: DataStore 기반 `ResultViewTracker` 도입, `ResultViewModel` 성공 조회 시 확인 회차 기록
+  - Home 인사이트 계산 로직 추가: 최신 회차 결과 + 티켓 데이터 결합으로 배지/리포트 산출
+  - 회귀 테스트 보강: `HomeViewModelTest` 신규 추가, `ResultViewModelTest` 확인 회차 기록 케이스 추가
+  - 통합 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug` 통과
+  - 테스트 더블 네이밍/스코프 충돌 방지 규칙 문서화(`06-test-plan.md` 3장)
+  - 루틴 즉시 조치 보드 완결(`10-detailed-todo-board.md` O-001~O-004 완료)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Wear OS 실기기(소형/대형) 기준 UI/성능 검증
@@ -204,7 +217,7 @@
 - 다음 액션
   - 에뮬레이터 기준 `./scripts/release-final-check.sh` 정기 실행으로 회귀 감시 유지
   - 실기기 확보 시 `./scripts/release-final-check.sh --require-physical-device` 1회 통과 이력 확보
-  - W10 착수 항목(`L-001~L-004`, `M-001~M-010`) 구현 티켓 분해 및 실행
+  - W11 착수 항목(`M` 모션 코드 구현, `L` 인사이트 실험 이벤트 계측) 실행
   - Figma 툴 호출 가능 상태에서 node `6:2` 기준 화면 밀도/간격 최종 동기화
 
 ## 상태 요약

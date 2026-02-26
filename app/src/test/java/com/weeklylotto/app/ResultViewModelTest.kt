@@ -16,6 +16,7 @@ import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.ResultEvaluator
+import com.weeklylotto.app.domain.service.ResultViewTracker
 import com.weeklylotto.app.feature.result.ResultViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -201,6 +202,28 @@ class ResultViewModelTest {
             assertThat(state.winningCount).isEqualTo(1)
             assertThat(state.totalWinningAmount).isEqualTo(5_000L)
         }
+
+    @Test
+    fun 결과조회_성공시_확인회차를_기록한다() =
+        runTest {
+            val draw = sampleDraw(roundNumber = 1212)
+            val tracker = ResultViewModelFakeResultViewTracker()
+            val viewModel =
+                ResultViewModel(
+                    drawRepository =
+                        ResultViewModelFakeDrawRepository(
+                            latestQueue = ArrayDeque(listOf(AppResult.Success(draw))),
+                        ),
+                    ticketRepository = ResultViewModelFakeTicketRepository(),
+                    evaluator = ResultViewModelFakeResultEvaluator(),
+                    resultViewTracker = tracker,
+                    retryDelayProvider = { 0L },
+                )
+
+            advanceUntilIdle()
+
+            assertThat(tracker.markedRounds).containsExactly(1212)
+        }
 }
 
 private class ResultViewModelFakeDrawRepository(
@@ -261,6 +284,16 @@ private class ResultViewModelFakeResultEvaluator(
             bonusMatched = false,
             highlightedNumbers = emptySet(),
         )
+}
+
+private class ResultViewModelFakeResultViewTracker : ResultViewTracker {
+    val markedRounds = mutableListOf<Int>()
+
+    override suspend fun loadLastViewedRound(): Int? = null
+
+    override suspend fun markRoundViewed(roundNumber: Int) {
+        markedRounds += roundNumber
+    }
 }
 
 private fun sampleDraw(roundNumber: Int): DrawResult =

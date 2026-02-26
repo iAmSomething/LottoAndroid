@@ -75,6 +75,7 @@ fun WeeklyLottoApp(initialRoute: String? = null) {
                 HomeScreen(
                     onClickGenerator = { navController.navigate(AppDestination.Generator.route) },
                     onClickManage = { navController.navigate(AppDestination.Manage.route) },
+                    onClickResult = { navController.navigate(AppDestination.Result.route) },
                     onClickSettings = { navController.navigate(AppDestination.Settings.route) },
                     onClickQr = { navController.navigate(AppDestination.QrScan.route) },
                 )

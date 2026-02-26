@@ -62,6 +62,7 @@ fun ResultScreen() {
                         drawRepository = AppGraph.drawRepository,
                         ticketRepository = AppGraph.ticketRepository,
                         evaluator = AppGraph.resultEvaluator,
+                        resultViewTracker = AppGraph.resultViewTracker,
                     )
                 },
         )

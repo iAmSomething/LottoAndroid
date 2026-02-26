@@ -73,7 +73,14 @@
 - Reduce Motion 모드 동작 검증(축소 규칙 준수)
 - 저사양 기기 프레임 드롭 허용치 검증(jank 비율)
 
-## 3. 합격 기준
+## 3. 테스트 더블 네이밍/스코프 규칙
+- 테스트 더블 클래스는 파일 단위 접두사로 시작한다. 예: `HomeFakeDrawRepository`, `ResultViewModelFakeResultViewTracker`
+- 동일 패키지 내 공용 이름(`FakeRepository`, `AlwaysFifthEvaluator`)은 금지한다.
+- 테스트 더블은 기본적으로 해당 테스트 파일 내부 `private` 선언으로 한정한다.
+- 여러 테스트 파일에서 재사용해야 할 경우에만 `testFixtures` 또는 `testutil` 패키지로 이동하고, 도메인별 접두사를 유지한다.
+- `object` 더블은 파일 내부 고유 목적일 때만 사용하고, 재사용 가능성이 있으면 `class`로 분리한다.
+
+## 4. 합격 기준
 - 핵심 유즈케이스 회귀 실패 0건
 - CI 빌드/단위 테스트 성공
 - `connectedDebugAndroidTest` 통과(현재 8 tests, 0 failures)

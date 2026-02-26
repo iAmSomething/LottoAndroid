@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.weeklylotto.app.BuildConfig
 import com.weeklylotto.app.data.local.DataStoreReminderConfigStore
+import com.weeklylotto.app.data.local.DataStoreResultViewTracker
 import com.weeklylotto.app.data.local.WeeklyLottoDatabase
 import com.weeklylotto.app.data.network.DrawApiClient
 import com.weeklylotto.app.data.qr.QrTicketParser
@@ -20,6 +21,7 @@ import com.weeklylotto.app.domain.service.NumberGenerator
 import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
 import com.weeklylotto.app.domain.service.ResultEvaluator
+import com.weeklylotto.app.domain.service.ResultViewTracker
 import com.weeklylotto.app.domain.service.WidgetDataProvider
 import com.weeklylotto.app.domain.service.WidgetRefreshScheduler
 
@@ -72,6 +74,13 @@ object AppGraph {
         get() {
             ensureDependenciesInitialized()
             return checkNotNull(reminderConfigStoreInternal)
+        }
+
+    private var resultViewTrackerInternal: ResultViewTracker? = null
+    val resultViewTracker: ResultViewTracker
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(resultViewTrackerInternal)
         }
 
     private var widgetDataProviderInternal: WidgetDataProvider? = null
@@ -133,6 +142,7 @@ object AppGraph {
             val resultEvaluator = DefaultResultEvaluator()
             val reminderScheduler = WorkManagerReminderScheduler(appContext)
             val reminderConfigStore = DataStoreReminderConfigStore(appContext)
+            val resultViewTracker = DataStoreResultViewTracker(appContext)
             val widgetDataProvider = DefaultWidgetDataProvider(ticketRepository, drawRepository, resultEvaluator)
             val qrParser = QrTicketParser()
 
@@ -143,6 +153,7 @@ object AppGraph {
             resultEvaluatorInternal = resultEvaluator
             reminderSchedulerInternal = reminderScheduler
             reminderConfigStoreInternal = reminderConfigStore
+            resultViewTrackerInternal = resultViewTracker
             widgetDataProviderInternal = widgetDataProvider
             qrTicketParserInternal = qrParser
         }

@@ -12,7 +12,9 @@ import com.weeklylotto.app.domain.model.PrizeAmountPolicy
 import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
+import com.weeklylotto.app.domain.service.NoOpResultViewTracker
 import com.weeklylotto.app.domain.service.ResultEvaluator
+import com.weeklylotto.app.domain.service.ResultViewTracker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,6 +50,7 @@ class ResultViewModel(
     private val drawRepository: DrawRepository,
     private val ticketRepository: TicketRepository,
     private val evaluator: ResultEvaluator,
+    private val resultViewTracker: ResultViewTracker = NoOpResultViewTracker,
     private val retryDelayProvider: (Int) -> Long = { attempt -> attempt * 1_000L },
     private val nowProvider: () -> LocalDateTime = LocalDateTime::now,
 ) : ViewModel() {
@@ -128,6 +131,7 @@ class ResultViewModel(
     }
 
     private suspend fun updateWithDraw(draw: DrawResult) {
+        resultViewTracker.markRoundViewed(draw.round.number)
         val bundles = ticketRepository.observeTicketsByRound(draw.round).first()
         val evaluated =
             bundles.flatMap { bundle ->
