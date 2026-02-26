@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,7 +27,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -52,6 +50,8 @@ import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.ui.component.BallChip
 import com.weeklylotto.app.ui.component.BallState
 import com.weeklylotto.app.ui.component.LottoTopAppBar
+import com.weeklylotto.app.ui.component.MotionButton
+import com.weeklylotto.app.ui.component.MotionTextButton
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
@@ -157,7 +157,7 @@ fun QrScanScreen(onBack: () -> Unit) {
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(
+                    MotionButton(
                         onClick = {
                             viewModel.cancelPendingSave()
                             restartScanner()
@@ -166,7 +166,7 @@ fun QrScanScreen(onBack: () -> Unit) {
                     ) {
                         Text("취소")
                     }
-                    Button(
+                    MotionButton(
                         onClick = {
                             viewModel.confirmPendingSave()
                             if (uiState.continuousScanEnabled) {
@@ -196,7 +196,7 @@ fun QrScanScreen(onBack: () -> Unit) {
                 quickTips.forEach { tip ->
                     Text("- $tip", color = LottoColors.TextSecondary, fontSize = 13.sp)
                 }
-                Button(
+                MotionButton(
                     onClick = { isEnvironmentGuideOpen = false },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
@@ -294,7 +294,7 @@ fun QrScanScreen(onBack: () -> Unit) {
                             enabled = hasCameraPermission && torchAvailable,
                         )
                     }
-                    TextButton(
+                    MotionTextButton(
                         onClick = { isEnvironmentGuideOpen = true },
                         modifier = Modifier.align(Alignment.End),
                     ) {
@@ -342,13 +342,13 @@ fun QrScanScreen(onBack: () -> Unit) {
                         }
                     } else {
                         Text("카메라 권한이 필요합니다.", color = Color(0xFFD32F2F))
-                        Button(onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) }) {
+                        MotionButton(onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) }) {
                             Text("카메라 권한 요청")
                         }
                     }
 
                     if (!scannerEnabled) {
-                        Button(
+                        MotionButton(
                             onClick = { restartScanner() },
                             modifier = Modifier.fillMaxWidth(),
                         ) {
@@ -380,15 +380,15 @@ fun QrScanScreen(onBack: () -> Unit) {
                                     )
                                 }
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    Button(onClick = { restartScanner() }) {
+                                    MotionButton(onClick = { restartScanner() }) {
                                         Text("재시도")
                                     }
                                     if (uiState.shouldRecommendTorch && torchAvailable && !torchEnabled) {
-                                        Button(onClick = { torchEnabled = true }) {
+                                        MotionButton(onClick = { torchEnabled = true }) {
                                             Text("플래시 켜기")
                                         }
                                     }
-                                    Button(onClick = { rawInput = "" }) {
+                                    MotionButton(onClick = { rawInput = "" }) {
                                         Text("수동입력 준비")
                                     }
                                 }
@@ -403,7 +403,7 @@ fun QrScanScreen(onBack: () -> Unit) {
                         }
                     }
 
-                    Button(
+                    MotionButton(
                         onClick = { viewModel.resetSessionCount() },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
@@ -432,7 +432,7 @@ fun QrScanScreen(onBack: () -> Unit) {
                         label = { Text("QR URL") },
                         modifier = Modifier.fillMaxWidth().testTag("qr_manual_input"),
                     )
-                    Button(
+                    MotionButton(
                         onClick = {
                             scannerEnabled = false
                             viewModel.parseForConfirm(rawInput)

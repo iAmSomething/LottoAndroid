@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -29,6 +28,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.ui.component.LottoTopAppBar
+import com.weeklylotto.app.ui.component.MotionButton
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 
@@ -138,11 +138,11 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                 )
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = viewModel::useDefaultSchedule) { Text("기본값") }
-                    Button(onClick = viewModel::useFridayEveningSchedule) { Text("금요일 저녁") }
+                    MotionButton(onClick = viewModel::useDefaultSchedule) { Text("기본값") }
+                    MotionButton(onClick = viewModel::useFridayEveningSchedule) { Text("금요일 저녁") }
                 }
 
-                Button(
+                MotionButton(
                     onClick = {
                         if (uiState.config.enabled && !hasNotificationPermission) {
                             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)

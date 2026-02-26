@@ -2,7 +2,6 @@ package com.weeklylotto.app.feature.manualadd
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +25,8 @@ import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.ui.component.BallChip
 import com.weeklylotto.app.ui.component.BallState
 import com.weeklylotto.app.ui.component.LottoTopAppBar
+import com.weeklylotto.app.ui.component.MotionButton
+import com.weeklylotto.app.ui.component.motionClickable
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 
@@ -90,7 +90,7 @@ fun ManualAddScreen(onBack: () -> Unit) {
                         modifier =
                             Modifier
                                 .padding(2.dp)
-                                .clickable { viewModel.toggleNumber(number) },
+                                .motionClickable { viewModel.toggleNumber(number) },
                     ) {
                         BallChip(
                             number = number,
@@ -106,13 +106,13 @@ fun ManualAddScreen(onBack: () -> Unit) {
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                Button(onClick = viewModel::autoFill, modifier = Modifier.weight(1f)) { Text("자동 채우기") }
-                Button(onClick = viewModel::clear, modifier = Modifier.weight(1f)) { Text("초기화") }
+                MotionButton(onClick = viewModel::autoFill, modifier = Modifier.weight(1f)) { Text("자동 채우기") }
+                MotionButton(onClick = viewModel::clear, modifier = Modifier.weight(1f)) { Text("초기화") }
             }
             uiState.error?.let { message ->
                 Text(text = message, color = LottoColors.DangerText)
             }
-            Button(
+            MotionButton(
                 onClick = viewModel::save,
                 enabled = uiState.selected.size == 6,
                 modifier = Modifier.fillMaxWidth(),

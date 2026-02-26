@@ -244,6 +244,11 @@
   - 리스트 전이 보강: Home/Manage 티켓 카드/요약 카드에 `Modifier.animateItem` 적용
   - `TicketCard` 클릭 경로를 모션 공통 모디파이어로 통일해 press 피드백 일관성 확보
   - 품질 게이트 재검증: `./gradlew :app:ktlintFormat :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` + `:wear:assembleDebug` 성공
+  - 버튼형 모션 공통 컴포넌트 추가: `MotionButton`, `MotionTextButton` 도입
+  - 모션 확장 반영: `ManualAddScreen`, `QrScanScreen`, `SettingsScreen`의 주요 액션을 모션 컴포넌트로 전환
+  - EXP-05/06 이벤트 샘플 검증 자동화 스크립트 추가(`scripts/verify-analytics-events.sh`)
+  - 샘플 로그 기반 스크립트 검증 성공: 필수 이벤트 5종 및 interaction 스키마(`screen/component/action`) PASS
+  - 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Wear OS 실기기(소형/대형) 기준 UI/성능 검증

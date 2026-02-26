@@ -93,3 +93,18 @@
   1. `AnalyticsActionValue` 도입으로 `action` 파라미터 값을 상수화
   2. Home/Generator/Manage/Result/Splash에서 `action` 문자열 리터럴 제거
   3. 대시보드 집계 시 action value drift 리스크 축소
+
+## 9. EXP-05/06 샘플 검증 자동화 (2026-02-26 Cycle-09)
+- 검증 스크립트 추가: `scripts/verify-analytics-events.sh`
+- 검증 대상:
+  - `motion_splash_shown`
+  - `motion_splash_skip`
+  - `interaction_cta_press`
+  - `interaction_ball_lock_toggle`
+  - `interaction_sheet_apply`
+- 스키마 검증: `interaction_*` 이벤트 로그에 `screen/component/action` 포함 여부 확인
+- 실행 방식:
+  - 실기/에뮬레이터 연결 시: `adb logcat -d -s WeeklyLottoAnalytics:I` 기반 검사
+  - 샘플 파일 검증 시: `--log-file <path>` 옵션 사용
+- Cycle-09 결과:
+  - 샘플 로그 기반 실행에서 필수 이벤트 5종 + 스키마 검증 PASS

@@ -288,3 +288,35 @@
 1. `P-004` 실기기 증적 확보 경로 유지
 2. 실험 대시보드에서 `interaction_*` 이벤트 샘플 검증
 3. 모션 2차 적용 범위를 QR/ManualAdd/Settings 화면으로 확장
+
+## 2026-02-26 Cycle-09
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 범위
+  - 버튼형 모션 공통 컴포넌트 추가(`MotionButton`, `MotionTextButton`)
+  - 모션 확장 적용: `ManualAddScreen`, `QrScanScreen`, `SettingsScreen`
+  - EXP-05/06 로그 검증 스크립트 추가(`scripts/verify-analytics-events.sh`)
+- 품질 스냅샷
+  - `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
+  - `./scripts/verify-analytics-events.sh --log-file <sample>` 성공
+
+### 2) 진행도 진단
+- 개선점
+  - INT-01 press feedback 적용 화면이 생성/스캔/설정 플로우까지 확장됨
+  - EXP-05/06 이벤트 연결 상태를 수동 점검이 아닌 스크립트로 재검증 가능해짐
+- 남은 갭
+  - `P-004` 실기기(워치 소형/대형) 증적은 여전히 미수집
+  - 모션 적용을 티켓 상세/통계 세부 CTA까지 확대할 여지 존재
+
+### 3) 증적
+- 코드:
+  - `app/src/main/java/com/weeklylotto/app/ui/component/MotionButtons.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/manualadd/ManualAddScreen.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/qr/QrScanScreen.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/settings/SettingsScreen.kt`
+  - `scripts/verify-analytics-events.sh`
+
+### 4) 다음 루틴 시작점
+1. `P-004` 실기기 증적 확보(가능 시 워치 소형/대형 우선)
+2. 모션 공통 컴포넌트 확장 범위 점검(티켓 상세/통계/가져오기)
+3. EXP-05/06 로그를 에뮬레이터 실플로우 기준으로 1회 수집/검증

@@ -188,3 +188,22 @@
 ### 14.3 INT-03 리스트/카드 전이 보강
 - Home/Manage의 티켓 카드 및 요약 카드에 `Modifier.animateItem` 적용
 - 목록 변경/정렬 시 카드 배치 전이를 자연스럽게 처리
+
+## 15. Cycle-09 코드 반영 (2026-02-26)
+
+### 15.1 버튼형 모션 컴포넌트 공통화
+- `MotionButton`, `MotionTextButton` 도입
+- press/release 피드백과 Reduce Motion 규칙을 버튼 계열 컴포넌트에서 재사용 가능하게 정렬
+
+### 15.2 화면 확장 적용
+- `ManualAddScreen`
+  - 번호 팔레트 선택 경로에 `motionClickable` 적용
+  - 하단 CTA(`자동 채우기/초기화/저장`)를 `MotionButton`으로 전환
+- `QrScanScreen`
+  - 확인 시트/가이드 시트/수동 파싱/재시도 액션을 `MotionButton`/`MotionTextButton`으로 전환
+- `SettingsScreen`
+  - 프리셋/저장 CTA를 `MotionButton`으로 전환
+
+### 15.3 EXP-05/06 검증 자동화 연계
+- `scripts/verify-analytics-events.sh` 추가
+- 필수 이벤트 5종 및 `interaction_*` 스키마(`screen/component/action`)를 로그 기반으로 자동 검증

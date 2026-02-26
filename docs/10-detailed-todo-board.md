@@ -286,3 +286,10 @@
 - [x] V-004 Manage/Home 리스트 카드 전이 애니메이션 반영(`Modifier.animateItem`)
 - [x] V-005 `TicketCard` 클릭 경로를 모션 공통 모디파이어로 통일
 - [x] V-006 품질 스냅샷 재검증(`./gradlew :app:ktlintFormat :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` + `:wear:assembleDebug`)
+
+## W. 모션 확장 + EXP-05/06 검증 자동화(2026-02-26 Cycle-09)
+- [x] W-001 버튼형 공통 컴포넌트 도입(`MotionButton`, `MotionTextButton`)
+- [x] W-002 수동추가 화면 모션 확장(번호 선택 터치 + CTA 버튼)
+- [x] W-003 QR/설정 화면 모션 확장(시트/닫기/저장/프리셋 액션)
+- [x] W-004 EXP-05/06 샘플 이벤트 검증 스크립트 추가(`scripts/verify-analytics-events.sh`)
+- [x] W-005 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug`)
