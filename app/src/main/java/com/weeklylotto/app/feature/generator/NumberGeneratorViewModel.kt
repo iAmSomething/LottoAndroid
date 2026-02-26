@@ -68,6 +68,7 @@ class NumberGeneratorViewModel(
     fun applyManualNumber(
         slot: GameSlot,
         rawInput: String,
+        replaceTargetNumber: Int? = null,
     ) {
         val validation = validateManualInput(rawInput)
         if (validation is ManualInputValidation.Error) {
@@ -77,7 +78,11 @@ class NumberGeneratorViewModel(
 
         val input = (validation as ManualInputValidation.Valid).number
         _uiState.update { state ->
-            val result = applyManualInputToGames(state.games, slot, input)
+            val replaceTarget =
+                replaceTargetNumber
+                    ?.takeIf { it in 1..45 }
+                    ?.let(::LottoNumber)
+            val result = applyManualInputToGames(state.games, slot, input, replaceTarget)
             state.copy(games = result.games, toastMessage = result.message, manualInputError = result.manualInputError)
         }
     }
@@ -85,8 +90,9 @@ class NumberGeneratorViewModel(
     fun applyManualNumber(
         slot: GameSlot,
         number: Int,
+        replaceTargetNumber: Int? = null,
     ) {
-        applyManualNumber(slot = slot, rawInput = number.toString())
+        applyManualNumber(slot = slot, rawInput = number.toString(), replaceTargetNumber = replaceTargetNumber)
     }
 
     fun regenerateExceptLocked() {
@@ -159,6 +165,7 @@ private enum class ManualApplyAction {
     LOCKED_EXISTING,
     ALREADY_LOCKED,
     ALL_LOCKED,
+    INVALID_TARGET,
 }
 
 private fun validateManualInput(rawInput: String): ManualInputValidation =
@@ -173,6 +180,7 @@ private fun applyManualInputToGames(
     games: List<LottoGame>,
     slot: GameSlot,
     input: LottoNumber,
+    replaceTarget: LottoNumber?,
 ): ManualApplyResult {
     val targetIndex = games.indexOfFirst { it.slot == slot }
     if (targetIndex < 0) {
@@ -183,7 +191,7 @@ private fun applyManualInputToGames(
         )
     }
 
-    val (updatedGame, action) = applyManualInputToGame(games[targetIndex], input)
+    val (updatedGame, action) = applyManualInputToGame(games[targetIndex], input, replaceTarget)
     val updatedGames = games.toMutableList().apply { set(targetIndex, updatedGame) }
 
     return when (action) {
@@ -212,12 +220,20 @@ private fun applyManualInputToGames(
                 message = "해당 게임은 6개 번호가 모두 고정되어 교체할 수 없습니다.",
                 manualInputError = "해당 게임은 6개 번호가 모두 고정되어 교체할 수 없습니다.",
             )
+
+        ManualApplyAction.INVALID_TARGET ->
+            ManualApplyResult(
+                games = updatedGames,
+                message = "교체 대상을 다시 선택해주세요.",
+                manualInputError = "잠금되지 않은 번호를 교체 대상으로 선택해주세요.",
+            )
     }
 }
 
 private fun applyManualInputToGame(
     game: LottoGame,
     input: LottoNumber,
+    replaceTarget: LottoNumber?,
 ): Pair<LottoGame, ManualApplyAction> =
     when {
         input in game.lockedNumbers -> game to ManualApplyAction.ALREADY_LOCKED
@@ -231,8 +247,16 @@ private fun applyManualInputToGame(
         game.lockedNumbers.size == game.numbers.size -> game to ManualApplyAction.ALL_LOCKED
         else -> {
             val target =
-                game.numbers.firstOrNull { it !in game.lockedNumbers }
-                    ?: game.numbers.last()
+                when {
+                    replaceTarget == null -> {
+                        game.numbers.firstOrNull { it !in game.lockedNumbers }
+                            ?: game.numbers.last()
+                    }
+                    replaceTarget !in game.numbers || replaceTarget in game.lockedNumbers -> {
+                        return game to ManualApplyAction.INVALID_TARGET
+                    }
+                    else -> replaceTarget
+                }
 
             val replacedNumbers =
                 game.numbers.toMutableList().apply {

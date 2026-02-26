@@ -315,3 +315,11 @@
 - [x] Z-004 저장 로직 확장: 누적 게임을 A~E 슬롯으로 한 번에 저장
 - [x] Z-005 회귀 테스트 추가(`ManualAddViewModelTest`: 다중 저장/반복 저장)
 - [x] Z-006 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug`)
+
+## AA. 번호생성 수동 편집 교체 로직 명시화(2026-02-26 Cycle-13)
+- [x] AA-001 `NumberGeneratorViewModel` 수동 반영 API 확장(`replaceTargetNumber` 지원)
+- [x] AA-002 교체 대상 유효성 검증 추가(잠금 번호/없는 번호 선택 시 에러 반환)
+- [x] AA-003 `NumberGeneratorScreen`에 교체 대상 직접 선택 UI 반영(현재 번호 탭)
+- [x] AA-004 화면 안내 문구/상태 텍스트 보강(선택 번호 + 교체 대상 표시)
+- [x] AA-005 회귀 테스트 추가(`NumberGeneratorViewModelTest`: 교체 대상 지정/유효성 오류)
+- [x] AA-006 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug`)

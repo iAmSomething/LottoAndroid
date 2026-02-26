@@ -261,6 +261,10 @@
   - 저장 로직 확장: 번호 직접 추가 화면에서 A~E 슬롯 다중 게임을 한 번에 저장 가능
   - 회귀 테스트 보강: `ManualAddViewModelTest`에 다중 저장/반복 저장 케이스 추가
   - 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` 성공
+  - 번호생성 수동 편집 UX 개선: `교체 대상 번호` 직접 선택 플로우 추가(현재 번호 탭 선택)
+  - 수동 반영 로직 확장: `replaceTargetNumber` 지원 + 잠금/존재 여부 유효성 검증 추가
+  - 회귀 테스트 보강: `NumberGeneratorViewModelTest`에 교체 대상 지정 성공/유효성 오류 케이스 추가
+  - 품질 게이트 재검증: 동일 게이트 재통과(`ktlintCheck`, `detekt`, `testDebugUnitTest`, `assembleDebug`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Wear OS 실기기(소형/대형) 기준 UI/성능 검증

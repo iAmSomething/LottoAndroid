@@ -73,6 +73,7 @@ fun NumberGeneratorScreen() {
 
     var manualInput by remember { mutableStateOf("") }
     var selectedManualNumber by remember(uiState.selectedSlot) { mutableStateOf<Int?>(null) }
+    var selectedReplaceTarget by remember(uiState.selectedSlot) { mutableStateOf<Int?>(null) }
     val selectedGame = uiState.games.firstOrNull { it.slot == uiState.selectedSlot }
     val selectedNumbers = selectedGame?.numbers?.toSet().orEmpty()
     val selectedLockedNumbers = selectedGame?.lockedNumbers.orEmpty()
@@ -85,6 +86,17 @@ fun NumberGeneratorScreen() {
         uiState.toastMessage?.let {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             viewModel.clearMessage()
+        }
+    }
+
+    LaunchedEffect(selectedGame, selectedReplaceTarget) {
+        val hasValidTarget =
+            selectedReplaceTarget != null &&
+                selectedGame != null &&
+                selectedGame.numbers.any { it.value == selectedReplaceTarget } &&
+                selectedGame.lockedNumbers.none { it.value == selectedReplaceTarget }
+        if (selectedReplaceTarget != null && !hasValidTarget) {
+            selectedReplaceTarget = null
         }
     }
 
@@ -120,7 +132,10 @@ fun NumberGeneratorScreen() {
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .clickable { viewModel.selectSlot(game.slot) },
+                            .clickable {
+                                viewModel.selectSlot(game.slot)
+                                selectedReplaceTarget = null
+                            },
                     shape = RoundedCornerShape(LottoDimens.CardRadius),
                     border =
                         androidx.compose.foundation.BorderStroke(
@@ -216,12 +231,36 @@ fun NumberGeneratorScreen() {
                             val state =
                                 if (number in game.lockedNumbers) {
                                     BallState.Locked
+                                } else if (selectedReplaceTarget == number.value) {
+                                    BallState.Hit
                                 } else {
                                     BallState.Selected
                                 }
-                            BallChip(number = number.value, state = state, size = 30.dp)
+                            BallChip(
+                                number = number.value,
+                                state = state,
+                                size = 30.dp,
+                                modifier =
+                                    if (number in game.lockedNumbers) {
+                                        Modifier
+                                    } else {
+                                        Modifier.clickable {
+                                            selectedReplaceTarget =
+                                                if (selectedReplaceTarget == number.value) {
+                                                    null
+                                                } else {
+                                                    number.value
+                                                }
+                                        }
+                                    },
+                            )
                         }
                     }
+                    Text(
+                        "현재 번호를 탭하면 교체 대상을 지정할 수 있습니다.",
+                        color = LottoColors.TextMuted,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
                 }
 
                 Text(
@@ -312,7 +351,12 @@ fun NumberGeneratorScreen() {
                                     ),
                             )
                             val raw = selectedManualNumber?.toString() ?: manualInput
-                            viewModel.applyManualNumber(uiState.selectedSlot, raw)
+                            viewModel.applyManualNumber(
+                                slot = uiState.selectedSlot,
+                                rawInput = raw,
+                                replaceTargetNumber = selectedReplaceTarget,
+                            )
+                            selectedReplaceTarget = null
                         },
                         enabled = selectedManualNumber != null || manualInput.isNotBlank(),
                     ) {
@@ -328,13 +372,17 @@ fun NumberGeneratorScreen() {
                         onClick = {
                             selectedManualNumber = null
                             manualInput = ""
+                            selectedReplaceTarget = null
                             viewModel.clearManualInputError()
                         },
                     ) {
                         Text("입력 초기화")
                     }
                     Text(
-                        text = "선택 번호: ${selectedManualNumber?.toString()?.padStart(2, '0') ?: "-"}",
+                        text =
+                            "선택 번호: ${selectedManualNumber?.toString()?.padStart(2, '0') ?: "-"}  ·  교체 대상: ${
+                                selectedReplaceTarget?.toString()?.padStart(2, '0') ?: "자동"
+                            }",
                         color = LottoColors.TextMuted,
                         style = MaterialTheme.typography.bodySmall,
                     )

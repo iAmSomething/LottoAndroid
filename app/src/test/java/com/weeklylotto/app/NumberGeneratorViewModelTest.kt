@@ -52,6 +52,52 @@ class NumberGeneratorViewModelTest {
             .isEqualTo("해당 게임은 6개 번호가 모두 고정되어 교체할 수 없습니다.")
     }
 
+    @Test
+    fun 수동입력시_교체대상을_지정하면_해당번호가_교체된다() {
+        val viewModel =
+            NumberGeneratorViewModel(
+                numberGenerator = FakeNumberGenerator(baseGames()),
+                ticketRepository = FakeTicketRepository(),
+            )
+
+        viewModel.applyManualNumber(
+            slot = GameSlot.A,
+            rawInput = "40",
+            replaceTargetNumber = 25,
+        )
+
+        val numbers = viewModel.uiState.value.games.first().numbers.map { it.value }
+        assertThat(numbers).containsExactly(1, 7, 13, 19, 31, 40)
+        assertThat(viewModel.uiState.value.manualInputError).isNull()
+    }
+
+    @Test
+    fun 수동입력시_잠금번호를_교체대상으로_지정하면_에러를_노출한다() {
+        val lockedGame =
+            LottoGame(
+                slot = GameSlot.A,
+                numbers = listOf(1, 7, 13, 19, 25, 31).map(::LottoNumber),
+                lockedNumbers = setOf(LottoNumber(25)),
+                mode = GameMode.SEMI_AUTO,
+            )
+        val viewModel =
+            NumberGeneratorViewModel(
+                numberGenerator = FakeNumberGenerator(listOf(lockedGame)),
+                ticketRepository = FakeTicketRepository(),
+            )
+
+        viewModel.applyManualNumber(
+            slot = GameSlot.A,
+            rawInput = "40",
+            replaceTargetNumber = 25,
+        )
+
+        assertThat(viewModel.uiState.value.games.first().numbers.map { it.value })
+            .containsExactly(1, 7, 13, 19, 25, 31)
+        assertThat(viewModel.uiState.value.manualInputError)
+            .isEqualTo("잠금되지 않은 번호를 교체 대상으로 선택해주세요.")
+    }
+
     private fun baseGames(): List<LottoGame> =
         listOf(
             LottoGame(

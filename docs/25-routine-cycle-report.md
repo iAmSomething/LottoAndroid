@@ -409,3 +409,33 @@
 1. `C01`(중복도 경고) 1차 구현 착수
 2. 수동추가 다중 게임 UX 미세 조정(문구/밀도/버튼 우선순위)
 3. `P-004` 블로커 유지 + 에뮬레이터 증적 누적
+
+## 2026-02-26 Cycle-13
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 범위
+  - `NumberGeneratorViewModel` 수동 반영 로직 확장(`replaceTargetNumber`)
+  - 교체 대상 유효성 검증 추가(잠금 번호/존재하지 않는 번호 차단)
+  - `NumberGeneratorScreen`에 교체 대상 직접 선택 UI/안내 문구 추가
+  - `NumberGeneratorViewModelTest`에 교체 대상 회귀 테스트 2건 추가
+- 품질 스냅샷
+  - `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` 성공
+
+### 2) 진행도 진단
+- 개선점
+  - 기존 "선택 반영 시 어떤 번호가 바뀌는지 모호함" 문제를 해소
+  - 사용자가 교체 대상을 명시적으로 선택할 수 있어 예측 가능성 향상
+- 남은 갭
+  - Generator 수동 편집의 단계 수는 여전히 많은 편(후속 단순화 가능)
+  - `P-004` 실기기 증적 블로커 유지
+
+### 3) 증적
+- 코드:
+  - `app/src/main/java/com/weeklylotto/app/feature/generator/NumberGeneratorViewModel.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/generator/NumberGeneratorScreen.kt`
+  - `app/src/test/java/com/weeklylotto/app/NumberGeneratorViewModelTest.kt`
+
+### 4) 다음 루틴 시작점
+1. `C01`(중복도 경고) 1차 구현 착수
+2. Generator 수동 편집 단계 단순화(후보/팔레트/입력 흐름 재정렬) 검토
+3. `P-004` 블로커 유지 + 에뮬레이터 증적 누적
