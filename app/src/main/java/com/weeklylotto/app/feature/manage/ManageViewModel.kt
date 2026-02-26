@@ -21,6 +21,12 @@ enum class ManageTab {
     SCAN,
 }
 
+enum class ManageSort {
+    LATEST_CREATED,
+    OLDEST_CREATED,
+    ROUND_DESC,
+}
+
 data class ManageFilter(
     val statuses: Set<TicketStatus> = emptySet(),
     val roundRange: IntRange? = null,
@@ -28,11 +34,13 @@ data class ManageFilter(
 
 data class ManageUiState(
     val tab: ManageTab = ManageTab.WEEK,
+    val sort: ManageSort = ManageSort.LATEST_CREATED,
     val editMode: Boolean = false,
     val selectedIds: Set<Long> = emptySet(),
     val filter: ManageFilter = ManageFilter(),
     val isFabSheetOpen: Boolean = false,
     val isFilterSheetOpen: Boolean = false,
+    val isSortSheetOpen: Boolean = false,
     val isMoveSheetOpen: Boolean = false,
     val isDeleteDialogOpen: Boolean = false,
     val tickets: List<TicketBundle> = emptyList(),
@@ -116,6 +124,18 @@ class ManageViewModel(
 
     fun closeFilterSheet() {
         _uiState.update { it.copy(isFilterSheetOpen = false) }
+    }
+
+    fun openSortSheet() {
+        _uiState.update { it.copy(isSortSheetOpen = true) }
+    }
+
+    fun closeSortSheet() {
+        _uiState.update { it.copy(isSortSheetOpen = false) }
+    }
+
+    fun setSort(sort: ManageSort) {
+        _uiState.update { it.copy(sort = sort) }
     }
 
     fun openMoveSheet() {
@@ -276,10 +296,21 @@ class ManageViewModel(
             }
 
         val range = state.filter.roundRange
-        return if (range == null) {
-            statusFiltered
-        } else {
-            statusFiltered.filter { it.round.number in range }
+        val rangeFiltered =
+            if (range == null) {
+                statusFiltered
+            } else {
+                statusFiltered.filter { it.round.number in range }
+            }
+
+        return when (state.sort) {
+            ManageSort.LATEST_CREATED -> rangeFiltered.sortedByDescending { it.createdAt }
+            ManageSort.OLDEST_CREATED -> rangeFiltered.sortedBy { it.createdAt }
+            ManageSort.ROUND_DESC ->
+                rangeFiltered.sortedWith(
+                    compareByDescending<TicketBundle> { it.round.number }
+                        .thenByDescending { it.createdAt },
+                )
         }
     }
 

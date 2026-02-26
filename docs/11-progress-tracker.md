@@ -161,6 +161,10 @@
   - 필터 초기화 동작 보강: 초기화 시 직접 입력값/오류 문구까지 함께 리셋
   - 회차 필터 회귀 테스트 추가: 직접 입력 범위 필터 적용 결과 및 전체필터 초기화(상태+회차 해제) 검증
   - 통합 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug` 재통과
+  - 번호관리 정렬 옵션 추가: `최신순/오래된순/회차순` 선택 가능한 정렬 시트와 리스트 정렬 연동
+  - 번호관리 목록 헤더 개선: `편집` 액션과 별도로 현재 정렬 기준 버튼(`최신순` 등) 노출
+  - 정렬 회귀 테스트 추가: `ManageViewModelTest`에서 기본 최신순/오래된순/회차순 결과 검증
+  - 통합 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug` 재통과
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)

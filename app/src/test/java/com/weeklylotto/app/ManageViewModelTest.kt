@@ -10,6 +10,7 @@ import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.TicketRepository
+import com.weeklylotto.app.feature.manage.ManageSort
 import com.weeklylotto.app.feature.manage.ManageTab
 import com.weeklylotto.app.feature.manage.ManageViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -360,6 +361,100 @@ class ManageViewModelTest {
 
             assertThat(viewModel.uiState.value.filter.statuses).isEmpty()
             assertThat(viewModel.uiState.value.filter.roundRange).isNull()
+        }
+
+    @Test
+    fun 기본정렬은_등록최신순이다() =
+        runTest {
+            val currentRound =
+                Round(
+                    number = RoundEstimator.currentSalesRound(LocalDate.now()),
+                    drawDate = RoundEstimator.nextDrawDate(LocalDate.now()),
+                )
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets =
+                        listOf(
+                            ticket(id = 81L, round = currentRound, status = TicketStatus.PENDING).copy(
+                                createdAt = Instant.parse("2026-02-01T10:00:00Z"),
+                            ),
+                            ticket(id = 82L, round = currentRound, status = TicketStatus.PENDING).copy(
+                                createdAt = Instant.parse("2026-02-03T10:00:00Z"),
+                            ),
+                            ticket(id = 83L, round = currentRound, status = TicketStatus.PENDING).copy(
+                                createdAt = Instant.parse("2026-02-02T10:00:00Z"),
+                            ),
+                        ),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+
+            assertThat(viewModel.filteredTickets().map { it.id }).containsExactly(82L, 83L, 81L).inOrder()
+        }
+
+    @Test
+    fun 등록오래된순_정렬을_적용할수있다() =
+        runTest {
+            val currentRound =
+                Round(
+                    number = RoundEstimator.currentSalesRound(LocalDate.now()),
+                    drawDate = RoundEstimator.nextDrawDate(LocalDate.now()),
+                )
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets =
+                        listOf(
+                            ticket(id = 91L, round = currentRound, status = TicketStatus.PENDING).copy(
+                                createdAt = Instant.parse("2026-02-01T10:00:00Z"),
+                            ),
+                            ticket(id = 92L, round = currentRound, status = TicketStatus.PENDING).copy(
+                                createdAt = Instant.parse("2026-02-03T10:00:00Z"),
+                            ),
+                            ticket(id = 93L, round = currentRound, status = TicketStatus.PENDING).copy(
+                                createdAt = Instant.parse("2026-02-02T10:00:00Z"),
+                            ),
+                        ),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+            viewModel.setSort(ManageSort.OLDEST_CREATED)
+
+            assertThat(viewModel.filteredTickets().map { it.id }).containsExactly(91L, 93L, 92L).inOrder()
+        }
+
+    @Test
+    fun 회차순_정렬을_적용할수있다() =
+        runTest {
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets =
+                        listOf(
+                            ticket(
+                                id = 101L,
+                                round = Round(1002, LocalDate.of(2025, 1, 11)),
+                                status = TicketStatus.PENDING,
+                            ).copy(createdAt = Instant.parse("2026-02-03T10:00:00Z")),
+                            ticket(
+                                id = 102L,
+                                round = Round(1008, LocalDate.of(2025, 2, 22)),
+                                status = TicketStatus.PENDING,
+                            ).copy(createdAt = Instant.parse("2026-02-01T10:00:00Z")),
+                            ticket(
+                                id = 103L,
+                                round = Round(1005, LocalDate.of(2025, 2, 1)),
+                                status = TicketStatus.PENDING,
+                            ).copy(createdAt = Instant.parse("2026-02-02T10:00:00Z")),
+                        ),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+            viewModel.setTab(ManageTab.VAULT)
+            viewModel.setSort(ManageSort.ROUND_DESC)
+
+            assertThat(viewModel.filteredTickets().map { it.id }).containsExactly(102L, 103L, 101L).inOrder()
         }
 }
 

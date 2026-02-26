@@ -269,6 +269,41 @@ fun ManageScreen(
         }
     }
 
+    if (uiState.isSortSheetOpen) {
+        ModalBottomSheet(
+            onDismissRequest = viewModel::closeSortSheet,
+            containerColor = LottoColors.Surface,
+            shape = RoundedCornerShape(topStart = LottoDimens.SheetRadius, topEnd = LottoDimens.SheetRadius),
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text("정렬", style = MaterialTheme.typography.titleMedium)
+                ManageSort.entries.forEach { sort ->
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        FilterChip(
+                            selected = uiState.sort == sort,
+                            onClick = { viewModel.setSort(sort) },
+                            label = { Text(sort.toSortLabel()) },
+                        )
+                        Text(
+                            text = sort.toSortDescription(),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LottoColors.TextMuted,
+                        )
+                    }
+                }
+                Button(
+                    onClick = viewModel::closeSortSheet,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("닫기")
+                }
+            }
+        }
+    }
+
     if (uiState.isDeleteDialogOpen) {
         AlertDialog(
             onDismissRequest = viewModel::dismissDeleteDialog,
@@ -385,10 +420,15 @@ fun ManageScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text("저장된 번호", style = MaterialTheme.typography.titleMedium)
-                TextButton(
-                    onClick = viewModel::toggleEditMode,
-                ) {
-                    Text(if (uiState.editMode) "완료" else "편집")
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    TextButton(onClick = viewModel::openSortSheet) {
+                        Text(uiState.sort.toSortShortLabel())
+                    }
+                    TextButton(
+                        onClick = viewModel::toggleEditMode,
+                    ) {
+                        Text(if (uiState.editMode) "완료" else "편집")
+                    }
                 }
             }
 
@@ -597,3 +637,24 @@ private fun buildFilterSummary(
     }
     return parts.takeIf { it.isNotEmpty() }?.joinToString(", ")
 }
+
+private fun ManageSort.toSortShortLabel(): String =
+    when (this) {
+        ManageSort.LATEST_CREATED -> "최신순"
+        ManageSort.OLDEST_CREATED -> "오래된순"
+        ManageSort.ROUND_DESC -> "회차순"
+    }
+
+private fun ManageSort.toSortLabel(): String =
+    when (this) {
+        ManageSort.LATEST_CREATED -> "등록 최신순"
+        ManageSort.OLDEST_CREATED -> "등록 오래된순"
+        ManageSort.ROUND_DESC -> "회차 높은순"
+    }
+
+private fun ManageSort.toSortDescription(): String =
+    when (this) {
+        ManageSort.LATEST_CREATED -> "최근 등록한 번호부터 보여줍니다."
+        ManageSort.OLDEST_CREATED -> "먼저 등록한 번호부터 보여줍니다."
+        ManageSort.ROUND_DESC -> "회차가 높은 번호를 먼저 보여줍니다."
+    }
