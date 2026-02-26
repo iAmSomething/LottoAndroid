@@ -99,3 +99,4 @@
 - [x] J-005 신규 라우트(ManualAdd/Import/Qr/TicketDetail) 구현
 - [x] J-006 Result 회차 피커와 실제 회차 데이터 스위칭 연동
 - [x] J-007 Figma/스펙 기준 간격·타이포 픽셀 보정(컴포넌트/핵심 화면)
+- [x] J-008 Ticket 상세 화면 공유 액션 및 공유 텍스트 포맷 구현

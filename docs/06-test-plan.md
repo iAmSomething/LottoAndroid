@@ -51,6 +51,10 @@
 - 클릭 가능한 공통 UI 요소의 역할(role) 검증
 - 자동 검증: `BallChipAccessibilityTest`
 
+### 번호관리 상세
+- 상세 화면 공유 텍스트 포맷(회차/출처/상태/게임 번호) 검증
+- 자동 검증: `TicketDetailShareFormatterTest`
+
 ## 3. 합격 기준
 - 핵심 유즈케이스 회귀 실패 0건
 - CI 빌드/단위 테스트 성공

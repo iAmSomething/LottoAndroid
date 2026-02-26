@@ -96,6 +96,8 @@
   - 실기기 미연결 상태에서 스크립트 실패 가드 확인(`[FAIL] No physical device connected`)
   - 공통 컴포넌트 접근성 보강: 번호볼 스크린리더 문구, 클릭 가능한 카드/상단 액션 버튼 role 적용
   - 접근성 문구 회귀 단위 테스트 추가(`BallChipAccessibilityTest`)
+  - Ticket 상세 화면 공유 버튼 추가 및 시스템 공유 인텐트 연동
+  - 공유 텍스트 포맷터 추가(회차/출처/상태/게임 번호) 및 단위 테스트(`TicketDetailShareFormatterTest`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
