@@ -82,8 +82,9 @@
 - 스프린트 재정렬: `16-next-sprint-backlog.md`
 - 우선순위 보강: `22-prioritization-matrix.md`
 - 모션 적용 매핑 보강: `24-motion-and-interaction-playbook.md`
+- EXP-05/06 이벤트 훅 누락 포인트 점검 반영: `23-kpi-and-experiment-plan.md` 8장
 
 ### 5) 다음 루틴 시작점
-1. P-004/P-005(실기기 QA 증적, 이벤트 훅 연결) 착수 상태 점검
+1. P-004(실기기 QA 증적) 블로커 해소 여부 점검
 2. Wear 구현 착수 범위(4화면 중 1차 화면) 코드 진행률 확인
 3. SPL/INT 우선 시나리오의 실제 화면 반영 여부 재검증

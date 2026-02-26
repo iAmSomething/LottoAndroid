@@ -212,6 +212,7 @@
   - 통합 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug` 통과
   - 테스트 더블 네이밍/스코프 충돌 방지 규칙 문서화(`06-test-plan.md` 3장)
   - 루틴 즉시 조치 보드 완결(`10-detailed-todo-board.md` O-001~O-004 완료)
+  - EXP-05/06 이벤트 훅 연결 점검 완료: `motion_*`, `interaction_*` 누락 포인트 식별(`23-kpi-and-experiment-plan.md` 8장)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Wear OS 실기기(소형/대형) 기준 UI/성능 검증
