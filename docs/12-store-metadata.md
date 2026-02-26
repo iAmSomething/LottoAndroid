@@ -49,6 +49,8 @@
   - [x] 당첨 결과 화면 (`docs/assets/store-screenshots/result.png`)
   - [x] QR 스캔 화면 (`docs/assets/store-screenshots/qr_scan.png`)
   - [x] 통계 화면 (`docs/assets/store-screenshots/stats.png`)
+- 앱 아이콘:
+  - [x] adaptive icon 최종본 반영 (`app/src/main/res/drawable/ic_launcher_foreground.xml`, `ic_launcher_background.xml`, `ic_launcher_monochrome.xml`)
 - 권장 보조 이미지:
   - 위젯 A/B 미리보기
   - 알림 설정 화면

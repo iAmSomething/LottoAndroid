@@ -21,6 +21,7 @@
 ## 3. 스토어 배포 준비
 - [x] 앱 설명 문구 초안 작성 (`12-store-metadata.md`)
 - [x] 앱 아이콘/스크린샷 최종본 준비 (`docs/assets/store-screenshots/*.png`)
+- [x] adaptive launcher icon 최종본 반영(`ic_launcher_foreground/background/monochrome`)
 - [x] 버전코드/버전명 업데이트 (`versionCode=2`, `versionName=0.2.0`)
 - [x] 개인정보/권한 고지 초안 작성 (`13-privacy-and-permissions.md`)
 - [x] 서명/배포 절차 문서화 (`14-signing-and-distribution.md`)

@@ -91,6 +91,7 @@
 - [x] I-008 Secrets 업로드 스크립트 안전모드(`--apply` 명시) 보강
 - [x] I-009 Secrets 업로드 대상 Android 저장소 검증 가드 추가 및 오업로드 정리
 - [x] I-010 Secrets 업로드 대상 repo 자동탐지(단일 후보) 및 안전중단 로직 추가
+- [x] I-011 앱 아이콘 브랜딩 리뉴얼(adaptive foreground/background/monochrome)
 
 ## J. 디자인 스펙 정렬(`/Volumes/무제/design_spec_android_lotto.md`)
 - [x] J-001 토큰(색상/간격/타이포) 1차 반영
