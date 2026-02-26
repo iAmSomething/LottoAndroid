@@ -11,6 +11,7 @@ import com.weeklylotto.app.domain.model.LottoNumber
 import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
+import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.service.WidgetRefreshScheduler
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -143,5 +144,31 @@ class RoomTicketRepositoryIntegrationTest {
 
             val stored = repository.observeTicketsByRound(round).first()
             assertEquals(2, stored.size)
+        }
+
+    @Test
+    fun 선택한_티켓상태를_보관함으로_일괄변경한다() =
+        runBlocking {
+            val round = Round(number = 1203, drawDate = LocalDate.parse("2026-05-16"))
+            val game =
+                LottoGame(
+                    slot = GameSlot.A,
+                    numbers = listOf(3, 11, 14, 22, 31, 45).map(::LottoNumber),
+                )
+
+            repository.save(
+                TicketBundle(
+                    round = round,
+                    games = listOf(game),
+                    source = TicketSource.MANUAL,
+                    status = TicketStatus.PENDING,
+                ),
+            )
+
+            val saved = repository.observeTicketsByRound(round).first().first()
+            repository.updateStatusByIds(setOf(saved.id), TicketStatus.SAVED)
+
+            val updated = repository.observeTicketsByRound(round).first().first()
+            assertEquals(TicketStatus.SAVED, updated.status)
         }
 }

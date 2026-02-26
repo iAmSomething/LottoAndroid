@@ -4,4 +4,5 @@ enum class TicketStatus {
     PENDING,
     WIN,
     LOSE,
+    SAVED,
 }

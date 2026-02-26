@@ -24,6 +24,7 @@ fun TicketStatus.toStatusLabel(): String =
         TicketStatus.PENDING -> "대기"
         TicketStatus.WIN -> "당첨"
         TicketStatus.LOSE -> "낙첨"
+        TicketStatus.SAVED -> "보관"
     }
 
 fun TicketStatus.toBadgeTone(): BadgeTone =
@@ -31,6 +32,7 @@ fun TicketStatus.toBadgeTone(): BadgeTone =
         TicketStatus.WIN -> BadgeTone.Success
         TicketStatus.LOSE -> BadgeTone.Neutral
         TicketStatus.PENDING -> BadgeTone.Accent
+        TicketStatus.SAVED -> BadgeTone.Accent
     }
 
 fun GameMode.toModeLabel(): String =

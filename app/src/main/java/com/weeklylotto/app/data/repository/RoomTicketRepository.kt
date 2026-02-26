@@ -5,6 +5,7 @@ import com.weeklylotto.app.data.local.TicketDao
 import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
+import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.WidgetRefreshScheduler
 import kotlinx.coroutines.flow.Flow
@@ -54,6 +55,15 @@ class RoomTicketRepository(
     }
 
     override suspend fun latest(): TicketBundle? = ticketDao.latest()?.toDomain()
+
+    override suspend fun updateStatusByIds(
+        ids: Set<Long>,
+        status: TicketStatus,
+    ) {
+        if (ids.isEmpty()) return
+        ticketDao.updateBundleStatus(ids.toList(), status.name)
+        widgetRefreshScheduler.refreshAll()
+    }
 
     override suspend fun deleteByIds(ids: Set<Long>) {
         if (ids.isEmpty()) return

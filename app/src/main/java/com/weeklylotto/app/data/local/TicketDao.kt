@@ -34,6 +34,12 @@ interface TicketDao {
     @Query("DELETE FROM ticket_bundle WHERE id IN (:ids)")
     suspend fun deleteBundles(ids: List<Long>)
 
+    @Query("UPDATE ticket_bundle SET status = :status WHERE id IN (:ids)")
+    suspend fun updateBundleStatus(
+        ids: List<Long>,
+        status: String,
+    )
+
     @Transaction
     @Query("SELECT * FROM ticket_bundle ORDER BY createdAtEpochMillis DESC")
     fun observeAll(): Flow<List<TicketBundleWithGames>>

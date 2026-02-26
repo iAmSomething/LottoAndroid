@@ -29,10 +29,12 @@ class LottoUiLabelsTest {
         assertThat(TicketStatus.PENDING.toStatusLabel()).isEqualTo("대기")
         assertThat(TicketStatus.WIN.toStatusLabel()).isEqualTo("당첨")
         assertThat(TicketStatus.LOSE.toStatusLabel()).isEqualTo("낙첨")
+        assertThat(TicketStatus.SAVED.toStatusLabel()).isEqualTo("보관")
 
         assertThat(TicketStatus.PENDING.toBadgeTone()).isEqualTo(BadgeTone.Accent)
         assertThat(TicketStatus.WIN.toBadgeTone()).isEqualTo(BadgeTone.Success)
         assertThat(TicketStatus.LOSE.toBadgeTone()).isEqualTo(BadgeTone.Neutral)
+        assertThat(TicketStatus.SAVED.toBadgeTone()).isEqualTo(BadgeTone.Accent)
     }
 
     @Test

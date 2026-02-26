@@ -122,6 +122,12 @@
   - 계측 회귀 테스트 안정화: `WeeklySaveFlowInstrumentedTest`에서 `Espresso.pressBack()` 제거 후 Compose dispatcher back 사용
   - 프리플라이트 계측 재시도 확장: 설치 Broken pipe/device offline/startup crash 패턴 포함, 최대 3회 재시도
   - 실검증: `connectedDebugAndroidTest` 8/8 통과 재확인 + `release-preflight --with-build --android-serial emulator-5554` PASS 14/WARN 0/FAIL 0
+  - 도메인 상태 확장: `TicketStatus.SAVED` 추가 및 상태 라벨/배지 매핑(보관) 반영
+  - 번호관리 편집모드 이동 구현: `이동` 버튼 → `MoveSheet` → 선택 티켓 일괄 `SAVED` 전환
+  - 번호관리 탭 필터 정렬: 이번주 탭에서 `SAVED` 제외, 보관함 탭에서 `SAVED` 또는 과거 회차 표시
+  - 저장소 API 확장: `TicketRepository.updateStatusByIds` + Room DAO 일괄 상태 업데이트 쿼리 추가
+  - 회귀 테스트 추가: `ManageViewModelTest`(이동 플로우) 및 `RoomTicketRepositoryIntegrationTest`(상태 일괄 변경)
+  - 품질 게이트 재통과: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)

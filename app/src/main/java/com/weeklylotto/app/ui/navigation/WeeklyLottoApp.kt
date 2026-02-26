@@ -82,7 +82,6 @@ fun WeeklyLottoApp(initialRoute: String? = null) {
             composable(AppDestination.Manage.route) {
                 ManageScreen(
                     onOpenQr = { navController.navigate(AppDestination.QrScan.route) },
-                    onOpenGenerator = { navController.navigate(AppDestination.Generator.route) },
                     onOpenManualAdd = { navController.navigate(AppDestination.ManualAdd.route) },
                     onOpenImport = { navController.navigate(AppDestination.Import.route) },
                     onOpenTicketDetail = { ticketId ->

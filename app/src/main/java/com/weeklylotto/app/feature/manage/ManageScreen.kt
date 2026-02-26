@@ -56,7 +56,6 @@ import java.time.format.DateTimeFormatter
 @Suppress("CyclomaticComplexMethod")
 fun ManageScreen(
     onOpenQr: () -> Unit,
-    onOpenGenerator: () -> Unit,
     onOpenManualAdd: () -> Unit,
     onOpenImport: () -> Unit,
     onOpenTicketDetail: (Long) -> Unit,
@@ -179,6 +178,38 @@ fun ManageScreen(
         )
     }
 
+    if (uiState.isMoveSheetOpen) {
+        ModalBottomSheet(
+            onDismissRequest = viewModel::closeMoveSheet,
+            containerColor = LottoColors.Surface,
+            shape = RoundedCornerShape(topStart = LottoDimens.SheetRadius, topEnd = LottoDimens.SheetRadius),
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Text("이동", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    "선택한 ${uiState.selectedIds.size}개를 보관함으로 이동합니다.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = LottoColors.TextMuted,
+                )
+                Button(
+                    onClick = viewModel::moveSelectedToVault,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("보관함으로 이동")
+                }
+                TextButton(
+                    onClick = viewModel::closeMoveSheet,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("취소")
+                }
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             LottoTopAppBar(
@@ -262,7 +293,7 @@ fun ManageScreen(
                 ) {
                     Text("${uiState.selectedIds.size}개 선택")
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        TextButton(onClick = onOpenGenerator) { Text("이동") }
+                        TextButton(onClick = viewModel::openMoveSheet) { Text("이동") }
                         TextButton(onClick = viewModel::requestDeleteSelected) { Text("삭제") }
                     }
                 }

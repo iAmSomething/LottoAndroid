@@ -7,6 +7,7 @@ import com.weeklylotto.app.domain.model.LottoGame
 import com.weeklylotto.app.domain.model.LottoNumber
 import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
+import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.NumberGenerator
 import com.weeklylotto.app.feature.generator.NumberGeneratorViewModel
@@ -80,6 +81,11 @@ private class FakeTicketRepository : TicketRepository {
     override suspend fun update(bundle: TicketBundle) = Unit
 
     override suspend fun latest(): TicketBundle? = null
+
+    override suspend fun updateStatusByIds(
+        ids: Set<Long>,
+        status: TicketStatus,
+    ) = Unit
 
     override suspend fun deleteByIds(ids: Set<Long>) = Unit
 }

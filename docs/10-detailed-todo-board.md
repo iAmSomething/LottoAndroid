@@ -21,6 +21,7 @@
 - [x] B-006 번호 편집 UX(키패드/오류 메시지 세분화) 개선
 - [x] B-007 저장 시 중복 bundle 정책(덮어쓰기/누적) 고도화
 - [x] B-008 판매 회차 기준 통일(다음 추첨 회차 기준으로 홈/번호관리/저장 동기화)
+- [x] B-009 번호관리 편집모드 이동 기능 구현(선택 번호 `SAVED` 상태 전환 + 보관함 탭 반영)
 
 ## C. QR 등록
 - [x] C-001 QR URL 파서(2포맷) 구현
@@ -81,6 +82,7 @@
 - [x] H-012 테마 색상 콘트라스트 자동 검증 추가(`ColorContrastTest`, WCAG AA 4.5:1 기준)
 - [x] H-013 상태/출처/모드 한국어 라벨 매핑 공통화 및 회귀 테스트 추가(`LottoUiLabelsTest`)
 - [x] H-014 계측 회귀 안정화: `WeeklySaveFlowInstrumentedTest`의 Espresso back 의존 제거(Compose dispatcher back으로 전환)
+- [x] H-015 번호관리 이동 플로우 회귀 테스트 추가(`ManageViewModelTest`, `RoomTicketRepositoryIntegrationTest`)
 
 ## I. 릴리즈 준비
 - [x] I-001 스토어 메타데이터 작성
@@ -116,3 +118,4 @@
 - [x] J-008 Ticket 상세 화면 공유 액션 및 공유 텍스트 포맷 구현
 - [x] J-009 Figma 호출 제한 대응 오프라인 디자인 QA 체크리스트 문서화
 - [x] J-010 QR 카메라 바인딩 안정화(라이프사이클 destroyed 가드, 콜백 최신화)로 계측 크래시 리스크 완화
+- [x] J-011 Manage 편집모드 `이동` 액션을 실동작으로 연결(이동 시트 + 보관함 상태 배지)

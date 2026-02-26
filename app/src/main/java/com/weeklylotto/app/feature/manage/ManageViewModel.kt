@@ -32,6 +32,7 @@ data class ManageUiState(
     val filter: ManageFilter = ManageFilter(),
     val isFabSheetOpen: Boolean = false,
     val isFilterSheetOpen: Boolean = false,
+    val isMoveSheetOpen: Boolean = false,
     val isDeleteDialogOpen: Boolean = false,
     val tickets: List<TicketBundle> = emptyList(),
 )
@@ -57,6 +58,7 @@ class ManageViewModel(
                 tab = tab,
                 selectedIds = emptySet(),
                 editMode = false,
+                isMoveSheetOpen = false,
             )
         }
     }
@@ -66,6 +68,7 @@ class ManageViewModel(
             it.copy(
                 editMode = !it.editMode,
                 selectedIds = if (it.editMode) emptySet() else it.selectedIds,
+                isMoveSheetOpen = false,
             )
         }
     }
@@ -96,6 +99,20 @@ class ManageViewModel(
         _uiState.update { it.copy(isFilterSheetOpen = false) }
     }
 
+    fun openMoveSheet() {
+        _uiState.update { state ->
+            if (state.selectedIds.isEmpty()) {
+                state
+            } else {
+                state.copy(isMoveSheetOpen = true)
+            }
+        }
+    }
+
+    fun closeMoveSheet() {
+        _uiState.update { it.copy(isMoveSheetOpen = false) }
+    }
+
     fun toggleStatusFilter(status: TicketStatus) {
         _uiState.update { state ->
             val updated =
@@ -117,7 +134,13 @@ class ManageViewModel(
     }
 
     fun requestDeleteSelected() {
-        _uiState.update { it.copy(isDeleteDialogOpen = true) }
+        _uiState.update { state ->
+            if (state.selectedIds.isEmpty()) {
+                state
+            } else {
+                state.copy(isDeleteDialogOpen = true, isMoveSheetOpen = false)
+            }
+        }
     }
 
     fun dismissDeleteDialog() {
@@ -138,6 +161,29 @@ class ManageViewModel(
                     selectedIds = emptySet(),
                     editMode = false,
                     isDeleteDialogOpen = false,
+                    isMoveSheetOpen = false,
+                )
+            }
+        }
+    }
+
+    fun moveSelectedToVault() {
+        val selectedIds = uiState.value.selectedIds
+        if (selectedIds.isEmpty()) {
+            _uiState.update { it.copy(isMoveSheetOpen = false) }
+            return
+        }
+
+        viewModelScope.launch {
+            ticketRepository.updateStatusByIds(
+                ids = selectedIds,
+                status = TicketStatus.SAVED,
+            )
+            _uiState.update {
+                it.copy(
+                    selectedIds = emptySet(),
+                    editMode = false,
+                    isMoveSheetOpen = false,
                 )
             }
         }
@@ -148,8 +194,8 @@ class ManageViewModel(
         val currentRound = RoundEstimator.currentSalesRound(LocalDate.now())
         val tabFiltered =
             when (state.tab) {
-                ManageTab.WEEK -> state.tickets.filter { it.round.number == currentRound }
-                ManageTab.VAULT -> state.tickets.filter { it.round.number != currentRound }
+                ManageTab.WEEK -> state.tickets.filter { it.round.number == currentRound && it.status != TicketStatus.SAVED }
+                ManageTab.VAULT -> state.tickets.filter { it.round.number != currentRound || it.status == TicketStatus.SAVED }
                 ManageTab.SCAN -> state.tickets.filter { it.source == TicketSource.QR_SCAN }
             }
         val statusFiltered =

@@ -11,6 +11,7 @@ import com.weeklylotto.app.domain.model.LottoNumber
 import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
+import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.ResultEvaluator
@@ -142,6 +143,11 @@ private class StatsTicketRepository(
     override suspend fun update(bundle: TicketBundle) = Unit
 
     override suspend fun latest(): TicketBundle? = all.value.firstOrNull()
+
+    override suspend fun updateStatusByIds(
+        ids: Set<Long>,
+        status: TicketStatus,
+    ) = Unit
 
     override suspend fun deleteByIds(ids: Set<Long>) = Unit
 }
