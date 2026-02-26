@@ -24,7 +24,7 @@
 - 번호관리 빠른 액션 후속 최적화(`A02`) - 완료(2026-02-26, 카드 하단 `상세/이번주 복사/보관/삭제` + 단위 테스트 보강)
 - 설정/시크릿 파일 버전관리 정책 정리(`AE-005`, 시크릿 JSON 2종 포함)
 - Firebase App Distribution 운영 검증(`AF-005`, dry-run/실배포 증적) - 완료(2026-02-26, `firebase_dry_run_2026-02-26.md`)
-- 배포 주기 점검 루틴 자동화(`I-023`) - 완료(2026-02-26, `firebase-distribution-routine.yml` 주간 스케줄 + `firebase-distribution-routine-check.sh` dry-run 체인)
+- 배포 주기 점검 루틴 자동화(`I-023`) - 완료(2026-02-26, `firebase-distribution-routine.yml` 주간 스케줄 + `firebase-distribution-routine-check.sh` dry-run 체인 + 첫 CI 실행 run `22436650122` 증적 확보)
 - AB-005 착수 승인 패키지 정리(`AJ-005`, 체크리스트/배포 증적/타이포 시안 2종) - 완료(2026-02-26)
 - AB-009/AB-010 시각 증적 매트릭스 확정(`AK-005`, 화면 4종×폰트스케일×저조도) - 완료(2026-02-26, `32-visual-proof-matrix-report.md`)
 - AB-009/AB-010 증적 운영안 확정(`AL-005`, 파일명 규칙/담당/판정 템플릿)
