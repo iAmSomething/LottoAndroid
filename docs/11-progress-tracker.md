@@ -257,6 +257,10 @@
   - 통계 화면 확장: `회차별 ROI 트렌드` 카드(회차/순이익 바/구매·당첨 메타) 반영
   - 회귀 테스트 보강: `StatsViewModelTest`에 ROI 트렌드 8개 제한/빈데이터 케이스 추가
   - 통합 품질 게이트 재검증: 동일 게이트 재통과(`ktlintCheck`, `detekt`, `testDebugUnitTest`, `assembleDebug`, `wear:assembleDebug`)
+  - 번호 직접 추가 UX 개선: `pendingGames` 기반 다중 게임 누적/삭제/반복 추가(최대 5게임) 구현
+  - 저장 로직 확장: 번호 직접 추가 화면에서 A~E 슬롯 다중 게임을 한 번에 저장 가능
+  - 회귀 테스트 보강: `ManualAddViewModelTest`에 다중 저장/반복 저장 케이스 추가
+  - 품질 게이트 재검증: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` 성공
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Wear OS 실기기(소형/대형) 기준 UI/성능 검증

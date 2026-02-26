@@ -307,3 +307,11 @@
 - [x] Y-003 `StatsScreen`에 `회차별 ROI 트렌드` 카드 추가(순이익 바 + 회차 메타)
 - [x] Y-004 회귀 테스트 추가(`StatsViewModelTest`: ROI 트렌드 8개 제한/빈데이터 케이스)
 - [x] Y-005 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug`)
+
+## Z. 번호 직접 추가 다중 게임 UX 개선(2026-02-26 Cycle-12)
+- [x] Z-001 `ManualAddViewModel`에 다중 게임 상태 추가(`pendingGames`, `repeatCount`)
+- [x] Z-002 `현재 번호 1게임 추가`/`같은 번호 반복 추가` 액션 구현(최대 5게임)
+- [x] Z-003 `번호 직접 추가` 화면에 추가 게임 목록/삭제/반복 카운트 UI 반영
+- [x] Z-004 저장 로직 확장: 누적 게임을 A~E 슬롯으로 한 번에 저장
+- [x] Z-005 회귀 테스트 추가(`ManualAddViewModelTest`: 다중 저장/반복 저장)
+- [x] Z-006 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug`)

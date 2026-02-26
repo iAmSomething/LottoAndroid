@@ -60,6 +60,49 @@ class ManualAddViewModelTest {
             assertThat(repository.savedBundles.first().games.first().numbers.map { it.value })
                 .containsExactly(7, 8, 9, 10, 11, 12)
         }
+
+    @Test
+    fun 여러게임을_추가한_뒤_한번에_저장할_수_있다() =
+        runTest {
+            val repository = ManualAddFakeTicketRepository(initial = emptyList())
+            val viewModel = ManualAddViewModel(ticketRepository = repository)
+
+            listOf(1, 2, 3, 4, 5, 6).forEach(viewModel::toggleNumber)
+            viewModel.addSelectedGame()
+            viewModel.clear()
+            listOf(7, 8, 9, 10, 11, 12).forEach(viewModel::toggleNumber)
+            viewModel.addSelectedGame()
+
+            viewModel.save()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.saved).isTrue()
+            assertThat(viewModel.uiState.value.savedGameCount).isEqualTo(2)
+            assertThat(repository.savedBundles).hasSize(1)
+            assertThat(repository.savedBundles.first().games).hasSize(2)
+            assertThat(repository.savedBundles.first().games[0].slot).isEqualTo(GameSlot.A)
+            assertThat(repository.savedBundles.first().games[1].slot).isEqualTo(GameSlot.B)
+        }
+
+    @Test
+    fun 같은번호_반복추가로_게임수를_늘릴_수_있다() =
+        runTest {
+            val repository = ManualAddFakeTicketRepository(initial = emptyList())
+            val viewModel = ManualAddViewModel(ticketRepository = repository)
+
+            listOf(1, 2, 3, 4, 5, 6).forEach(viewModel::toggleNumber)
+            viewModel.setRepeatCount(5)
+            viewModel.addSelectedGameRepeated()
+            viewModel.save()
+            advanceUntilIdle()
+
+            val saved = repository.savedBundles.first()
+            assertThat(saved.games).hasSize(5)
+            assertThat(saved.games.map { it.slot })
+                .containsExactly(GameSlot.A, GameSlot.B, GameSlot.C, GameSlot.D, GameSlot.E)
+                .inOrder()
+            assertThat(saved.games.all { game -> game.numbers.map { it.value } == listOf(1, 2, 3, 4, 5, 6) }).isTrue()
+        }
 }
 
 private fun ticket(

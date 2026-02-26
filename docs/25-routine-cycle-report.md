@@ -379,3 +379,33 @@
 1. `C01`(조합 중복도 경고) 계산 기준 확정 및 1차 구현
 2. 통계 카드 간 정보 밀도(스크롤 길이/요약 문구) 미세 조정
 3. `P-004` 블로커 유지 + 에뮬레이터 증적 누적
+
+## 2026-02-26 Cycle-12
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 범위
+  - `ManualAddViewModel`에 다중 게임 상태/액션 추가(`pendingGames`, `repeatCount`, 반복 추가/삭제)
+  - `ManualAddScreen`에 다중 게임 등록 UI 추가(추가 목록/반복 카운트/일괄 저장)
+  - 저장 로직 확장: 수동 추가에서 최대 5게임(A~E)을 한 번에 저장
+  - `ManualAddViewModelTest`에 다중 저장/반복 저장 케이스 추가
+- 품질 스냅샷
+  - `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` 성공
+
+### 2) 진행도 진단
+- 개선점
+  - 기존 "1게임만 저장" 제약 해소
+  - 동일 번호 반복 구매 시나리오를 UX에서 직접 지원
+- 남은 갭
+  - 기존 수동추가 중복 차단 정책은 유지(이번 주 기존 동일 번호 존재 시 저장 차단)
+  - `P-004` 실기기 증적 블로커 유지
+
+### 3) 증적
+- 코드:
+  - `app/src/main/java/com/weeklylotto/app/feature/manualadd/ManualAddViewModel.kt`
+  - `app/src/main/java/com/weeklylotto/app/feature/manualadd/ManualAddScreen.kt`
+  - `app/src/test/java/com/weeklylotto/app/ManualAddViewModelTest.kt`
+
+### 4) 다음 루틴 시작점
+1. `C01`(중복도 경고) 1차 구현 착수
+2. 수동추가 다중 게임 UX 미세 조정(문구/밀도/버튼 우선순위)
+3. `P-004` 블로커 유지 + 에뮬레이터 증적 누적
