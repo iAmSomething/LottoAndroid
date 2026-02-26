@@ -106,6 +106,7 @@
 - [x] I-019 에뮬레이터 시작 ANR 대응 프리플라이트 보강(`connectedDebugAndroidTest` 1회 자동 재시도)
 - [x] I-020 앱 스타트업 ANR 완화: `AppGraph.init` 경량화 + 의존성 lazy 초기화
 - [x] I-021 에뮬레이터 설치/연결 불안정 대응: 프리플라이트 재시도 3회로 확장(Broken pipe/offline/startup 감지)
+- [x] I-022 런처 아이콘 콘셉트 교체: 딥틸 배경 + 상승하는 행운(Adaptive foreground/monochrome)
 
 ## J. 디자인 스펙 정렬(`/Volumes/무제/design_spec_android_lotto.md`)
 - [x] J-001 토큰(색상/간격/타이포) 1차 반영

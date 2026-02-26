@@ -128,6 +128,7 @@
   - 저장소 API 확장: `TicketRepository.updateStatusByIds` + Room DAO 일괄 상태 업데이트 쿼리 추가
   - 회귀 테스트 추가: `ManageViewModelTest`(이동 플로우) 및 `RoomTicketRepositoryIntegrationTest`(상태 일괄 변경)
   - 품질 게이트 재통과: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`
+  - 앱 아이콘 콘셉트 업데이트: Adaptive icon을 딥틸 배경 + 골드 볼 상승(안 A) 메타포로 교체하고 monochrome 동기화
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
