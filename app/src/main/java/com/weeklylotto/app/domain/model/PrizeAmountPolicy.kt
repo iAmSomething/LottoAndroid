@@ -1,8 +1,6 @@
-package com.weeklylotto.app.feature.stats
+package com.weeklylotto.app.domain.model
 
-import com.weeklylotto.app.domain.model.DrawRank
-
-internal object PrizePolicy {
+object PrizeAmountPolicy {
     fun amountFor(rank: DrawRank): Long =
         when (rank) {
             DrawRank.NONE -> 0L

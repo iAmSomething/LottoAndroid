@@ -4,6 +4,26 @@
 - 날짜 형식: `YYYY-MM-DD`
 - 필수 항목: 완료 작업, 미완료 작업, 블로커, 다음 액션
 
+## 2026-02-26
+- 완료 작업
+  - 워치 플랫폼 명칭을 Wear OS(갤럭시 워치)로 통일
+  - Wear OS 연동 전략 문서 확정(`20-wearos-integration-plan.md`)
+  - 제품 고도화 아이디어 문서 추가(`21-product-enhancement-ideas.md`)
+  - 우선순위 매트릭스 문서 추가(`22-prioritization-matrix.md`)
+  - KPI/실험 계획 문서 추가(`23-kpi-and-experiment-plan.md`)
+  - 모션/상호작용 플레이북 문서 추가(`24-motion-and-interaction-playbook.md`)
+  - 스플래시/상호작용 고도화 작업 보드 추가(`10-detailed-todo-board.md` M-001~M-020)
+  - 디자인/테스트/일정/백로그 문서에 모션 항목 연계 반영
+  - `00`, `05`, `06`, `09`, `10`, `16`, `README` 고도화 계획 반영
+- 미완료 작업
+  - Wear OS 구현/실기기 검증 착수
+  - 실험 이벤트 로깅 체계 구현
+- 블로커
+  - 없음(기획 단계)
+- 다음 액션
+  - `22` 상위 항목부터 `10`의 K/L 섹션 순차 착수
+  - 2주 단위 KPI 리뷰 루틴 실행
+
 ## 2026-02-25
 - 완료 작업
   - Android 프로젝트 스캐폴딩 완료
@@ -165,15 +185,26 @@
   - 번호관리 목록 헤더 개선: `편집` 액션과 별도로 현재 정렬 기준 버튼(`최신순` 등) 노출
   - 정렬 회귀 테스트 추가: `ManageViewModelTest`에서 기본 최신순/오래된순/회차순 결과 검증
   - 통합 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `compileDebugAndroidTestKotlin`, `assembleDebug` 재통과
+  - 당첨 결과 화면 고도화: 게임별 예상 당첨금과 회차 기준 당첨금 합계 카드 추가
+  - 당첨금 정책 공통화: `PrizeAmountPolicy`를 도입해 통계/결과 화면의 금액 기준 통일
+  - 번호생성 수동 입력 UX 재설계: 빠른 후보 칩 + 1~45 번호 팔레트 + 선택 반영 중심 동선으로 개선
+  - 위젯 A/B 리디자인: 카드형 레이아웃, 강조 CTA, 텍스트 위계/색 대비 개선
+  - 회귀 테스트 추가: `PrizeAmountPolicyTest`, `ResultViewModelTest`(당첨금 합계 계산) 보강
+  - 문서 동기화: `08-design-mapping.md`, `10-detailed-todo-board.md` 반영
+  - 고도화 문서 세트 확정: `20-wearos-integration-plan.md`, `21-product-enhancement-ideas.md`, `22-prioritization-matrix.md`, `23-kpi-and-experiment-plan.md`, `24-motion-and-interaction-playbook.md`
+  - K/L/M 상세 TODO를 문서 산출물 기준으로 완료 처리(`10-detailed-todo-board.md` K-001~K-020, L-001~L-015, M-001~M-020)
+  - Wear 모듈 기초 스캐폴딩 추가(`:wear`, 기본 Activity/Manifest/테마/문자열)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
+  - Wear OS 실기기(소형/대형) 기준 UI/성능 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
 - 블로커
   - Figma MCP 호출 한도(노드 직접 대조 불가)
-  - 실기기 미보유(에뮬레이터 fallback으로 개발/사전 점검은 진행 가능)
+  - 실기기 미보유(모바일/워치 모두 에뮬레이터 fallback으로 개발/사전 점검 진행)
 - 다음 액션
   - 에뮬레이터 기준 `./scripts/release-final-check.sh` 정기 실행으로 회귀 감시 유지
   - 실기기 확보 시 `./scripts/release-final-check.sh --require-physical-device` 1회 통과 이력 확보
+  - W10 착수 항목(`L-001~L-004`, `M-001~M-010`) 구현 티켓 분해 및 실행
   - Figma 툴 호출 가능 상태에서 node `6:2` 기준 화면 밀도/간격 최종 동기화
 
 ## 상태 요약

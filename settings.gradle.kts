@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "weeklylotto"
 include(":app")
+include(":wear")

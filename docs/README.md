@@ -11,6 +11,8 @@
 | 04-02 ~ 04-08 | W6 | 위젯 A/B 동작 완성 | 03, 05, 06, 08, 09, 10 |
 | 04-09 ~ 04-15 | W7 | 통계/회귀 테스트 강화 | 05, 06, 09, 10, 11 |
 | 04-16 ~ 04-22 | W8 | 릴리즈 준비/인수인계 | 06, 07, 09, 10, 11 |
+| 04-23 ~ 05-20 | W9~W12 | 고도화/플랫폼 확장 | 09, 10, 16, 20, 21, 22, 23 |
+| 04-30 ~ 05-20 | W10~W12 | 모션/상호작용 고도화 | 08, 10, 22, 23, 24 |
 
 ## 문서별 역할
 - `00-product-overview.md`: 제품 목적/범위 고정 기준
@@ -33,6 +35,11 @@
 - `17-release-preflight-report.md`: 자동 프리플라이트 점검 리포트
 - `18-device-validation-report.md`: 실기기 계측 테스트 실행 이력
 - `19-offline-design-qa-checklist.md`: Figma 제한 시 오프라인 디자인 정합성 점검 가이드
+- `20-wearos-integration-plan.md`: Wear OS(갤럭시 워치) 연동 전략/아키텍처/단계별 실행안
+- `21-product-enhancement-ideas.md`: 앱 전체 고도화 아이디어 풀
+- `22-prioritization-matrix.md`: 고도화 우선순위 점수/실행 권고
+- `23-kpi-and-experiment-plan.md`: KPI 목표/실험 설계/성공 기준
+- `24-motion-and-interaction-playbook.md`: 스플래시/내부 모션 규격/QA 기준
 
 ## 운영 규칙
 1. 작업 시작 전 `09`, `10`, `11`을 먼저 확인한다.

@@ -8,6 +8,7 @@ import com.weeklylotto.app.domain.model.DrawRank
 import com.weeklylotto.app.domain.model.DrawResult
 import com.weeklylotto.app.domain.model.EvaluationResult
 import com.weeklylotto.app.domain.model.LottoGame
+import com.weeklylotto.app.domain.model.PrizeAmountPolicy
 import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
@@ -39,6 +40,7 @@ data class ResultUiState(
     val lastErrorAt: LocalDateTime? = null,
 ) {
     val winningCount: Int get() = evaluatedGames.count { it.result.rank != DrawRank.NONE }
+    val totalWinningAmount: Long get() = evaluatedGames.sumOf { PrizeAmountPolicy.amountFor(it.result.rank) }
     val hasRetried: Boolean get() = retryAttempt > 1
 }
 

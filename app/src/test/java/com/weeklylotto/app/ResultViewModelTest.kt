@@ -6,10 +6,12 @@ import com.weeklylotto.app.domain.error.AppResult
 import com.weeklylotto.app.domain.model.DrawRank
 import com.weeklylotto.app.domain.model.DrawResult
 import com.weeklylotto.app.domain.model.EvaluationResult
+import com.weeklylotto.app.domain.model.GameSlot
 import com.weeklylotto.app.domain.model.LottoGame
 import com.weeklylotto.app.domain.model.LottoNumber
 import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
+import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
@@ -158,6 +160,47 @@ class ResultViewModelTest {
             assertThat(state.selectedRound).isEqualTo(1210)
             assertThat(state.drawResult?.round?.number).isEqualTo(1210)
         }
+
+    @Test
+    fun 당첨게임이_있으면_예상당첨금합계를_계산한다() =
+        runTest {
+            val draw = sampleDraw(roundNumber = 1212)
+            val drawRepository =
+                ResultViewModelFakeDrawRepository(
+                    latestQueue = ArrayDeque(listOf(AppResult.Success(draw))),
+                )
+            val ticketRepository =
+                ResultViewModelFakeTicketRepository(
+                    tickets =
+                        listOf(
+                            TicketBundle(
+                                id = 1L,
+                                round = draw.round,
+                                source = TicketSource.GENERATED,
+                                games =
+                                    listOf(
+                                        LottoGame(
+                                            slot = GameSlot.A,
+                                            numbers = listOf(3, 12, 19, 24, 35, 41).map(::LottoNumber),
+                                        ),
+                                    ),
+                            ),
+                        ),
+                )
+            val viewModel =
+                ResultViewModel(
+                    drawRepository = drawRepository,
+                    ticketRepository = ticketRepository,
+                    evaluator = ResultViewModelFakeResultEvaluator(rank = DrawRank.FIFTH),
+                    retryDelayProvider = { 0L },
+                )
+
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(state.winningCount).isEqualTo(1)
+            assertThat(state.totalWinningAmount).isEqualTo(5_000L)
+        }
 }
 
 private class ResultViewModelFakeDrawRepository(
@@ -181,12 +224,15 @@ private class ResultViewModelFakeDrawRepository(
     }
 }
 
-private class ResultViewModelFakeTicketRepository : TicketRepository {
-    override fun observeAllTickets(): Flow<List<TicketBundle>> = flowOf(emptyList())
+private class ResultViewModelFakeTicketRepository(
+    private val tickets: List<TicketBundle> = emptyList(),
+) : TicketRepository {
+    override fun observeAllTickets(): Flow<List<TicketBundle>> = flowOf(tickets)
 
-    override fun observeCurrentRoundTickets(): Flow<List<TicketBundle>> = flowOf(emptyList())
+    override fun observeCurrentRoundTickets(): Flow<List<TicketBundle>> = flowOf(tickets)
 
-    override fun observeTicketsByRound(round: Round): Flow<List<TicketBundle>> = flowOf(emptyList())
+    override fun observeTicketsByRound(round: Round): Flow<List<TicketBundle>> =
+        flowOf(tickets.filter { it.round.number == round.number })
 
     override suspend fun save(bundle: TicketBundle) = Unit
 
@@ -202,13 +248,15 @@ private class ResultViewModelFakeTicketRepository : TicketRepository {
     override suspend fun deleteByIds(ids: Set<Long>) = Unit
 }
 
-private class ResultViewModelFakeResultEvaluator : ResultEvaluator {
+private class ResultViewModelFakeResultEvaluator(
+    private val rank: DrawRank = DrawRank.NONE,
+) : ResultEvaluator {
     override fun evaluate(
         game: LottoGame,
         draw: DrawResult,
     ): EvaluationResult =
         EvaluationResult(
-            rank = DrawRank.NONE,
+            rank = rank,
             matchedMainCount = 0,
             bonusMatched = false,
             highlightedNumbers = emptySet(),

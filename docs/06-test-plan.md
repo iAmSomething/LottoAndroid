@@ -57,9 +57,26 @@
 - 상태/출처/모드 라벨 매핑 일관성 검증
 - 자동 검증: `TicketDetailShareFormatterTest`, `LottoUiLabelsTest`
 
+### Wear OS
+- 원형 화면 레이아웃 가독성(핵심 정보 첫 노출) 검증
+- 워치 Home/Numbers/Result/Settings 내비게이션 회귀 검증
+- 워치→폰 핸드오프 액션 성공/실패 분기 검증
+
+### 실험/지표
+- EXP-01/02/03/04 이벤트 로깅 정확도 검증
+- 실험군/대조군 분기 규칙 검증
+- KPI 집계 배치(주간) 누락/중복 검증
+
+### 모션/상호작용
+- 스플래시 콜드/웜 실행 시간 검증(목표 900ms 이하/축약 300ms)
+- 핵심 인터랙션 모션 일관성 검증(버튼/볼/탭/시트/리스트)
+- Reduce Motion 모드 동작 검증(축소 규칙 준수)
+- 저사양 기기 프레임 드롭 허용치 검증(jank 비율)
+
 ## 3. 합격 기준
 - 핵심 유즈케이스 회귀 실패 0건
 - CI 빌드/단위 테스트 성공
-- `connectedDebugAndroidTest` 통과(현재 7 tests, 0 failures)
 - `connectedDebugAndroidTest` 통과(현재 8 tests, 0 failures)
+- Wear OS 핵심 플로우 회귀 테스트 통과(추가 시나리오 기준)
+- 모션 품질 기준 통과(스플래시 시간/Reduce Motion/프레임 안정성)
 - 치명 이슈(P0/P1) 0건

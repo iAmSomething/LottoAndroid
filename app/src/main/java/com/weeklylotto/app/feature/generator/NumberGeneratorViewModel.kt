@@ -82,6 +82,13 @@ class NumberGeneratorViewModel(
         }
     }
 
+    fun applyManualNumber(
+        slot: GameSlot,
+        number: Int,
+    ) {
+        applyManualNumber(slot = slot, rawInput = number.toString())
+    }
+
     fun regenerateExceptLocked() {
         _uiState.update { state ->
             state.copy(

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.weeklylotto.app.domain.error.AppResult
 import com.weeklylotto.app.domain.model.DrawRank
 import com.weeklylotto.app.domain.model.LottoNumber
+import com.weeklylotto.app.domain.model.PrizeAmountPolicy
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
@@ -98,7 +99,7 @@ class StatsViewModel(
                     if (draw != null) {
                         bundle.games.forEach { game ->
                             val evaluation = resultEvaluator.evaluate(game, draw)
-                            totalWinAmount += PrizePolicy.amountFor(evaluation.rank)
+                            totalWinAmount += PrizeAmountPolicy.amountFor(evaluation.rank)
                             if (evaluation.rank != DrawRank.NONE) {
                                 winningGames += 1
                             }

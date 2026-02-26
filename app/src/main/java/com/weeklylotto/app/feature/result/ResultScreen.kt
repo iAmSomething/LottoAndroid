@@ -38,11 +38,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.domain.model.DrawRank
+import com.weeklylotto.app.domain.model.PrizeAmountPolicy
 import com.weeklylotto.app.ui.component.BadgeTone
 import com.weeklylotto.app.ui.component.BallChip
 import com.weeklylotto.app.ui.component.BallState
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.StatusBadge
+import com.weeklylotto.app.ui.format.toWonLabel
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
@@ -289,6 +291,31 @@ fun ResultScreen() {
                 }
             }
 
+            item {
+                Card(
+                    shape = RoundedCornerShape(LottoDimens.CardRadius),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                    colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(LottoDimens.ScreenPadding),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Text(
+                            text = "당첨 ${uiState.winningCount}게임",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = LottoColors.TextSecondary,
+                        )
+                        Text(
+                            text = "예상 당첨금 합계 ${uiState.totalWinningAmount.toWonLabel()}",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Black,
+                            color = LottoColors.TextPrimary,
+                        )
+                    }
+                }
+            }
+
             if (uiState.evaluatedGames.isEmpty()) {
                 item {
                     Card {
@@ -301,6 +328,7 @@ fun ResultScreen() {
 
             items(uiState.evaluatedGames) { evaluated ->
                 val highlight = evaluated.result.rank != DrawRank.NONE
+                val estimatedPrize = PrizeAmountPolicy.amountFor(evaluated.result.rank)
                 Card(
                     shape = RoundedCornerShape(LottoDimens.CardRadius),
                     border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
@@ -344,6 +372,22 @@ fun ResultScreen() {
                                     if (evaluated.result.bonusMatched) " + 보너스" else "",
                             color = LottoColors.TextMuted,
                             style = MaterialTheme.typography.bodySmall,
+                        )
+                        Text(
+                            text =
+                                if (estimatedPrize > 0) {
+                                    "예상 당첨금 ${estimatedPrize.toWonLabel()}"
+                                } else {
+                                    "예상 당첨금 없음"
+                                },
+                            color =
+                                if (estimatedPrize > 0) {
+                                    LottoColors.Primary
+                                } else {
+                                    LottoColors.TextMuted
+                                },
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = if (estimatedPrize > 0) FontWeight.Bold else FontWeight.Normal,
                         )
                     }
                 }
