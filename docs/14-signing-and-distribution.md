@@ -33,6 +33,13 @@
 - 점검 범위: JDK/ADB, 버전, 스크린샷 세트, 서명 값, 품질 게이트
 - 최신 실행 기록: `17-release-preflight-report.md`
 
+### 3-1-a. 최종 배포 직전(실기기 필수)
+```bash
+./scripts/release-preflight.sh --with-build --require-physical-device
+```
+- 실기기 1대 이상이 연결되지 않으면 실패(`FAIL > 0`)하도록 강제
+- 에뮬레이터만 연결된 상태의 오검증을 방지
+
 ## 3-1-1. CI 프리플라이트(ADB 없이)
 ```bash
 ./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing

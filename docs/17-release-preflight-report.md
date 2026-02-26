@@ -36,6 +36,7 @@
 3. 재실행: PASS 13 / WARN 0 / FAIL 0
 4. 기능/디자인/접근성 추가 반영 후 재실행(2026-02-26): PASS 13 / WARN 0 / FAIL 0 (`connectedDebugAndroidTest` 8/8)
 5. 프리플라이트 로컬 게이트에 `detekt` 포함 후 재실행(2026-02-26): PASS 13 / WARN 0 / FAIL 0
+6. 실기기 엄격 모드 검증(2026-02-26): PASS 13 / WARN 0 / FAIL 1 (`--require-physical-device`, 실기기 0대로 의도된 실패)
 
 ## 후속 조치
 1. CI 환경에도 동일하게 `LOTTO_RELEASE_*` 시크릿 설정
@@ -45,5 +46,5 @@
 2. GitHub Actions `release-preflight.yml`에서 `--with-build-ci --skip-adb --require-signing` 실행 유지
 3. 배포 직전 아래 명령으로 최종 재검증
 ```bash
-./scripts/release-preflight.sh --with-build
+./scripts/release-preflight.sh --with-build --require-physical-device
 ```

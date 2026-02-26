@@ -8,6 +8,7 @@ RUN_BUILD_LOCAL=0
 RUN_BUILD_CI=0
 SKIP_ADB=0
 REQUIRE_SIGNING=0
+REQUIRE_PHYSICAL_DEVICE=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -23,9 +24,12 @@ while [[ $# -gt 0 ]]; do
     --require-signing)
       REQUIRE_SIGNING=1
       ;;
+    --require-physical-device)
+      REQUIRE_PHYSICAL_DEVICE=1
+      ;;
     *)
       echo "Unknown option: $1"
-      echo "Usage: $0 [--with-build|--with-build-ci] [--skip-adb] [--require-signing]"
+      echo "Usage: $0 [--with-build|--with-build-ci] [--skip-adb] [--require-signing] [--require-physical-device]"
       exit 2
       ;;
   esac
@@ -96,10 +100,19 @@ if [[ "$SKIP_ADB" -eq 1 ]]; then
   pass "ADB 점검 생략(--skip-adb)"
 elif command -v adb >/dev/null 2>&1; then
   DEVICE_COUNT="$(adb devices | awk 'NR>1 && $2=="device" {count++} END {print count+0}')"
+  PHYSICAL_DEVICE_COUNT="$(adb devices | awk 'NR>1 && $2=="device" && $1 !~ /^emulator-/ {count++} END {print count+0}')"
+  EMULATOR_DEVICE_COUNT="$(adb devices | awk 'NR>1 && $2=="device" && $1 ~ /^emulator-/ {count++} END {print count+0}')"
   if [[ "$DEVICE_COUNT" -ge 1 ]]; then
-    pass "ADB 연결 디바이스 ${DEVICE_COUNT}대 확인"
+    pass "ADB 연결 디바이스 ${DEVICE_COUNT}대 확인(실기기 ${PHYSICAL_DEVICE_COUNT}, 에뮬레이터 ${EMULATOR_DEVICE_COUNT})"
+    if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 && "$PHYSICAL_DEVICE_COUNT" -lt 1 ]]; then
+      fail "실기기 연결 필수 옵션 활성화됨(--require-physical-device), 현재 실기기 0대"
+    fi
   else
-    warn "ADB 연결 디바이스 없음(계측 테스트 자동 실행 불가)"
+    if [[ "$REQUIRE_PHYSICAL_DEVICE" -eq 1 ]]; then
+      fail "실기기 연결 필수 옵션 활성화됨(--require-physical-device), 연결 디바이스 없음"
+    else
+      warn "ADB 연결 디바이스 없음(계측 테스트 자동 실행 불가)"
+    fi
   fi
 else
   warn "adb 명령을 찾지 못함"

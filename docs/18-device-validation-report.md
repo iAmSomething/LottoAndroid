@@ -14,3 +14,4 @@
 
 ## 실행 이력
 - 2026-02-26: 실기기 미연결로 실행 불가 (`[FAIL] No physical device connected. Connect one device and retry.`)
+- 2026-02-26: 프리플라이트 엄격 모드에서도 동일 확인 (`./scripts/release-preflight.sh --with-build --require-physical-device` → `FAIL=1`)

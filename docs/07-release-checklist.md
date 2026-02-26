@@ -6,6 +6,7 @@
 - [x] `./gradlew :app:ktlintCheck :app:detekt`
 - [x] `./gradlew :app:connectedDebugAndroidTest` (실기기/에뮬레이터 필수)
 - [x] 실기기 재검증 자동화 명령 준비(`./scripts/run-physical-device-validation.sh`)
+- [x] 프리플라이트 실기기 엄격 모드 추가(`./scripts/release-preflight.sh --with-build --require-physical-device`)
 - [x] 크래시 재현 케이스 점검 (계측 테스트 재실행 + 수동 instrumentation 확인)
 - [x] `./scripts/release-preflight.sh --with-build` 실행 및 리포트 저장(`17-release-preflight-report.md`)
 - [x] CI 프리플라이트 워크플로우 추가(`.github/workflows/release-preflight.yml`)
@@ -44,3 +45,9 @@
 - 신규 단위: `SettingsViewModelTest`, `DefaultWidgetDataProviderTest`, `StatsViewModelTest`, `BallChipAccessibilityTest`, `TicketDetailShareFormatterTest`, `ColorContrastTest`
 - 당첨 API fallback: 공식 API 실패 시 미러 API로 1212회 로드 확인
 - CI preflight 모드(`--with-build-ci --skip-adb --require-signing`) 검증 통과
+
+## 7. 최종 배포 직전 필수 명령
+```bash
+./scripts/release-preflight.sh --with-build --require-physical-device
+```
+- 통과 조건: 실기기 1대 이상 연결 + 요약 `FAIL=0`

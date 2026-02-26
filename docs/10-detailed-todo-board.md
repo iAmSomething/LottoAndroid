@@ -94,6 +94,7 @@
 - [x] I-010 Secrets 업로드 대상 repo 자동탐지(단일 후보) 및 안전중단 로직 추가
 - [x] I-011 앱 아이콘 브랜딩 리뉴얼(adaptive foreground/background/monochrome)
 - [x] I-012 `release-preflight.sh --with-build` 로컬 품질게이트에 `detekt` 포함
+- [x] I-013 프리플라이트 실기기 엄격 모드(`--require-physical-device`) 추가
 
 ## J. 디자인 스펙 정렬(`/Volumes/무제/design_spec_android_lotto.md`)
 - [x] J-001 토큰(색상/간격/타이포) 1차 반영
