@@ -263,3 +263,9 @@
 - [x] S-001 `SplashGate` 구현(콜드 900ms/웜 300ms 브리지)
 - [x] S-002 `motion_splash_shown`, `motion_splash_skip` 이벤트 연결
 - [x] S-003 스플래시 캡처 증적 수집(`docs/assets/typography-refresh/splash_cold.png`, `splash_warm.png`)
+
+## T. Wear v1 코드 구현(2026-02-26 Cycle-06)
+- [x] T-001 `:wear` 실제 4화면(Home/Numbers/Result/Settings) 내비게이션 구현(`WearApp.kt`)
+- [x] T-002 워치→폰 핸드오프 최소 경로 구현(QR/Result/Settings 딥링크 오픈)
+- [x] T-003 Wear 원형 UI 번호볼/요약 카드/토글 설정 UI 반영(정보 밀도 기준 적용)
+- [x] T-004 품질 스냅샷 재검증(`./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug`)

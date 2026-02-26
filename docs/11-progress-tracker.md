@@ -232,6 +232,10 @@
   - 테스트 더블 네이밍/스코프 충돌 방지 규칙 문서화(`06-test-plan.md` 3장)
   - 루틴 즉시 조치 보드 완결(`10-detailed-todo-board.md` O-001~O-004 완료)
   - EXP-05/06 이벤트 훅 연결 점검 완료: `motion_*`, `interaction_*` 누락 포인트 식별(`23-kpi-and-experiment-plan.md` 8장)
+  - Wear v1 실제 화면 구현 완료: Home/Numbers/Result/Settings 4화면 내비게이션 + 카드/칩/토글 UI 반영(`wear/src/main/java/com/weeklylotto/wear/WearApp.kt`)
+  - 워치→폰 핸드오프 최소 경로 구현: QR/결과/설정 딥링크를 워치에서 폰으로 실행(`androidx.wear:wear-remote-interactions:1.1.0`)
+  - Wear 앱 라벨 정렬: `매주로또 워치`로 통일(`wear/src/main/res/values/strings.xml`)
+  - 품질 게이트 재검증: `./gradlew :wear:assembleDebug` 및 `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Wear OS 실기기(소형/대형) 기준 UI/성능 검증
@@ -243,6 +247,7 @@
   - 에뮬레이터 기준 `./scripts/release-final-check.sh` 정기 실행으로 회귀 감시 유지
   - 실기기 확보 시 `./scripts/release-final-check.sh --require-physical-device` 1회 통과 이력 확보
   - W11 착수 항목(`M` 모션 코드 구현, `L` 인사이트 실험 이벤트 계측) 실행
+  - W11 착수 항목에 Wear 실기기 증적(`P-004`) 확보를 최우선으로 병행
   - Figma 툴 호출 가능 상태에서 node `6:2` 기준 화면 밀도/간격 최종 동기화
 
 ## 상태 요약

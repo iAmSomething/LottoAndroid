@@ -109,3 +109,16 @@
 | K-018 | 스토어 분리 전략(모바일/워치) 필요사항 명시 | 6장 실행안 |
 | K-019 | 권한/개인정보 Wear 확장 반영 항목 식별 | 6장 실행안, 7장 리스크 |
 | K-020 | 릴리즈 게이트(동기화/치명 이슈 0건) 확정 | 8장 DoD |
+
+## 12. 구현 현황 업데이트 (2026-02-26 Cycle-06)
+- `:wear` 모듈에서 v1 4화면(Home/Numbers/Result/Settings) 구현 완료
+  - 경로: `wear/src/main/java/com/weeklylotto/wear/WearApp.kt`
+  - 구조: `SwipeDismissableNavHost` 기반 화면 전환 + 원형 UI 기준 카드/칩/토글 구성
+- 워치→폰 핸드오프 최소 경로(D02) 1차 구현 완료
+  - QR 스캔/결과/설정 딥링크를 워치에서 폰으로 요청
+  - 기술: `androidx.wear:wear-remote-interactions:1.1.0`
+- 품질 스냅샷
+  - `./gradlew :wear:assembleDebug` 성공
+  - `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug :wear:assembleDebug` 성공
+- 잔여 과제
+  - `P-004`: 워치 실기기(소형/대형) 렌더/스크롤/터치 검증 증적 수집

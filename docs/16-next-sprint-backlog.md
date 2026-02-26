@@ -6,8 +6,8 @@
 
 ## 2. 우선순위 High
 - 비주얼/타이포 리프레시 2차 적용(Generator/Manage 확장 + 상호작용 enum 정렬) (`T01`, `R-009`~`R-012`)
-- Wear OS v1 실제 화면 구현(placeholder → Home/Numbers/Result/Settings 4화면) (`D01`, `K-001`~`K-012`)
-- 워치→폰 핸드오프 최소 경로 구현(`D02`, `K-009`~`K-012`)
+- Wear OS v1 실제 화면 구현(placeholder → Home/Numbers/Result/Settings 4화면) (`D01`, `K-001`~`K-012`) - 완료(2026-02-26, `wear/src/main/java/com/weeklylotto/wear/WearApp.kt`)
+- 워치→폰 핸드오프 최소 경로 구현(`D02`, `K-009`~`K-012`) - 완료(2026-02-26, `wear-remote-interactions` + 딥링크 핸드오프)
 - 핵심 상호작용 모션 2차 코드 적용(`G03`, `INT-01`~`INT-05`)
 - Reduce Motion 실제 설정/동작 반영(`G06`, `M-012`)
 - EXP-05/06 계측 이벤트 실제 훅 연결(`M-016`~`M-018`)
