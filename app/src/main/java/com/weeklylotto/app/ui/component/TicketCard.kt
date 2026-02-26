@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
@@ -56,8 +57,9 @@ fun TicketCard(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleSmall,
+                    style = MaterialTheme.typography.titleMedium,
                     color = LottoColors.TextPrimary,
+                    fontWeight = FontWeight.SemiBold,
                 )
                 badge?.invoke()
             }
@@ -70,7 +72,7 @@ fun TicketCard(
                 Text(
                     text = meta,
                     color = LottoColors.TextMuted,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.labelSmall,
                 )
             }
         }

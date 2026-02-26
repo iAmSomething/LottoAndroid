@@ -106,6 +106,7 @@
   - `AnalyticsLogger` 인터페이스 및 `LogcatAnalyticsLogger` 도입
   - `interaction_cta_press`, `interaction_ball_lock_toggle`, `interaction_sheet_apply`가 주요 화면(Home/Generator/Manage/Result)에 연결
   - `interaction_*` 공통 파라미터 키(`screen`, `component`, `action`) 1차 적용
+  - 스플래시 motion 이벤트 PR 게이트 적용(`scripts/check-splash-motion-gate.sh`, CI 워크플로우)
 - 남은 갭
   - `motion_splash_shown`, `motion_splash_skip`는 여전히 미연결
   - Wear UI는 여전히 단일 placeholder 화면
@@ -123,6 +124,44 @@
 - Cycle-03 진단/개선안 기록: 본 문서
 
 ### 5) 다음 루틴 시작점
-1. `motion_*` 이벤트 연결 착수 여부 확인
+1. Splash 화면 구현과 동시에 `motion_splash_shown`, `motion_splash_skip` 실제 연결
 2. `interaction_*` 선택 파라미터 enum 고정(시트 타입/lock 상태/action value)
 3. Wear Home/Result 1차 구현 착수 여부 확인
+
+## 2026-02-26 Cycle-04
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 자산 규모
+  - `app/src/main/java`: 95개 Kotlin 파일
+  - `app/src/test/java`: 21개 Kotlin 파일
+  - `app/src/androidTest/java`: 5개 Kotlin 파일
+  - `wear/src/main/java`: 1개 Kotlin 파일
+- 품질 스냅샷
+  - `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleDebug` 성공
+  - `./gradlew :wear:assembleDebug` 성공
+  - `./scripts/check-splash-motion-gate.sh` 성공
+
+### 2) UI/UX 진단(타이포 중심)
+- 반영 완료
+  - `Type.kt`에 `FontFamily`와 `LottoTypeTokens.Numeric*` 도입
+  - `Color.kt` 팔레트 1차 전환(딥틸/웜골드/아이보리)
+  - Home/Result 숫자 강조형 스타일 적용
+  - 공통 컴포넌트 4종(AppBar/TicketCard/BottomBar/BallChip) 타이포/위계 정렬
+- 증적
+  - 전/후: `docs/assets/typography-refresh/home_before.png`, `home_after.png`, `result_before.png`, `result_after.png`
+  - 접근성 1.3x: `home_font_1_3x.png`, `result_font_1_3x.png`
+
+### 3) 이번 루틴에서 도출한 고도화 제안
+- 다음 우선순위
+  - Splash 구현 시 `motion_splash_shown`, `motion_splash_skip` 실제 연결
+  - `interaction_*` 선택 파라미터 enum 고정(시트 타입/lock 상태/action value)
+  - Wear Home/Result 1차 구현 및 실기기 증적 확보
+
+### 4) 문서 반영 상태
+- 신규 기준 문서: `26-visual-typography-refresh.md`
+- 연동 문서: `08`, `10`, `11`, `16`, `21`, `22`, `README`
+
+### 5) 다음 루틴 시작점
+1. Splash 화면 구현과 `motion_*` 이벤트 동시 연결
+2. Wear Home/Result 1차 화면 코드 착수
+3. 실기기(워치) 증적 수집 계획 확정(P-004)

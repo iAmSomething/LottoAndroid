@@ -30,10 +30,19 @@
     - `interaction_*` 이벤트 훅 연결 현황 확인(Home/Generator/Manage/Result)
     - `motion_*` 미연결 갭 문서 동기화(`23` 8장, `24` 12장, `25` Cycle-03)
     - `interaction_*` 공통 파라미터 키(`screen`, `component`, `action`) 코드 스키마 1차 적용
+    - 스플래시 motion 이벤트 PR 게이트 추가(`scripts/check-splash-motion-gate.sh`, `android-ci.yml`, `release-preflight.yml`, `release-preflight.sh`)
     - 품질 스냅샷 재검증(`app:assembleDebug`, `app:testDebugUnitTest`, `wear:assembleDebug` 성공)
+  - Cycle-04 루틴 반영:
+    - 타이포/비주얼 리프레시 기준 문서 추가(`26-visual-typography-refresh.md`)
+    - 아이디어/우선순위/백로그/보드에 타이포 리프레시 트랙 연동(`21`, `22`, `16`, `10`, `README`)
+    - 루틴 리포트에 타이포 진단/개선안 추가(`25` Cycle-04)
+    - 타이포/컬러 1차 코드 반영(`Color.kt`, `Type.kt`, Home/Result, AppBar/TicketCard/BottomBar/BallChip)
+    - 전/후 및 접근성 1.3x 스크린샷 증적 확보(`docs/assets/typography-refresh`)
+    - Wear 원형 UI 타이포 밀도 가이드 확정(`26` 11장)
 - 미완료 작업
   - Wear OS 구현/실기기 검증 착수
   - 스플래시 `motion_*` 이벤트 연결
+  - 실기기 기반 Wear QA 증적 확보(P-004)
 - 블로커
   - 없음(현재 품질 게이트 Green, 플래키 여부는 관찰)
 - 다음 액션

@@ -40,6 +40,7 @@ import com.weeklylotto.app.ui.format.toWonLabel
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
+import com.weeklylotto.app.ui.theme.LottoTypeTokens
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -110,7 +111,7 @@ fun HomeScreen(
                         )
                         Text(
                             text = "제 ${uiState.currentRound}회 로또 6/45",
-                            style = MaterialTheme.typography.titleLarge,
+                            style = LottoTypeTokens.NumericTitle,
                             color = LottoColors.TextPrimary,
                             fontWeight = FontWeight.Black,
                         )
@@ -280,8 +281,8 @@ fun HomeScreen(
                         ) {
                             Text(
                                 text = "${report.round}회 주간 리포트",
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Black,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
                             )
                             Text(
                                 text = "구매 ${report.totalGames}게임 · 당첨 ${report.winningGames}게임",
@@ -295,7 +296,7 @@ fun HomeScreen(
                             )
                             Text(
                                 text = "순이익 ${report.netProfitAmount.toWonLabel()}",
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = LottoTypeTokens.NumericBody,
                                 color = if (report.netProfitAmount >= 0) LottoColors.Primary else LottoColors.TextPrimary,
                                 fontWeight = FontWeight.Black,
                             )

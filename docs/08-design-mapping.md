@@ -98,3 +98,16 @@
   - 회차 변경 시트 오픈/닫힘 모션 일관성 유지
 
 세부 규격은 `24-motion-and-interaction-playbook.md`를 기준으로 적용한다.
+
+## 8. 비주얼/타이포 리프레시 매핑
+- 기준 문서: `26-visual-typography-refresh.md`
+- 핵심 적용 포인트:
+  - Home/Result의 숫자 정보(회차/당첨금/합계)를 Display/Numeric 스타일로 우선 전환
+  - 카드 타이틀/본문/메타를 3단 위계로 분리
+  - CTA는 화면당 1개만 강한 대비를 유지
+- 구현 우선 컴포넌트:
+  - `LottoTopAppBar`, `TicketCard`, `LottoBottomBar`, `BallChip`
+- Cycle-04 증적:
+  - Home 전/후: `docs/assets/typography-refresh/home_before.png`, `home_after.png`
+  - Result 전/후: `docs/assets/typography-refresh/result_before.png`, `result_after.png`
+  - 접근성 1.3x: `home_font_1_3x.png`, `result_font_1_3x.png`

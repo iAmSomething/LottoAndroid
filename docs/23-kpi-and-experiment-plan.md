@@ -88,6 +88,7 @@
 | `interaction_sheet_apply` | 연결(1차) | 시트 타입 enum 고정 필요 | Manage 필터/정렬 시트, Result 회차 변경 시트 |
 
 - 코드 기준 확인 결과: `AnalyticsLogger`/`LogcatAnalyticsLogger`가 도입되었고, DI(`AppGraph`)를 통해 주요 화면에서 `interaction_*` 로그를 수집 중이다.
+- 스플래시 PR 게이트 적용: `scripts/check-splash-motion-gate.sh`가 splash 소스 감지 시 `motion_splash_shown`/`motion_splash_skip` 누락을 실패 처리한다.
 - 즉시 실행 순서:
   1. `motion_splash_shown`, `motion_splash_skip`를 스플래시 구현과 동시에 연결
   2. `interaction_*` 선택 파라미터(enum/action value) 고정

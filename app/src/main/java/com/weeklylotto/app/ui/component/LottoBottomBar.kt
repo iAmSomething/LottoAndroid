@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
@@ -65,7 +66,12 @@ fun LottoBottomBar(
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Icon(imageVector = item.icon, contentDescription = item.label, tint = tint)
-                    Text(text = item.label, color = tint, style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        text = item.label,
+                        color = tint,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+                    )
                 }
             }
         }

@@ -15,7 +15,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.weeklylotto.app.ui.theme.LottoTypeTokens
 
 enum class BallState {
     Normal,
@@ -85,7 +85,7 @@ fun BallChip(
         Text(
             text = number?.toString()?.padStart(2, '0') ?: "-",
             color = textColor,
-            fontSize = 11.sp,
+            style = LottoTypeTokens.NumericBall,
             fontWeight = FontWeight.Bold,
         )
     }

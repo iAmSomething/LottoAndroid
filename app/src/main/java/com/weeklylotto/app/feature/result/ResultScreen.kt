@@ -50,6 +50,7 @@ import com.weeklylotto.app.ui.format.toWonLabel
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
+import com.weeklylotto.app.ui.theme.LottoTypeTokens
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -291,7 +292,7 @@ fun ResultScreen() {
                     ) {
                         Text(
                             text = "제 ${draw?.round?.number}회 당첨 결과",
-                            style = MaterialTheme.typography.titleSmall,
+                            style = LottoTypeTokens.NumericTitle,
                             fontWeight = FontWeight.Black,
                         )
                         Row(
@@ -378,7 +379,7 @@ fun ResultScreen() {
                         )
                         Text(
                             text = "예상 당첨금 합계 ${uiState.totalWinningAmount.toWonLabel()}",
-                            style = MaterialTheme.typography.titleSmall,
+                            style = LottoTypeTokens.NumericTitle,
                             fontWeight = FontWeight.Black,
                             color = LottoColors.TextPrimary,
                         )
@@ -456,7 +457,7 @@ fun ResultScreen() {
                                 } else {
                                     LottoColors.TextMuted
                                 },
-                            style = MaterialTheme.typography.bodySmall,
+                            style = LottoTypeTokens.NumericBody,
                             fontWeight = if (estimatedPrize > 0) FontWeight.Bold else FontWeight.Normal,
                         )
                     }

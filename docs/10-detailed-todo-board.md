@@ -243,4 +243,18 @@
 - [x] Q-002 `interaction_*` 이벤트 훅 연결 상태 확인(Home/Generator/Manage/Result)
 - [x] Q-003 `motion_*` 이벤트 미연결 상태 문서 반영(`23`, `24`, `25`)
 - [x] Q-004 `interaction_*` 공통 파라미터 스키마(`screen/component/action`) 정의 및 보드 반영
-- [ ] Q-005 스플래시 구현 PR 게이트에 `motion_*` 연결 조건 추가
+- [x] Q-005 스플래시 구현 PR 게이트에 `motion_*` 연결 조건 추가(`scripts/check-splash-motion-gate.sh`, CI 워크플로우 연동)
+
+## R. 비주얼/타이포 리프레시(2026-02-26 Cycle-04)
+- [x] R-001 타이포 문제 진단 문서화(`fontFamily` 미지정/위계 평면화)
+- [x] R-002 리프레시 콘셉트 정의(`Lucky Editorial`)
+- [x] R-003 폰트 페어/타입 스케일 가이드 작성(`26-visual-typography-refresh.md`)
+- [x] R-004 컬러 톤 리프레시 가이드 작성(딥틸/웜골드/아이보리)
+- [x] R-005 디자인 매핑 연동(`08-design-mapping.md` 8장)
+- [x] R-006 우선순위/백로그 반영(`22`, `16`, `README`)
+- [x] R-007 Home/Result 타이포 1차 코드 반영 및 전/후 스크린샷 수집(`docs/assets/typography-refresh`)
+- [x] R-008 `Type.kt` 폰트 리소스 연결(`FontFamily`) 설계 확정(현재 시스템 fallback 기반)
+- [x] R-009 숫자 강조 스타일(`Numeric`) 공통 토큰 정의(`LottoTypeTokens`)
+- [x] R-010 컴포넌트 4종(AppBar/TicketCard/BottomBar/BallChip) 비주얼 통일 적용
+- [x] R-011 접근성 1.3x 폰트 스케일 QA(에뮬레이터 캡처 증적 확보)
+- [x] R-012 Wear 타이포 밀도 가이드(원형 UI 전용) 확정(`26` 11장)

@@ -4,18 +4,18 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 object LottoColors {
-    val Primary = Color(0xFF7C3AED)
-    val PrimaryDark = Color(0xFF6D28D9)
-    val Accent = Color(0xFFFB7185)
-    val AccentDark = Color(0xFFE11D48)
+    val Primary = Color(0xFF0F5B63)
+    val PrimaryDark = Color(0xFF0A3F45)
+    val Accent = Color(0xFFE0B34A)
+    val AccentDark = Color(0xFFB98E2E)
 
-    val Background = Color(0xFFFFF7FB)
-    val Surface = Color(0xFFFFFFFF)
-    val Border = Color(0xFFE9D5FF)
+    val Background = Color(0xFFF7F4EE)
+    val Surface = Color(0xFFFFFCF7)
+    val Border = Color(0xFFDDE3E8)
 
-    val TextPrimary = Color(0xFF111827)
-    val TextSecondary = Color(0xFF374151)
-    val TextMuted = Color(0xFF6B7280)
+    val TextPrimary = Color(0xFF1C2228)
+    val TextSecondary = Color(0xFF4A5561)
+    val TextMuted = Color(0xFF55606B)
 
     val SuccessBg = Color(0xFFDCFCE7)
     val SuccessText = Color(0xFF166534)

@@ -18,6 +18,8 @@ object AnalyticsEvent {
     const val INTERACTION_CTA_PRESS = "interaction_cta_press"
     const val INTERACTION_BALL_LOCK_TOGGLE = "interaction_ball_lock_toggle"
     const val INTERACTION_SHEET_APPLY = "interaction_sheet_apply"
+    const val MOTION_SPLASH_SHOWN = "motion_splash_shown"
+    const val MOTION_SPLASH_SKIP = "motion_splash_skip"
 }
 
 object AnalyticsParamKey {

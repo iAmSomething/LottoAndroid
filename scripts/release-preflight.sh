@@ -347,6 +347,13 @@ else
   fi
 fi
 
+section "모션 계측 게이트"
+if ./scripts/check-splash-motion-gate.sh; then
+  pass "스플래시 motion 이벤트 게이트 통과"
+else
+  fail "스플래시 motion 이벤트 게이트 실패"
+fi
+
 section "품질 게이트"
 if [[ "$SKIP_BUILD_DUE_TO_ENV_FAIL" -eq 1 ]]; then
   warn "실기기 필수 조건 미충족으로 품질 게이트 실행 생략"

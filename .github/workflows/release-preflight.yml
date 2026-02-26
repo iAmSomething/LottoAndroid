@@ -28,6 +28,9 @@ jobs:
       - name: Cache Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Check splash motion analytics gate
+        run: ./scripts/check-splash-motion-gate.sh
+
       - name: Prepare release signing from secrets
         if: github.event_name != 'pull_request'
         env:

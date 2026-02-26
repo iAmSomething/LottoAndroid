@@ -138,4 +138,6 @@
 
 ### 12.3 다음 적용 규칙
 - 스플래시 composable이 들어가는 PR에서는 `motion_*` 2종 이벤트 연결을 필수 게이트로 처리한다.
+  - 자동 체크: `scripts/check-splash-motion-gate.sh`
+  - CI 연동: `.github/workflows/android-ci.yml`, `.github/workflows/release-preflight.yml`
 - `interaction_*`는 공통 파라미터 키(`screen`, `component`, `action`)를 강제한다.

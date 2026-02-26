@@ -44,9 +44,9 @@ fun LottoTopAppBar(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
-                fontWeight = FontWeight.Black,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f),
             )
             if (rightActionText != null) {
@@ -60,7 +60,7 @@ fun LottoTopAppBar(
                 Text(
                     text = rightActionText,
                     color = Color.White.copy(alpha = 0.9f),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.SemiBold,
                     modifier = actionModifier,
                 )
