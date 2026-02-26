@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,12 +21,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.ui.component.LottoTopAppBar
+import com.weeklylotto.app.ui.component.StatusBadge
 import com.weeklylotto.app.ui.component.TicketCard
+import com.weeklylotto.app.ui.format.toBadgeTone
 import com.weeklylotto.app.ui.format.toModeLabel
 import com.weeklylotto.app.ui.format.toSourceDisplayLabel
 import com.weeklylotto.app.ui.format.toStatusLabel
@@ -80,6 +85,42 @@ fun TicketDetailScreen(
             modifier = Modifier.fillMaxSize().padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            item {
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(14.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text(
+                            "제 ${ticket.round.number}회",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Black,
+                        )
+                        StatusBadge(
+                            label = ticket.status.toStatusLabel(),
+                            tone = ticket.status.toBadgeTone(),
+                        )
+                        Text(
+                            "추첨일: ${ticket.round.drawDate}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LottoColors.TextSecondary,
+                        )
+                        Text(
+                            "출처: ${ticket.source.toSourceDisplayLabel()}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LottoColors.TextSecondary,
+                        )
+                        Text(
+                            "등록일: ${ticket.createdAt.toDisplayDateTime()}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LottoColors.TextSecondary,
+                        )
+                    }
+                }
+            }
             item {
                 Text("게임", style = MaterialTheme.typography.titleMedium)
             }
@@ -151,4 +192,9 @@ internal fun buildTicketShareText(
         }
 
     return (headerLines + "" + gameLines).joinToString(separator = "\n")
+}
+
+private fun java.time.Instant.toDisplayDateTime(): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+    return atZone(ZoneId.systemDefault()).format(formatter)
 }

@@ -136,6 +136,8 @@
   - 복사 중복 저장 방지: 이번주에 동일 번호 세트가 이미 있으면 저장 차단 및 안내 문구 노출
   - 회귀 테스트 추가: `ManageViewModelTest`에 동일 번호 중복 차단 케이스 추가
   - 추가 컴파일 게이트 재확인: `assembleDebug`, `compileDebugAndroidTestKotlin` 통과
+  - 티켓 상세 화면 정보 구조 개선: SummaryCard(회차/상태/추첨일/출처/등록일) 추가로 상세 정보 가독성 강화
+  - 품질 게이트 재검증: `ktlintCheck`, `detekt`, `testDebugUnitTest`, `assembleDebug` 연속 통과
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
