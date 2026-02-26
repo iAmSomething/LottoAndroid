@@ -161,6 +161,7 @@
   - 매주 스케줄(UTC 월요일 01:00) + 수동 실행으로 동작
   - 실행 체인: `release-preflight --with-build-ci --skip-adb --require-signing` -> `firebase-distribute --dry-run`
   - 증적: workflow artifact(`firebase-distribution-routine-<run_id>`)
+  - 첫 실행 증적: run `22436650122` 성공, `docs/assets/distribution/firebase_routine_ci_22436650122.md`
 
 ### 6-5. GitHub Secrets (필수)
 - 릴리즈 서명:

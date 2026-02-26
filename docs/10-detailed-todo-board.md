@@ -132,6 +132,7 @@
 - [x] I-021 에뮬레이터 설치/연결 불안정 대응: 프리플라이트 재시도 3회로 확장(Broken pipe/offline/startup 감지)
 - [x] I-022 런처 아이콘 콘셉트 교체: 딥틸 배경 + 상승하는 행운(Adaptive foreground/monochrome)
 - [x] I-023 Firebase 배포 주기 점검 루틴 자동화(`firebase-distribution-routine.yml`, `firebase-distribution-routine-check.sh`, `firebase-distribute.sh --dry-run`)
+- [x] I-024 Firebase 배포 주기 점검 첫 CI 실행 증적 수집(run `22436650122`, artifact `firebase_routine_ci_22436650122.md`)
 
 ## J. 디자인 스펙 정렬(`/Volumes/무제/design_spec_android_lotto.md`)
 - [x] J-001 토큰(색상/간격/타이포) 1차 반영

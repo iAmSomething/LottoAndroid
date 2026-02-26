@@ -1225,3 +1225,68 @@
 1. 실기기 Wear QA 증적(`P-004`) 확보
 2. Figma node `6:2` 직접 대조 재시도(플랜 한도 해소 시)
 3. `firebase-distribution-routine` 첫 스케줄 실행 결과를 수집해 배포 점검 이력에 추가
+
+## 2026-02-26 Cycle-37
+
+### 1) 코드 진행 현황 스냅샷
+- 구현/운영 변경
+  - PR #2 merge로 `Firebase Distribution Routine` 워크플로를 `main`에 반영
+  - `workflow_dispatch`로 첫 CI 실행 트리거 후 성공 확인
+- 실행 증적
+  - run id: `22436650122`
+  - workflow: `Firebase Distribution Routine`
+  - conclusion: `success`
+  - run url: https://github.com/iAmSomething/LottoAndroid/actions/runs/22436650122
+
+### 2) UI/UX 진단(운영 루틴 관점)
+- 강점
+  - 배포 주기 점검이 로컬 스크립트 수준을 넘어 원격 CI 실행 이력까지 확보됨
+  - artifact 기반 증적 회수가 가능해 릴리즈 운영 추적성이 강화됨
+- 잔여 갭
+  - 실기기 Wear 증적(`P-004`)과 Figma node `6:2` 직접 대조는 블로커 유지
+
+### 3) 이번 루틴에서 도출한 개선안
+- 완료
+  - `firebase-distribution-routine` 첫 CI 실행 증적 확보 완료
+  - artifact 다운로드 후 로컬 문서 경로에 보존
+- 후속
+  - 첫 스케줄 실행 시각(2026-03-02 01:00 UTC, KST 2026-03-02 10:00) 결과를 동일 포맷으로 누적
+
+### 4) 문서 반영 상태
+- Cycle-37 반영 문서: `10`, `11`, `14`, `16`, `17`, `25`, `docs/assets/distribution/firebase_routine_ci_22436650122.md`, `docs/assets/distribution/firebase_routine_ci_run_2026-02-26.md`
+
+### 5) 다음 루틴 시작점
+1. 실기기 Wear QA 증적(`P-004`) 확보
+2. Figma node `6:2` 직접 대조 재시도(플랜 한도 해소 시)
+3. 첫 스케줄 실행(2026-03-02 01:00 UTC) 결과를 배포 점검 이력에 추가
+
+## 2026-02-26 Cycle-38
+
+### 1) 코드 진행 현황 스냅샷
+- 구현 변경
+  - 제품 코드 변경 없음(블로커 해소 재시도 루틴)
+- 검증 시도
+  - Figma MCP `whoami` 확인: 계정 활성
+  - `get_design_context(fileKey=DY43CuXVwQwlqakFfR2yM1,nodeId=6:2)` 재호출
+
+### 2) UI/UX 진단(디자인 정합성 관점)
+- 강점
+  - 원격 배포 루틴 CI 증적까지 확보되어 운영 루틴은 안정화됨
+- 잔여 갭
+  - Figma node `6:2` 직접 대조는 플랜 호출 한도로 계속 차단
+  - 실기기 Wear 증적(`P-004`)은 단말 미보유로 미해소
+
+### 3) 이번 루틴에서 도출한 개선안
+- 완료
+  - 블로커 재확인(한도/실기기) 상태를 문서에 명시적으로 갱신
+- 후속
+  - Figma 한도 해소 후 동일 호출로 즉시 재검증
+  - 실기기 확보 전까지 오프라인 디자인 QA 체크리스트 기준 유지
+
+### 4) 문서 반영 상태
+- Cycle-38 반영 문서: `11`, `25`
+
+### 5) 다음 루틴 시작점
+1. 실기기 Wear QA 증적(`P-004`) 확보
+2. Figma 플랜 한도 해소 후 node `6:2` 직접 대조 재시도
+3. 첫 스케줄 실행(2026-03-02 01:00 UTC) 결과를 배포 점검 이력에 추가
