@@ -101,6 +101,7 @@
 - [x] I-017 최종 점검 래퍼(`release-final-check.sh`) 추가: 실기기 우선, 미보유 시 에뮬레이터 fallback 지원
 - [x] I-018 에뮬레이터/무기기 환경 fallback 보강(`release-final-check.sh`: CI-only 자동 전환)
 - [x] I-019 에뮬레이터 시작 ANR 대응 프리플라이트 보강(`connectedDebugAndroidTest` 1회 자동 재시도)
+- [x] I-020 앱 스타트업 ANR 완화: `AppGraph.init` 경량화 + 의존성 lazy 초기화
 
 ## J. 디자인 스펙 정렬(`/Volumes/무제/design_spec_android_lotto.md`)
 - [x] J-001 토큰(색상/간격/타이포) 1차 반영

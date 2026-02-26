@@ -24,63 +24,127 @@ import com.weeklylotto.app.domain.service.WidgetDataProvider
 import com.weeklylotto.app.domain.service.WidgetRefreshScheduler
 
 object AppGraph {
+    private val lock = Any()
+
+    @Volatile
     private var initialized = false
 
     lateinit var appContext: Context
         private set
 
-    private lateinit var database: WeeklyLottoDatabase
+    private var ticketRepositoryInternal: TicketRepository? = null
+    val ticketRepository: TicketRepository
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(ticketRepositoryInternal)
+        }
 
-    lateinit var ticketRepository: TicketRepository
-        private set
+    private var drawRepositoryInternal: DrawRepository? = null
+    val drawRepository: DrawRepository
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(drawRepositoryInternal)
+        }
 
-    lateinit var drawRepository: DrawRepository
-        private set
+    private var numberGeneratorInternal: NumberGenerator? = null
+    val numberGenerator: NumberGenerator
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(numberGeneratorInternal)
+        }
 
-    lateinit var numberGenerator: NumberGenerator
-        private set
+    private var resultEvaluatorInternal: ResultEvaluator? = null
+    val resultEvaluator: ResultEvaluator
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(resultEvaluatorInternal)
+        }
 
-    lateinit var resultEvaluator: ResultEvaluator
-        private set
+    private var reminderSchedulerInternal: ReminderScheduler? = null
+    val reminderScheduler: ReminderScheduler
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(reminderSchedulerInternal)
+        }
 
-    lateinit var reminderScheduler: ReminderScheduler
-        private set
+    private var reminderConfigStoreInternal: ReminderConfigStore? = null
+    val reminderConfigStore: ReminderConfigStore
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(reminderConfigStoreInternal)
+        }
 
-    lateinit var reminderConfigStore: ReminderConfigStore
-        private set
+    private var widgetDataProviderInternal: WidgetDataProvider? = null
+    val widgetDataProvider: WidgetDataProvider
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(widgetDataProviderInternal)
+        }
 
-    lateinit var widgetDataProvider: WidgetDataProvider
-        private set
+    private var widgetRefreshSchedulerInternal: WidgetRefreshScheduler? = null
+    val widgetRefreshScheduler: WidgetRefreshScheduler
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(widgetRefreshSchedulerInternal)
+        }
 
-    lateinit var widgetRefreshScheduler: WidgetRefreshScheduler
-        private set
-
-    lateinit var qrTicketParser: QrTicketParser
-        private set
+    private var qrTicketParserInternal: QrTicketParser? = null
+    val qrTicketParser: QrTicketParser
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(qrTicketParserInternal)
+        }
 
     fun init(context: Context) {
-        if (initialized) return
+        if (initialized) {
+            return
+        }
+        synchronized(lock) {
+            if (initialized) {
+                return
+            }
+            appContext = context.applicationContext
+            initialized = true
+        }
+    }
 
-        appContext = context.applicationContext
+    private fun ensureDependenciesInitialized() {
+        check(initialized) { "AppGraph is not initialized. Call AppGraph.init(context) first." }
+        if (ticketRepositoryInternal != null) {
+            return
+        }
+        synchronized(lock) {
+            if (ticketRepositoryInternal != null) {
+                return
+            }
 
-        database =
-            Room.databaseBuilder(
-                appContext,
-                WeeklyLottoDatabase::class.java,
-                "weekly_lotto.db",
-            ).fallbackToDestructiveMigration().build()
+            val db =
+                Room.databaseBuilder(
+                    appContext,
+                    WeeklyLottoDatabase::class.java,
+                    "weekly_lotto.db",
+                ).fallbackToDestructiveMigration().build()
 
-        val drawApiClient = DrawApiClient(BuildConfig.DRAW_API_BASE_URL)
-        widgetRefreshScheduler = GlanceWidgetRefreshScheduler(appContext)
-        ticketRepository = RoomTicketRepository(database.ticketDao(), widgetRefreshScheduler)
-        drawRepository = RemoteDrawRepository(database.drawDao(), drawApiClient, widgetRefreshScheduler)
-        numberGenerator = RandomNumberGenerator()
-        resultEvaluator = DefaultResultEvaluator()
-        reminderScheduler = WorkManagerReminderScheduler(appContext)
-        reminderConfigStore = DataStoreReminderConfigStore(appContext)
-        widgetDataProvider = DefaultWidgetDataProvider(ticketRepository, drawRepository, resultEvaluator)
-        qrTicketParser = QrTicketParser()
+            val drawApiClient = DrawApiClient(BuildConfig.DRAW_API_BASE_URL)
+            val refreshScheduler = GlanceWidgetRefreshScheduler(appContext)
+            val ticketRepository = RoomTicketRepository(db.ticketDao(), refreshScheduler)
+            val drawRepository = RemoteDrawRepository(db.drawDao(), drawApiClient, refreshScheduler)
+            val numberGenerator = RandomNumberGenerator()
+            val resultEvaluator = DefaultResultEvaluator()
+            val reminderScheduler = WorkManagerReminderScheduler(appContext)
+            val reminderConfigStore = DataStoreReminderConfigStore(appContext)
+            val widgetDataProvider = DefaultWidgetDataProvider(ticketRepository, drawRepository, resultEvaluator)
+            val qrParser = QrTicketParser()
 
-        initialized = true
+            widgetRefreshSchedulerInternal = refreshScheduler
+            ticketRepositoryInternal = ticketRepository
+            drawRepositoryInternal = drawRepository
+            numberGeneratorInternal = numberGenerator
+            resultEvaluatorInternal = resultEvaluator
+            reminderSchedulerInternal = reminderScheduler
+            reminderConfigStoreInternal = reminderConfigStore
+            widgetDataProviderInternal = widgetDataProvider
+            qrTicketParserInternal = qrParser
+        }
     }
 }

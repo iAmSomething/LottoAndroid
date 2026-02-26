@@ -40,3 +40,11 @@
 - Android: N/A
 - ADB Serial: `N/A`
 - 실행 명령: `./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing`
+
+## 2026-02-26 11:14:24 +0900
+- 결과: PASS
+- 검증 모드: CI_ONLY_NO_DEVICE
+- 디바이스: N/A
+- Android: N/A
+- ADB Serial: `N/A`
+- 실행 명령: `./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing`

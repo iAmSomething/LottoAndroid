@@ -46,6 +46,7 @@
 10. 에뮬레이터 간헐 이슈 관찰(2026-02-26): API 36 AVD에서 `connectedDebugAndroidTest`가 간헐적으로 `Process crashed / failed to complete startup`로 0건 실행 실패
 11. 프리플라이트 보강(2026-02-26): `connectedDebugAndroidTest`에 시작/ANR 계열 실패 감지 시 1회 자동 재시도 로직 추가
 12. 무기기 환경 fallback 검증(2026-02-26): `./scripts/release-final-check.sh` 실행 시 CI-only fallback 자동 전환 PASS(`--with-build-ci --skip-adb --require-signing`)
+13. 앱 스타트업 안정화(2026-02-26): `AppGraph` 초기화를 lazy로 전환해 프로세스 시작 시 동기 초기화 부하 완화
 
 ## 후속 조치
 1. CI 환경에도 동일하게 `LOTTO_RELEASE_*` 시크릿 설정

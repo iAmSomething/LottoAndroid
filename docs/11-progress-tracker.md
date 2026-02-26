@@ -117,6 +117,8 @@
   - 에뮬레이터 간헐 startup ANR 대응: `release-preflight.sh`의 `connectedDebugAndroidTest` 1회 자동 재시도 추가
   - QR 카메라 바인딩 안정화: destroyed lifecycle 상태 가드 + callback 최신 상태 참조로 크래시 완화(`CameraScannerPreview.kt`)
   - 무기기 최종 점검 검증 통과: `./scripts/release-final-check.sh` → CI-only fallback PASS(13/0/0)
+  - 앱 스타트업 ANR 완화: `AppGraph.init`을 경량화하고 Room/Repository/Service 의존성을 최초 접근 시 lazy 초기화로 전환
+  - 회귀 검증: `ktlintCheck`, `detekt`, `testDebugUnitTest` 통과 + 무기기 `release-final-check.sh` CI-only fallback PASS 재확인
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
