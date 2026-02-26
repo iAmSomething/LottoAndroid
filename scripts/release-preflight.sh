@@ -200,8 +200,8 @@ fi
 
 section "품질 게이트"
 if [[ "$RUN_BUILD_LOCAL" -eq 1 ]]; then
-  if ./gradlew :app:ktlintCheck :app:testDebugUnitTest :app:connectedDebugAndroidTest :app:assembleRelease; then
-    pass "품질 게이트 통과(ktlint/unit/connected/release)"
+  if ./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:connectedDebugAndroidTest :app:assembleRelease; then
+    pass "품질 게이트 통과(ktlint/detekt/unit/connected/release)"
   else
     fail "품질 게이트 실패(Gradle 로그 확인 필요)"
   fi

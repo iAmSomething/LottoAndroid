@@ -23,6 +23,7 @@
 - 로컬 릴리즈 키 백업 생성 및 무결성 파일(SHA-256) 생성 확인
 - 품질 게이트 통과
   - `:app:ktlintCheck`
+  - `:app:detekt`
   - `:app:testDebugUnitTest`
   - `:app:connectedDebugAndroidTest` (8/8)
   - `:app:assembleRelease`
@@ -34,6 +35,7 @@
 2. `./scripts/setup-local-release-signing.sh` 적용
 3. 재실행: PASS 13 / WARN 0 / FAIL 0
 4. 기능/디자인/접근성 추가 반영 후 재실행(2026-02-26): PASS 13 / WARN 0 / FAIL 0 (`connectedDebugAndroidTest` 8/8)
+5. 프리플라이트 로컬 게이트에 `detekt` 포함 후 재실행(2026-02-26): PASS 13 / WARN 0 / FAIL 0
 
 ## 후속 조치
 1. CI 환경에도 동일하게 `LOTTO_RELEASE_*` 시크릿 설정
