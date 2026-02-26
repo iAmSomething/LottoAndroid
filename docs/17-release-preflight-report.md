@@ -54,6 +54,8 @@
 18. stats CTA 계측 샘플 루틴 검증(2026-02-26): `run-analytics-sample-check.sh --serial emulator-5554` 실행으로 계측 3/3 + `verify-analytics-events --profile stats-cta` PASS (`docs/assets/distribution/analytics_sample_check_2026-02-26.md`)
 19. 배포 주기 점검 루틴 검증(2026-02-26): `firebase-distribution-routine-check.sh` 실행으로 CI preflight PASS + Firebase dry-run PASS (`docs/assets/distribution/firebase_routine_local_2026-02-26.md`)
 20. 배포 주기 점검 CI 실행 증적(2026-02-26): `Firebase Distribution Routine` run `22436650122` 성공 + artifact 회수(`docs/assets/distribution/firebase_routine_ci_22436650122.md`)
+21. 관측성 1차 반영 후 품질 게이트 재검증(2026-02-26): `ktlintCheck`, `detekt`, `DrawApiClientTest`, `RoomTicketRepositoryIntegrationTest` PASS
+22. 운영 관측성 샘플 검증(2026-02-26): `run-ops-observability-check.sh --serial emulator-5554` 실행으로 계측 2/2 + `verify-analytics-events --profile ops-core` PASS (`docs/assets/distribution/ops_observability_check_2026-02-26.md`)
 
 ## 후속 조치
 1. CI 환경에도 동일하게 `LOTTO_RELEASE_*` 시크릿 설정

@@ -14,6 +14,7 @@
 - [x] stats CTA 로그 샘플 검증 루틴 추가(`./scripts/run-analytics-sample-check.sh`, `verify-analytics-events --profile stats-cta`)
 - [x] Firebase 배포 주기 점검 워크플로우 추가(`.github/workflows/firebase-distribution-routine.yml`, dry-run 체인)
 - [x] Firebase 배포 주기 점검 첫 CI 실행 증적 확보(run `22436650122`, artifact `firebase_routine_ci_22436650122.md`)
+- [x] 운영 관측성 샘플 검증 루틴 추가(`./scripts/run-ops-observability-check.sh`, `verify-analytics-events --profile ops-core`)
 
 ## 2. 기능 확인
 - [x] 번호 생성/잠금/저장 (단위 + 계측 스모크)

@@ -71,6 +71,17 @@
 ./scripts/run-analytics-sample-check.sh --serial <adb-serial> --save-log docs/assets/distribution/analytics_sample_YYYY-MM-DD.log
 ```
 
+### 3-1-d. 운영 관측성 샘플 점검(권장)
+```bash
+./scripts/run-ops-observability-check.sh --serial <adb-serial>
+```
+- 실행 범위: `MainNavigationInstrumentedTest`, `WeeklySaveFlowInstrumentedTest` 실행 후 ops 이벤트 검증
+- 검증 프로파일: `verify-analytics-events.sh --profile ops-core`
+- 증적 로그 저장 옵션:
+```bash
+./scripts/run-ops-observability-check.sh --serial <adb-serial> --save-log docs/assets/distribution/ops_observability_YYYY-MM-DD.log
+```
+
 ## 3-1-1. CI 프리플라이트(ADB 없이)
 ```bash
 ./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing

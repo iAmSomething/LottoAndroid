@@ -203,6 +203,8 @@
 - [x] L-021 통계 중복도 경고 → 번호생성 CTA 연계(`StatsScreen` 버튼 + `Stats -> Generator` 네비게이션)
 - [x] L-022 통계 CTA 계측 이벤트 연동(`interaction_cta_press`, `screen=stats`, `component=duplicate_warning_card`)
 - [x] L-023 통계 CTA 로그 샘플 수집 루틴 추가(`run-analytics-sample-check.sh` + `verify-analytics-events.sh --profile stats-cta`)
+- [x] L-024 API/로컬 저장 관측성 1차 코드 반영(`DrawApiClient`: `ops_api_request`, `RoomTicketRepository`: `ops_storage_mutation`)
+- [x] L-025 운영 관측성 로그 샘플 수집 루틴 추가(`run-ops-observability-check.sh` + `verify-analytics-events.sh --profile ops-core`)
 
 ## M. 스플래시/상호작용 모션 고도화
 - [x] M-001 스플래시 시나리오 정의(콜드/웜/오류 브리지)
@@ -434,3 +436,10 @@
 - [x] AO-003 실폰트 fallback 상태 유지 재확인(`Type.kt`: `SansSerif`/`Monospace`)
 - [x] AO-004 `AN-005` 계획 문서/인벤토리 연동 확인(`28` 5장, `29` 3~5장)
 - [x] AO-005 `29` 실행 1차 착수 증적 확보(`distribution_evidence`를 `ready`로 전환, `docs/assets/distribution/firebase_dry_run_2026-02-26.md`)
+
+## AP. 구매 리다이렉트 UX 고도화(2026-02-26 Cycle-40)
+- [x] AP-001 사용자 요청 기반 문제 정의: "구매 경로 진입이 번거로움" 확인
+- [x] AP-002 외부 이동 기본 정책 정의(공식 URL만 허용, 브라우저/커스텀탭 우선)
+- [x] AP-003 UX 플로우 정의(CTA 탭 → 1회 안내 모달 → 외부 이동)
+- [x] AP-004 실패 fallback 정의(열기 실패 시 `링크 복사`/`기본 브라우저로 열기`)
+- [ ] AP-005 적용 범위 확정(Home/Result/Settings 중 1차 노출 화면 선택 + 이벤트 계측 키 확정)

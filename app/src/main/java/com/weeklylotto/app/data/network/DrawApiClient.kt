@@ -2,6 +2,10 @@ package com.weeklylotto.app.data.network
 
 import com.weeklylotto.app.domain.error.AppError
 import com.weeklylotto.app.domain.error.AppResult
+import com.weeklylotto.app.domain.service.AnalyticsEvent
+import com.weeklylotto.app.domain.service.AnalyticsLogger
+import com.weeklylotto.app.domain.service.AnalyticsParamKey
+import com.weeklylotto.app.domain.service.NoOpAnalyticsLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -19,12 +23,14 @@ import java.time.format.DateTimeFormatter
 class DrawApiClient(
     private val baseUrl: String,
     private val mirrorBaseUrl: String = "https://smok95.github.io/lotto/results",
+    private val analyticsLogger: AnalyticsLogger = NoOpAnalyticsLogger,
 ) {
     private val json = Json { ignoreUnknownKeys = true }
 
     suspend fun fetchRound(round: Int): AppResult<DrawApiPayload> =
         withContext(Dispatchers.IO) {
             val officialUrl = "$baseUrl/common.do?method=getLottoNumber&drwNo=$round"
+            val officialStartedAt = System.nanoTime()
             val officialResult =
                 fetchJson(officialUrl).let { fetched ->
                     when (fetched) {
@@ -32,12 +38,19 @@ class DrawApiClient(
                         is AppResult.Failure -> fetched
                     }
                 }
+            logApiRequest(
+                source = "official",
+                requestedRound = round,
+                result = officialResult,
+                startedAtNanos = officialStartedAt,
+            )
 
             if (officialResult is AppResult.Success) {
                 return@withContext officialResult
             }
 
             val mirrorUrl = "$mirrorBaseUrl/$round.json"
+            val mirrorStartedAt = System.nanoTime()
             val mirrorResult =
                 fetchJson(mirrorUrl).let { fetched ->
                     when (fetched) {
@@ -45,6 +58,12 @@ class DrawApiClient(
                         is AppResult.Failure -> fetched
                     }
                 }
+            logApiRequest(
+                source = "mirror",
+                requestedRound = round,
+                result = mirrorResult,
+                startedAtNanos = mirrorStartedAt,
+            )
 
             if (mirrorResult is AppResult.Success) {
                 return@withContext mirrorResult
@@ -52,6 +71,33 @@ class DrawApiClient(
 
             officialResult
         }
+
+    private fun logApiRequest(
+        source: String,
+        requestedRound: Int,
+        result: AppResult<DrawApiPayload>,
+        startedAtNanos: Long,
+    ) {
+        val latencyMs = ((System.nanoTime() - startedAtNanos) / 1_000_000L).coerceAtLeast(0L)
+        val params =
+            buildMap {
+                put(AnalyticsParamKey.SCREEN, "system")
+                put(AnalyticsParamKey.COMPONENT, "draw_api")
+                put(AnalyticsParamKey.ACTION, "request")
+                put(AnalyticsParamKey.SOURCE, source)
+                put(AnalyticsParamKey.ROUND, requestedRound.toString())
+                put(AnalyticsParamKey.LATENCY_MS, latencyMs.toString())
+
+                when (result) {
+                    is AppResult.Success -> put(AnalyticsParamKey.STATUS, "success")
+                    is AppResult.Failure -> {
+                        put(AnalyticsParamKey.STATUS, "failure")
+                        put(AnalyticsParamKey.ERROR_TYPE, result.error.toErrorType())
+                    }
+                }
+            }
+        analyticsLogger.log(AnalyticsEvent.OPS_API_REQUEST, params)
+    }
 
     private fun fetchJson(url: String): AppResult<String> =
         runCatching {
@@ -183,3 +229,11 @@ private fun Map<String, JsonElement>.getIntList(key: String): List<Int> =
     this[key]?.jsonArray?.mapIndexed { index, element ->
         element.jsonPrimitive.intOrNull ?: error("$key[$index] is invalid")
     } ?: error("$key is missing")
+
+private fun AppError.toErrorType(): String =
+    when (this) {
+        is AppError.NetworkError -> "network"
+        is AppError.ParseError -> "parse"
+        is AppError.ValidationError -> "validation"
+        is AppError.StorageError -> "storage"
+    }
