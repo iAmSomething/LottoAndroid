@@ -47,6 +47,7 @@
 - [x] D-006 회차 추정 로직 검증 케이스 보강
 - [x] D-007 공식 API 차단 시 미러 endpoint 자동 fallback 구현/테스트
 - [x] D-008 Result 네트워크 실패 UX 개선(자동 재시도/실패시각/최신회차 재조회)
+- [x] D-009 Result 회차 변경 시트 UX 보강(라디오 선택/선택행 강조/취소·적용 버튼)
 
 ## E. 알림
 - [x] E-001 구매/결과 Worker 구현
@@ -88,6 +89,7 @@
 - [x] H-015 번호관리 이동 플로우 회귀 테스트 추가(`ManageViewModelTest`, `RoomTicketRepositoryIntegrationTest`)
 - [x] H-016 티켓 상세 복사 플로우 회귀 테스트 추가(`ManageViewModelTest` 복사 성공/차단 케이스)
 - [x] H-017 티켓 상세 복사 중복 차단 회귀 테스트 추가(`ManageViewModelTest` 동일 번호 중복 방지)
+- [x] H-018 Result 회차 선택/재조회 흐름 단위 테스트 추가(`ResultViewModelTest`)
 
 ## I. 릴리즈 준비
 - [x] I-001 스토어 메타데이터 작성
@@ -127,3 +129,4 @@
 - [x] J-011 Manage 편집모드 `이동` 액션을 실동작으로 연결(이동 시트 + 보관함 상태 배지)
 - [x] J-012 Ticket Detail 상단 공유 액션 + 하단 `이번주로 복사` CTA 정렬
 - [x] J-013 Ticket Detail 정보 요약 카드 UI 반영(스펙 6.5 SummaryCard 대응)
+- [x] J-014 Result 회차 선택 시트 인터랙션 개선(선택 상태 시각화 + 취소 동선)

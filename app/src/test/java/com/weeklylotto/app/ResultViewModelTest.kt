@@ -96,12 +96,77 @@ class ResultViewModelTest {
             assertThat(state.retryAttempt).isEqualTo(3)
             assertThat(state.lastErrorAt).isEqualTo(failedAt)
         }
+
+    @Test
+    fun 회차선택시_fetchByRound로_조회하고_선택회차를_갱신한다() =
+        runTest {
+            val latest = sampleDraw(roundNumber = 1212)
+            val selected = sampleDraw(roundNumber = 1209)
+            val drawRepository =
+                ResultViewModelFakeDrawRepository(
+                    latestQueue = ArrayDeque(listOf(AppResult.Success(latest))),
+                    byRoundResponses = mapOf(1209 to AppResult.Success(selected)),
+                )
+            val viewModel =
+                ResultViewModel(
+                    drawRepository = drawRepository,
+                    ticketRepository = ResultViewModelFakeTicketRepository(),
+                    evaluator = ResultViewModelFakeResultEvaluator(),
+                    retryDelayProvider = { 0L },
+                )
+
+            advanceUntilIdle()
+            viewModel.selectRound(1209)
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(drawRepository.fetchByRoundCount).isEqualTo(1)
+            assertThat(drawRepository.lastRequestedRound).isEqualTo(1209)
+            assertThat(state.selectedRound).isEqualTo(1209)
+            assertThat(state.drawResult?.round?.number).isEqualTo(1209)
+            assertThat(state.availableRounds).contains(1212)
+            assertThat(state.availableRounds).contains(1209)
+        }
+
+    @Test
+    fun 회차선택후_refresh는_선택회차를_유지해_재조회한다() =
+        runTest {
+            val latest = sampleDraw(roundNumber = 1212)
+            val selected = sampleDraw(roundNumber = 1210)
+            val drawRepository =
+                ResultViewModelFakeDrawRepository(
+                    latestQueue = ArrayDeque(listOf(AppResult.Success(latest))),
+                    byRoundResponses = mapOf(1210 to AppResult.Success(selected)),
+                )
+            val viewModel =
+                ResultViewModel(
+                    drawRepository = drawRepository,
+                    ticketRepository = ResultViewModelFakeTicketRepository(),
+                    evaluator = ResultViewModelFakeResultEvaluator(),
+                    retryDelayProvider = { 0L },
+                )
+
+            advanceUntilIdle()
+            viewModel.selectRound(1210)
+            advanceUntilIdle()
+            viewModel.refresh()
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(drawRepository.fetchLatestCount).isEqualTo(1)
+            assertThat(drawRepository.fetchByRoundCount).isEqualTo(2)
+            assertThat(state.selectedRound).isEqualTo(1210)
+            assertThat(state.drawResult?.round?.number).isEqualTo(1210)
+        }
 }
 
 private class ResultViewModelFakeDrawRepository(
     private val latestQueue: ArrayDeque<AppResult<DrawResult>>,
+    private val byRoundResponses: Map<Int, AppResult<DrawResult>> = emptyMap(),
 ) : DrawRepository {
     var fetchLatestCount: Int = 0
+    var fetchByRoundCount: Int = 0
+    var lastRequestedRound: Int? = null
 
     override suspend fun fetchLatest(): AppResult<DrawResult> {
         fetchLatestCount += 1
@@ -109,7 +174,11 @@ private class ResultViewModelFakeDrawRepository(
             ?: AppResult.Failure(AppError.NetworkError("no more queued response"))
     }
 
-    override suspend fun fetchByRound(round: Round): AppResult<DrawResult> = fetchLatest()
+    override suspend fun fetchByRound(round: Round): AppResult<DrawResult> {
+        fetchByRoundCount += 1
+        lastRequestedRound = round.number
+        return byRoundResponses[round.number] ?: fetchLatest()
+    }
 }
 
 private class ResultViewModelFakeTicketRepository : TicketRepository {

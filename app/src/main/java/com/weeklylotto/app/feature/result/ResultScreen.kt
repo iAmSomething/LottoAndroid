@@ -21,6 +21,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -66,6 +67,12 @@ fun ResultScreen() {
     val uiState by viewModel.uiState.collectAsState()
     var isRoundSheetOpen by remember { mutableStateOf(false) }
     var pendingRound by remember(uiState.selectedRound, isRoundSheetOpen) { mutableStateOf(uiState.selectedRound) }
+    val openRoundSheet = {
+        uiState.drawResult?.let { currentDraw ->
+            pendingRound = uiState.selectedRound ?: currentDraw.round.number
+            isRoundSheetOpen = true
+        }
+    }
 
     val drawResult = uiState.drawResult
     if (isRoundSheetOpen && drawResult != null) {
@@ -81,27 +88,50 @@ fun ResultScreen() {
             ) {
                 Text("회차 변경", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
                 rounds.forEach { round ->
-                    Text(
-                        text = if (round == pendingRound) "${round}회 (선택됨)" else "${round}회",
+                    val selected = round == pendingRound
+                    Row(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
+                                .background(
+                                    color = if (selected) LottoColors.Border.copy(alpha = 0.35f) else Color.Transparent,
+                                    shape = RoundedCornerShape(12.dp),
+                                )
                                 .clickable {
                                     pendingRound = round
                                 }
-                                .padding(vertical = 8.dp),
-                    )
+                                .padding(horizontal = 6.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        RadioButton(
+                            selected = selected,
+                            onClick = { pendingRound = round },
+                        )
+                        Text(text = "${round}회")
+                    }
                 }
-                Button(
-                    onClick = {
-                        pendingRound?.let(viewModel::selectRound)
-                        isRoundSheetOpen = false
-                    },
+                Row(
                     modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text("적용")
+                    TextButton(
+                        onClick = { isRoundSheetOpen = false },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text("취소")
+                    }
+                    Button(
+                        onClick = {
+                            pendingRound?.let(viewModel::selectRound)
+                            isRoundSheetOpen = false
+                        },
+                        enabled = pendingRound != null,
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text("적용")
+                    }
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
     }
@@ -112,7 +142,7 @@ fun ResultScreen() {
             rightActionText = uiState.drawResult?.round?.number?.let { "${it}회" } ?: "새로고침",
             onRightClick = {
                 if (uiState.drawResult != null) {
-                    isRoundSheetOpen = true
+                    openRoundSheet()
                 } else {
                     viewModel.refresh()
                 }
@@ -254,7 +284,7 @@ fun ResultScreen() {
                         text = "회차 변경",
                         color = LottoColors.Primary,
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.clickable { isRoundSheetOpen = true },
+                        modifier = Modifier.clickable { openRoundSheet() },
                     )
                 }
             }
