@@ -6,7 +6,6 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.test.espresso.Espresso.pressBack
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
@@ -21,7 +20,11 @@ class WeeklySaveFlowInstrumentedTest {
     fun 번호생성_저장후_번호관리와_홈에_즉시_반영된다() {
         composeRule.onNodeWithText("번호 생성").performClick()
         composeRule.onNodeWithText("이번 주 번호로 저장하기").performClick()
-        pressBack()
+        composeRule.waitForIdle()
+        composeRule.runOnUiThread {
+            composeRule.activity.onBackPressedDispatcher.onBackPressed()
+        }
+        composeRule.waitForIdle()
 
         composeRule.onNodeWithText("번호관리").performClick()
         composeRule.waitUntil(timeoutMillis = 5_000) {

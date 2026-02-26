@@ -80,6 +80,7 @@
 - [x] H-011 공통 컴포넌트 스크린리더 문구/접근성 역할 보강(`BallChip`, `TicketCard`, `LottoTopAppBar`)
 - [x] H-012 테마 색상 콘트라스트 자동 검증 추가(`ColorContrastTest`, WCAG AA 4.5:1 기준)
 - [x] H-013 상태/출처/모드 한국어 라벨 매핑 공통화 및 회귀 테스트 추가(`LottoUiLabelsTest`)
+- [x] H-014 계측 회귀 안정화: `WeeklySaveFlowInstrumentedTest`의 Espresso back 의존 제거(Compose dispatcher back으로 전환)
 
 ## I. 릴리즈 준비
 - [x] I-001 스토어 메타데이터 작성
@@ -102,6 +103,7 @@
 - [x] I-018 에뮬레이터/무기기 환경 fallback 보강(`release-final-check.sh`: CI-only 자동 전환)
 - [x] I-019 에뮬레이터 시작 ANR 대응 프리플라이트 보강(`connectedDebugAndroidTest` 1회 자동 재시도)
 - [x] I-020 앱 스타트업 ANR 완화: `AppGraph.init` 경량화 + 의존성 lazy 초기화
+- [x] I-021 에뮬레이터 설치/연결 불안정 대응: 프리플라이트 재시도 3회로 확장(Broken pipe/offline/startup 감지)
 
 ## J. 디자인 스펙 정렬(`/Volumes/무제/design_spec_android_lotto.md`)
 - [x] J-001 토큰(색상/간격/타이포) 1차 반영

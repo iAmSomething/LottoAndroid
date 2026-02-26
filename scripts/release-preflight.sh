@@ -119,7 +119,7 @@ run_connected_test_with_retry() {
   local serial="$1"
   local attempt=1
 
-  while [[ "$attempt" -le 2 ]]; do
+  while [[ "$attempt" -le 3 ]]; do
     local log_file
     local status
     log_file="$(mktemp)"
@@ -137,21 +137,30 @@ run_connected_test_with_retry() {
       return 0
     fi
 
-    if [[ "$attempt" -ge 2 ]]; then
+    if [[ "$attempt" -ge 3 ]]; then
       rm -f "$log_file"
       return "$status"
     fi
 
-    if grep -Eq "Process crashed|Starting 0 tests|failed to complete startup" "$log_file"; then
-      warn "connectedDebugAndroidTest 일시 실패 감지(프로세스 시작/ANR). 1회 재시도"
+    if grep -Eq "Process crashed|Starting 0 tests|failed to complete startup|Failed to install split APK|Broken pipe|device offline|Exception thrown during onBeforeAll" "$log_file"; then
+      warn "connectedDebugAndroidTest 일시 실패 감지(에뮬레이터/설치/시작 불안정). 재시도($attempt/3)"
       if command -v adb >/dev/null 2>&1; then
+        adb reconnect offline >/dev/null 2>&1 || true
+        adb start-server >/dev/null 2>&1 || true
         if [[ -n "$serial" ]]; then
           adb -s "$serial" wait-for-device >/dev/null 2>&1 || true
+          for _ in {1..20}; do
+            boot="$(adb -s "$serial" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')"
+            if [[ "$boot" == "1" ]]; then
+              break
+            fi
+            sleep 1
+          done
         else
           adb wait-for-device >/dev/null 2>&1 || true
         fi
       fi
-      sleep 3
+      sleep 5
       attempt=$((attempt + 1))
       rm -f "$log_file"
       continue

@@ -47,6 +47,8 @@
 11. 프리플라이트 보강(2026-02-26): `connectedDebugAndroidTest`에 시작/ANR 계열 실패 감지 시 1회 자동 재시도 로직 추가
 12. 무기기 환경 fallback 검증(2026-02-26): `./scripts/release-final-check.sh` 실행 시 CI-only fallback 자동 전환 PASS(`--with-build-ci --skip-adb --require-signing`)
 13. 앱 스타트업 안정화(2026-02-26): `AppGraph` 초기화를 lazy로 전환해 프로세스 시작 시 동기 초기화 부하 완화
+14. 계측 회귀 안정화(2026-02-26): `WeeklySaveFlowInstrumentedTest`의 back 동작을 Compose dispatcher 기반으로 교체
+15. 프리플라이트 재시도 확장 및 재검증(2026-02-26): 설치/연결/startup 불안정 패턴 포함 3회 재시도 적용 후 `--with-build --android-serial emulator-5554`에서 PASS 14 / WARN 0 / FAIL 0
 
 ## 후속 조치
 1. CI 환경에도 동일하게 `LOTTO_RELEASE_*` 시크릿 설정

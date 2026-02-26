@@ -119,6 +119,9 @@
   - 무기기 최종 점검 검증 통과: `./scripts/release-final-check.sh` → CI-only fallback PASS(13/0/0)
   - 앱 스타트업 ANR 완화: `AppGraph.init`을 경량화하고 Room/Repository/Service 의존성을 최초 접근 시 lazy 초기화로 전환
   - 회귀 검증: `ktlintCheck`, `detekt`, `testDebugUnitTest` 통과 + 무기기 `release-final-check.sh` CI-only fallback PASS 재확인
+  - 계측 회귀 테스트 안정화: `WeeklySaveFlowInstrumentedTest`에서 `Espresso.pressBack()` 제거 후 Compose dispatcher back 사용
+  - 프리플라이트 계측 재시도 확장: 설치 Broken pipe/device offline/startup crash 패턴 포함, 최대 3회 재시도
+  - 실검증: `connectedDebugAndroidTest` 8/8 통과 재확인 + `release-preflight --with-build --android-serial emulator-5554` PASS 14/WARN 0/FAIL 0
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)
