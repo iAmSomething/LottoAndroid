@@ -5,6 +5,7 @@
 - [x] `./gradlew :app:testDebugUnitTest`
 - [x] `./gradlew :app:ktlintCheck :app:detekt`
 - [x] `./gradlew :app:connectedDebugAndroidTest` (실기기/에뮬레이터 필수)
+- [x] 실기기 재검증 자동화 명령 준비(`./scripts/run-physical-device-validation.sh`)
 - [x] 크래시 재현 케이스 점검 (계측 테스트 재실행 + 수동 instrumentation 확인)
 - [x] `./scripts/release-preflight.sh --with-build` 실행 및 리포트 저장(`17-release-preflight-report.md`)
 - [x] CI 프리플라이트 워크플로우 추가(`.github/workflows/release-preflight.yml`)

@@ -92,6 +92,8 @@
   - 수동 입력 시 카메라 스캐너 자동 일시정지 처리(입력 간섭 방지)
   - QR 수동입력 계측 테스트를 태그 기반 상호작용 검증으로 안정화(`QrManualFlowInstrumentedTest`)
   - 통계 기간 필터를 `전체/최근4주/최근8주`로 확장하고 8주 경계 회귀 테스트 추가(`StatsViewModelTest`)
+  - 실기기 계측 검증 자동화 스크립트 추가(`scripts/run-physical-device-validation.sh`) 및 이력 문서 추가(`18-device-validation-report.md`)
+  - 실기기 미연결 상태에서 스크립트 실패 가드 확인(`[FAIL] No physical device connected`)
 - 미완료 작업
   - 실제 디바이스 1대 기준 계측 테스트 추가 검증
   - Figma 원본 노드 기준 정밀 픽셀 매핑(현재 MCP 호출 한도 이슈로 대기)

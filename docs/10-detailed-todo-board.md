@@ -76,6 +76,7 @@
 - [x] H-007 회차 계산 회귀 테스트 추가(`nextDrawDate`, `currentSalesRound`)
 - [x] H-008 번호생성 저장 E2E 계측 회귀 테스트 추가(`WeeklySaveFlowInstrumentedTest`)
 - [x] H-009 ResultViewModel 재시도 로직 단위 테스트 추가
+- [x] H-010 실기기 계측 검증 자동화 스크립트/리포트 템플릿 추가(`scripts/run-physical-device-validation.sh`, `docs/18-device-validation-report.md`)
 
 ## I. 릴리즈 준비
 - [x] I-001 스토어 메타데이터 작성

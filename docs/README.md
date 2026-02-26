@@ -31,6 +31,7 @@
 - `15-incident-response-runbook.md`: 장애 대응 루틴/템플릿
 - `16-next-sprint-backlog.md`: 다음 스프린트 우선순위 백로그
 - `17-release-preflight-report.md`: 자동 프리플라이트 점검 리포트
+- `18-device-validation-report.md`: 실기기 계측 테스트 실행 이력
 
 ## 운영 규칙
 1. 작업 시작 전 `09`, `10`, `11`을 먼저 확인한다.
