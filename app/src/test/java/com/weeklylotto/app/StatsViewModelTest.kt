@@ -281,6 +281,57 @@ class StatsViewModelTest {
             advanceUntilIdle()
             assertThat(viewModel.uiState.value.roiTrend).isEmpty()
         }
+
+    @Test
+    fun 번호_구간_분포는_구간별로_개수와_비율을_집계한다() =
+        runTest {
+            val round = Round(1211, LocalDate.of(2026, 5, 2))
+            val bundle = ticket(round, listOf(1, 9, 10, 19, 20, 45), Instant.now())
+
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(listOf(bundle)),
+                    drawRepository = StatsDrawRepository(draw(round)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            val distribution = viewModel.uiState.value.numberDistribution
+
+            assertThat(distribution).hasSize(5)
+            assertThat(distribution[0].label).isEqualTo("1-9")
+            assertThat(distribution[0].count).isEqualTo(2)
+            assertThat(distribution[0].percent).isEqualTo(33)
+            assertThat(distribution[1].label).isEqualTo("10-19")
+            assertThat(distribution[1].count).isEqualTo(2)
+            assertThat(distribution[1].percent).isEqualTo(33)
+            assertThat(distribution[2].label).isEqualTo("20-29")
+            assertThat(distribution[2].count).isEqualTo(1)
+            assertThat(distribution[2].percent).isEqualTo(16)
+            assertThat(distribution[3].label).isEqualTo("30-39")
+            assertThat(distribution[3].count).isEqualTo(0)
+            assertThat(distribution[4].label).isEqualTo("40-45")
+            assertThat(distribution[4].count).isEqualTo(1)
+            assertThat(distribution[4].percent).isEqualTo(16)
+        }
+
+    @Test
+    fun 번호_구간_분포는_데이터가_없어도_기본_구간을_유지한다() =
+        runTest {
+            val round = Round(1212, LocalDate.of(2026, 5, 9))
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(emptyList()),
+                    drawRepository = StatsDrawRepository(draw(round)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            val distribution = viewModel.uiState.value.numberDistribution
+
+            assertThat(distribution).hasSize(5)
+            assertThat(distribution.all { it.count == 0 && it.percent == 0 }).isTrue()
+        }
 }
 
 private fun draw(round: Round): DrawResult =

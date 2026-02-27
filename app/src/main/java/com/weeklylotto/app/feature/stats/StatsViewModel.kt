@@ -42,9 +42,18 @@ data class StatsUiState(
     val customRangeError: String? = null,
     val sourceStats: List<SourceStats> = TicketSource.entries.map { SourceStats(source = it) },
     val roiTrend: List<RoiTrendPoint> = emptyList(),
+    val numberDistribution: List<NumberRangeBucket> = defaultNumberRangeBuckets(),
 ) {
     val netProfitAmount: Long = totalWinAmount - totalPurchaseAmount
 }
+
+data class NumberRangeBucket(
+    val label: String,
+    val start: Int,
+    val end: Int,
+    val count: Int = 0,
+    val percent: Int = 0,
+)
 
 data class SourceStats(
     val source: TicketSource,
@@ -156,6 +165,7 @@ class StatsViewModel(
 
                 val games = filteredBundles.flatMap { it.games }
                 val purchase = games.size * 1_000L
+                val pickedNumbers = games.flatMap { game -> game.numbers.map { number -> number.value } }
                 val topNumbers =
                     games
                         .flatMap { it.numbers }
@@ -237,6 +247,24 @@ class StatsViewModel(
                             )
                         }
 
+                val totalPickedNumbers = pickedNumbers.size
+                val numberDistribution =
+                    defaultNumberRangeBuckets().map { bucket ->
+                        val count = pickedNumbers.count { number -> number in bucket.start..bucket.end }
+                        NumberRangeBucket(
+                            label = bucket.label,
+                            start = bucket.start,
+                            end = bucket.end,
+                            count = count,
+                            percent =
+                                if (totalPickedNumbers == 0) {
+                                    0
+                                } else {
+                                    (count * 100) / totalPickedNumbers
+                                },
+                        )
+                    }
+
                 _uiState.update {
                     it.copy(
                         totalPurchaseAmount = purchase,
@@ -246,6 +274,7 @@ class StatsViewModel(
                         winningGames = winningGames,
                         sourceStats = sourceStats,
                         roiTrend = roiTrend,
+                        numberDistribution = numberDistribution,
                     )
                 }
             }
@@ -280,6 +309,15 @@ private data class MutableSourceStats(
     var totalPurchaseAmount: Long = 0,
     var totalWinAmount: Long = 0,
 )
+
+private fun defaultNumberRangeBuckets(): List<NumberRangeBucket> =
+    listOf(
+        NumberRangeBucket(label = "1-9", start = 1, end = 9),
+        NumberRangeBucket(label = "10-19", start = 10, end = 19),
+        NumberRangeBucket(label = "20-29", start = 20, end = 29),
+        NumberRangeBucket(label = "30-39", start = 30, end = 39),
+        NumberRangeBucket(label = "40-45", start = 40, end = 45),
+    )
 
 private data class MutableRoundRoiStats(
     val drawDate: LocalDate,

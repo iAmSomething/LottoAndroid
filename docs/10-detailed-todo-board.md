@@ -520,3 +520,8 @@
 - [x] BF-001 `StatsViewModel` 출처별/회차별 ROI% 계산 필드 추가(`SourceStats.roiPercent`, `RoiTrendPoint.roiPercent`)
 - [x] BF-002 `StatsScreen` 출처 카드/ROI 트렌드 카드에 ROI% 노출 추가
 - [x] BF-003 회귀 테스트/증적 반영(`StatsViewModelTest` ROI% 케이스, `docs/assets/distribution/stats_source_roi_local_2026-02-27.md`) 및 문서 동기화(`06`, `11`, `16`, `21`, `22`)
+
+## BG. 번호 분포 히트맵(C02) v1 구현(2026-02-27 Cycle-56)
+- [x] BG-001 `StatsViewModel` 번호 구간 분포 모델/집계 추가(`NumberRangeBucket`, 1-9/10-19/20-29/30-39/40-45)
+- [x] BG-002 `StatsScreen`에 번호 구간 분포 히트맵 카드 추가(구간별 개수/비율 + 바 시각화)
+- [x] BG-003 회귀 테스트/증적 반영(`StatsViewModelTest` 2건 추가, `docs/assets/distribution/stats_number_distribution_local_2026-02-27.md`) 및 문서 동기화(`06`, `11`, `16`, `21`, `22`)
