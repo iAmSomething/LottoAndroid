@@ -77,9 +77,14 @@
 ```
 - 실행 범위: `MainNavigationInstrumentedTest`, `WeeklySaveFlowInstrumentedTest` 실행 후 ops 이벤트 검증
 - 검증 프로파일: `verify-analytics-events.sh --profile ops-core`
+- 임계치 판정: `evaluate-ops-observability-threshold.sh`(official/terminal failure rate + API/Storage p95 latency)
 - 증적 로그 저장 옵션:
 ```bash
 ./scripts/run-ops-observability-check.sh --serial <adb-serial> --save-log docs/assets/distribution/ops_observability_YYYY-MM-DD.log
+```
+- 임계치 리포트 저장 옵션:
+```bash
+./scripts/run-ops-observability-check.sh --serial <adb-serial> --threshold-report docs/assets/distribution/ops_observability_threshold_YYYY-MM-DD.md
 ```
 
 ### 3-1-e. 릴리즈 위험 점수 산출(권장)

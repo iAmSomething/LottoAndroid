@@ -206,6 +206,7 @@
 - [x] L-024 API/로컬 저장 관측성 1차 코드 반영(`DrawApiClient`: `ops_api_request`, `RoomTicketRepository`: `ops_storage_mutation`)
 - [x] L-025 운영 관측성 로그 샘플 수집 루틴 추가(`run-ops-observability-check.sh` + `verify-analytics-events.sh --profile ops-core`)
 - [x] L-026 릴리즈 위험 점수 운영 반영(`calculate-release-risk-score.sh` + `.github/workflows/release-risk-score.yml`)
+- [x] L-027 운영 관측성 임계치 자동 판정 루틴 추가(`evaluate-ops-observability-threshold.sh` + `run-ops-observability-check.sh` 연동)
 
 ## M. 스플래시/상호작용 모션 고도화
 - [x] M-001 스플래시 시나리오 정의(콜드/웜/오류 브리지)
@@ -509,3 +510,8 @@
 - [x] BD-001 외부 링크 공통 유틸 분리(`ExternalLinkSupport`: 공식 URL/안내 flag/open helper)
 - [x] BD-002 Result 화면에 구매 CTA + 1회 안내 모달 + fallback(브라우저 열기/링크 복사) 추가
 - [x] BD-003 Settings 화면에 구매 CTA + 1회 안내 모달 + fallback 추가 및 문서/증적 동기화(`11`, `16`, `21`, `22`, `docs/assets/distribution/purchase_redirect_result_settings_local_2026-02-27.md`)
+
+## BE. 운영 관측성 임계치 자동 판정(E01) v2 구현(2026-02-27 Cycle-54)
+- [x] BE-001 `evaluate-ops-observability-threshold.sh` 추가(official/terminal failure rate + API/Storage p95 latency + sample gate)
+- [x] BE-002 `run-ops-observability-check.sh`에 임계치 판정 단계 연동(`--threshold-report`, `--skip-threshold-check` 옵션 포함)
+- [x] BE-003 로컬 증적/문서 동기화(`docs/assets/distribution/ops_observability_threshold_local_2026-02-27.md`, `06`, `07`, `11`, `14`, `16`, `21`, `22`)
