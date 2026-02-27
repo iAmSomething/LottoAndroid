@@ -108,6 +108,25 @@ class ManualAddViewModelTest {
         }
 
     @Test
+    fun 저장직후_실행취소를_누르면_직전티켓을_삭제한다() =
+        runTest {
+            val repository = ManualAddFakeTicketRepository(initial = emptyList())
+            val viewModel = ManualAddViewModel(ticketRepository = repository)
+
+            listOf(7, 8, 9, 10, 11, 12).forEach(viewModel::toggleNumber)
+            viewModel.save()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.lastSavedTicketId).isNotNull()
+            viewModel.undoLastSavedTicket()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.lastSavedTicketId).isNull()
+            assertThat(viewModel.uiState.value.error).isEqualTo("직전 저장을 취소했습니다.")
+            assertThat(repository.observeCurrentRoundSnapshot()).isEmpty()
+        }
+
+    @Test
     fun 이번주_동일번호가_없으면_정상_저장한다() =
         runTest {
             val existing = ticket(id = 1L, numbers = listOf(1, 2, 3, 4, 5, 6))
@@ -211,12 +230,16 @@ private class ManualAddFakeTicketRepository(
 
     override suspend fun update(bundle: TicketBundle) = Unit
 
-    override suspend fun latest(): TicketBundle? = all.value.firstOrNull()
+    override suspend fun latest(): TicketBundle? = all.value.maxByOrNull { it.id }
 
     override suspend fun updateStatusByIds(
         ids: Set<Long>,
         status: TicketStatus,
     ) = Unit
 
-    override suspend fun deleteByIds(ids: Set<Long>) = Unit
+    override suspend fun deleteByIds(ids: Set<Long>) {
+        all.update { current -> current.filterNot { it.id in ids } }
+    }
+
+    fun observeCurrentRoundSnapshot(): List<TicketBundle> = all.value
 }

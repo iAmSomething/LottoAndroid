@@ -13,6 +13,7 @@
 - 잠금 유지 + 잠금 제외 재생성 검증
 - 번호 직접 추가 저장 시 중복 감지 후 선택지(취소/중복 제외 저장/중복 포함 저장) 검증
 - 번호 직접 추가 저장 실패 시 초안/대기 게임 유지 및 재시도 문구 노출 검증
+- 번호 직접 추가 저장 직후 실행 취소(undo) 동작 및 삭제 반영 검증
 - 자동 검증: `NumberGeneratorViewModelTest`, `MainNavigationInstrumentedTest`
 
 ### QR 파싱

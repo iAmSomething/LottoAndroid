@@ -25,6 +25,8 @@ data class ManualAddUiState(
     val repeatCount: Int = 1,
     val saved: Boolean = false,
     val savedGameCount: Int = 0,
+    val lastSavedGameCount: Int = 0,
+    val lastSavedTicketId: Long? = null,
     val error: String? = null,
     val duplicatePrompt: DuplicatePromptUi? = null,
 )
@@ -196,6 +198,35 @@ class ManualAddViewModel(
         }
     }
 
+    fun undoLastSavedTicket() {
+        val targetId = uiState.value.lastSavedTicketId ?: return
+        viewModelScope.launch {
+            val deleted = runCatching { ticketRepository.deleteByIds(setOf(targetId)) }
+            if (deleted.isSuccess) {
+                _uiState.update {
+                    it.copy(
+                        lastSavedTicketId = null,
+                        lastSavedGameCount = 0,
+                        error = "직전 저장을 취소했습니다.",
+                    )
+                }
+            } else {
+                _uiState.update {
+                    it.copy(error = "저장 취소에 실패했습니다. 다시 시도해 주세요.")
+                }
+            }
+        }
+    }
+
+    fun dismissLastSavedAction() {
+        _uiState.update {
+            it.copy(
+                lastSavedTicketId = null,
+                lastSavedGameCount = 0,
+            )
+        }
+    }
+
     private suspend fun currentRoundSignatures(): Set<List<Int>> =
         ticketRepository
             .observeCurrentRoundTickets()
@@ -232,6 +263,10 @@ class ManualAddViewModel(
             }
             return
         }
+        val savedTicketId =
+            runCatching { ticketRepository.latest()?.id }
+                .getOrNull()
+                ?.takeIf { id -> id > 0L }
         queuedGamesForDuplicateDecision = emptyList()
         _uiState.update {
             it.copy(
@@ -239,6 +274,8 @@ class ManualAddViewModel(
                 pendingGames = emptyList(),
                 saved = true,
                 savedGameCount = gamesToSave.size,
+                lastSavedGameCount = gamesToSave.size,
+                lastSavedTicketId = savedTicketId,
                 error = null,
                 duplicatePrompt = null,
             )
