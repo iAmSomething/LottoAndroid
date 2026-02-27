@@ -46,4 +46,9 @@ object AnalyticsActionValue {
     const val COLD = "cold"
     const val WARM = "warm"
     const val COMPACT = "compact"
+    const val PURCHASE_REDIRECT_TAP = "purchase_redirect_tap"
+    const val PURCHASE_REDIRECT_CONFIRM = "purchase_redirect_confirm"
+    const val PURCHASE_REDIRECT_FAIL = "purchase_redirect_fail"
+    const val PURCHASE_REDIRECT_OPEN_BROWSER = "purchase_redirect_open_browser"
+    const val PURCHASE_REDIRECT_COPY_LINK = "purchase_redirect_copy_link"
 }

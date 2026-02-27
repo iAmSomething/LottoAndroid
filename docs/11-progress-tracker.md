@@ -9,6 +9,8 @@
   - `A03` 구현: Result 초기 진입 시 최근 조회 회차를 기본값으로 복원하도록 `ResultViewModel` 로직 반영
   - 회귀 테스트 추가: `ResultViewModelTest`에 최근 조회 회차 우선 조회 케이스 추가
   - 실행 보드 동기화: `10-detailed-todo-board.md`에 `AQ` 사이클(`AQ-001~AQ-003`) 추가
+  - `AP-005` 구현: Home에 `공식 홈페이지에서 구매하기` CTA 1차 노출, 1회 안내 모달, 외부 열기 실패 fallback(브라우저 재시도/링크 복사) 적용
+  - 계측 키 반영: `purchase_redirect_tap`, `purchase_redirect_confirm`, `purchase_redirect_fail`, `purchase_redirect_open_browser`, `purchase_redirect_copy_link`
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
