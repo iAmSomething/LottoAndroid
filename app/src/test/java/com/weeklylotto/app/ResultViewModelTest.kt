@@ -204,6 +204,36 @@ class ResultViewModelTest {
         }
 
     @Test
+    fun 초기진입시_최근조회회차가_있으면_해당회차를_우선_조회한다() =
+        runTest {
+            val latest = sampleDraw(roundNumber = 1212)
+            val lastViewed = sampleDraw(roundNumber = 1208)
+            val drawRepository =
+                ResultViewModelFakeDrawRepository(
+                    latestQueue = ArrayDeque(listOf(AppResult.Success(latest))),
+                    byRoundResponses = mapOf(1208 to AppResult.Success(lastViewed)),
+                )
+            val tracker = ResultViewModelFakeResultViewTracker(lastViewedRound = 1208)
+            val viewModel =
+                ResultViewModel(
+                    drawRepository = drawRepository,
+                    ticketRepository = ResultViewModelFakeTicketRepository(),
+                    evaluator = ResultViewModelFakeResultEvaluator(),
+                    resultViewTracker = tracker,
+                    retryDelayProvider = { 0L },
+                )
+
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(drawRepository.fetchByRoundCount).isEqualTo(1)
+            assertThat(drawRepository.lastRequestedRound).isEqualTo(1208)
+            assertThat(drawRepository.fetchLatestCount).isEqualTo(0)
+            assertThat(state.selectedRound).isEqualTo(1208)
+            assertThat(state.drawResult?.round?.number).isEqualTo(1208)
+        }
+
+    @Test
     fun 결과조회_성공시_확인회차를_기록한다() =
         runTest {
             val draw = sampleDraw(roundNumber = 1212)
@@ -286,13 +316,16 @@ private class ResultViewModelFakeResultEvaluator(
         )
 }
 
-private class ResultViewModelFakeResultViewTracker : ResultViewTracker {
+private class ResultViewModelFakeResultViewTracker(
+    private var lastViewedRound: Int? = null,
+) : ResultViewTracker {
     val markedRounds = mutableListOf<Int>()
 
-    override suspend fun loadLastViewedRound(): Int? = null
+    override suspend fun loadLastViewedRound(): Int? = lastViewedRound
 
     override suspend fun markRoundViewed(roundNumber: Int) {
         markedRounds += roundNumber
+        lastViewedRound = roundNumber
     }
 }
 
