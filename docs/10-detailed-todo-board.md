@@ -442,7 +442,7 @@
 - [x] AP-002 외부 이동 기본 정책 정의(공식 URL만 허용, 브라우저/커스텀탭 우선)
 - [x] AP-003 UX 플로우 정의(CTA 탭 → 1회 안내 모달 → 외부 이동)
 - [x] AP-004 실패 fallback 정의(열기 실패 시 `링크 복사`/`기본 브라우저로 열기`)
-- [ ] AP-005 적용 범위 확정(Home/Result/Settings 중 1차 노출 화면 선택 + 이벤트 계측 키 확정)
+- [x] AP-005 적용 범위 확정: Home 1차 노출 + 이벤트 키 확정(`purchase_redirect_tap/confirm/fail/open_browser/copy_link`) 및 코드 반영
 
 ## AQ. 최근 조회 회차 기억(A03) 구현(2026-02-27 Cycle-41)
 - [x] AQ-001 `ResultViewModel` 초기 진입 시 `ResultViewTracker`의 최근 조회 회차를 우선 복원

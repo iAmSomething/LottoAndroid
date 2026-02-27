@@ -1,5 +1,9 @@
 package com.weeklylotto.app.feature.home
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,16 +18,24 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,6 +68,13 @@ fun HomeScreen(
     onClickQr: () -> Unit,
 ) {
     val analyticsLogger = AppGraph.analyticsLogger
+    val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
+    val purchaseRedirectPreferences = remember(context) {
+        context.getSharedPreferences(PURCHASE_REDIRECT_PREF_NAME, Context.MODE_PRIVATE)
+    }
+    var showPurchaseNoticeDialog by remember { mutableStateOf(false) }
+    var showPurchaseFallbackDialog by remember { mutableStateOf(false) }
     val viewModel =
         viewModel<HomeViewModel>(
             factory =
@@ -69,6 +88,119 @@ fun HomeScreen(
                 },
         )
     val uiState by viewModel.uiState.collectAsState()
+    val openOfficialPurchase = {
+        val opened = openOfficialPurchaseUrl(context = context, url = OFFICIAL_PURCHASE_URL)
+        if (opened) {
+            showPurchaseFallbackDialog = false
+            analyticsLogger.log(
+                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                params =
+                    mapOf(
+                        AnalyticsParamKey.SCREEN to "home",
+                        AnalyticsParamKey.COMPONENT to "purchase_redirect_cta",
+                        AnalyticsParamKey.ACTION to AnalyticsActionValue.PURCHASE_REDIRECT_OPEN_BROWSER,
+                    ),
+            )
+        } else {
+            analyticsLogger.log(
+                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                params =
+                    mapOf(
+                        AnalyticsParamKey.SCREEN to "home",
+                        AnalyticsParamKey.COMPONENT to "purchase_redirect_cta",
+                        AnalyticsParamKey.ACTION to AnalyticsActionValue.PURCHASE_REDIRECT_FAIL,
+                        AnalyticsParamKey.ERROR_TYPE to "external_open_failed",
+                    ),
+            )
+            showPurchaseFallbackDialog = true
+        }
+    }
+
+    if (showPurchaseNoticeDialog) {
+        AlertDialog(
+            onDismissRequest = { showPurchaseNoticeDialog = false },
+            title = { Text("외부 페이지 이동 안내") },
+            text = {
+                Text(
+                    "구매는 동행복권 공식 홈페이지에서만 가능합니다. " +
+                        "성인 인증과 구매 가능 시간을 확인한 뒤 이동해 주세요.",
+                    color = LottoColors.TextSecondary,
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        purchaseRedirectPreferences.edit()
+                            .putBoolean(PURCHASE_REDIRECT_NOTICE_SEEN_KEY, true)
+                            .apply()
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "home",
+                                    AnalyticsParamKey.COMPONENT to "purchase_redirect_cta",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.PURCHASE_REDIRECT_CONFIRM,
+                                ),
+                        )
+                        showPurchaseNoticeDialog = false
+                        openOfficialPurchase()
+                    },
+                ) {
+                    Text("이동")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showPurchaseNoticeDialog = false }) {
+                    Text("취소")
+                }
+            },
+        )
+    }
+
+    if (showPurchaseFallbackDialog) {
+        AlertDialog(
+            onDismissRequest = { showPurchaseFallbackDialog = false },
+            title = { Text("열기에 실패했어요") },
+            text = {
+                Text(
+                    "외부 브라우저 실행에 실패했습니다. 링크를 복사하거나 다시 시도해 주세요.",
+                    color = LottoColors.TextSecondary,
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        openOfficialPurchase()
+                        if (!showPurchaseFallbackDialog) {
+                            Toast.makeText(context, "브라우저에서 열었습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                ) {
+                    Text("브라우저로 열기")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(OFFICIAL_PURCHASE_URL))
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "home",
+                                    AnalyticsParamKey.COMPONENT to "purchase_redirect_cta",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.PURCHASE_REDIRECT_COPY_LINK,
+                                ),
+                        )
+                        showPurchaseFallbackDialog = false
+                        Toast.makeText(context, "링크를 복사했습니다.", Toast.LENGTH_SHORT).show()
+                    },
+                ) {
+                    Text("링크 복사")
+                }
+            },
+        )
+    }
 
     Column(modifier = Modifier.fillMaxSize().background(LottoColors.Background)) {
         LottoTopAppBar(
@@ -213,6 +345,56 @@ fun HomeScreen(
                                 style = MaterialTheme.typography.bodySmall,
                             )
                         }
+                    }
+                }
+            }
+
+            item {
+                Card(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .motionClickable {
+                                analyticsLogger.log(
+                                    event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                    params =
+                                        mapOf(
+                                            AnalyticsParamKey.SCREEN to "home",
+                                            AnalyticsParamKey.COMPONENT to "purchase_redirect_cta",
+                                            AnalyticsParamKey.ACTION to AnalyticsActionValue.PURCHASE_REDIRECT_TAP,
+                                        ),
+                                )
+
+                                val noticeSeen =
+                                    purchaseRedirectPreferences.getBoolean(
+                                        PURCHASE_REDIRECT_NOTICE_SEEN_KEY,
+                                        false,
+                                    )
+                                if (noticeSeen) {
+                                    openOfficialPurchase()
+                                } else {
+                                    showPurchaseNoticeDialog = true
+                                }
+                            },
+                    shape = RoundedCornerShape(LottoDimens.CardRadius),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                    colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(LottoDimens.ScreenPadding),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Text(
+                            text = "구매는 공식 홈페이지에서만 가능",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LottoColors.TextMuted,
+                        )
+                        Text(
+                            text = "공식 홈페이지에서 구매하기",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Black,
+                            color = LottoColors.PrimaryDark,
+                        )
                     }
                 }
             }
@@ -393,3 +575,18 @@ fun HomeScreen(
         }
     }
 }
+
+private fun openOfficialPurchaseUrl(
+    context: Context,
+    url: String,
+): Boolean =
+    runCatching {
+        context.startActivity(
+            Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+        )
+    }.isSuccess
+
+private const val OFFICIAL_PURCHASE_URL = "https://dhlottery.co.kr"
+private const val PURCHASE_REDIRECT_PREF_NAME = "purchase_redirect_notice"
+private const val PURCHASE_REDIRECT_NOTICE_SEEN_KEY = "notice_seen"
