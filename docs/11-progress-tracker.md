@@ -39,6 +39,8 @@
   - 임계치 증적 추가: 로컬 샘플 로그 기준 PASS 리포트 `docs/assets/distribution/ops_observability_threshold_local_2026-02-27.md`
   - `C03/C04` v2 구현: 통계 출처 카드/회차 트렌드에 ROI% 계산·노출 추가(`SourceStats.roiPercent`, `RoiTrendPoint.roiPercent`)
   - 회귀 테스트/증적 추가: `StatsViewModelTest` ROI% 케이스 PASS, 로컬 리포트 `docs/assets/distribution/stats_source_roi_local_2026-02-27.md`
+  - `C02` v1 구현: 통계 번호 구간 분포 히트맵 추가(1-9/10-19/20-29/30-39/40-45 count/percent)
+  - 회귀 테스트/증적 추가: `StatsViewModelTest` 구간 분포 2건 PASS, 로컬 리포트 `docs/assets/distribution/stats_number_distribution_local_2026-02-27.md`
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커

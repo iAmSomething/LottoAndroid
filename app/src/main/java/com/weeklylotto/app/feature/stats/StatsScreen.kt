@@ -139,6 +139,69 @@ fun StatsScreen() {
                     border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
                     colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
                 ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Text(
+                            "번호 구간 분포 히트맵",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        uiState.numberDistribution.forEach { bucket ->
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
+                                    Text(
+                                        bucket.label,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                    Text(
+                                        "${bucket.count}개 (${bucket.percent}%)",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = LottoColors.TextSecondary,
+                                    )
+                                }
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .height(8.dp)
+                                            .background(
+                                                color = LottoColors.Border.copy(alpha = 0.45f),
+                                                shape = RoundedCornerShape(999.dp),
+                                            ),
+                                ) {
+                                    if (bucket.count > 0) {
+                                        Box(
+                                            modifier =
+                                                Modifier
+                                                    .fillMaxWidth(
+                                                        fraction = (bucket.percent / 100f).coerceAtLeast(0.05f),
+                                                    )
+                                                    .height(8.dp)
+                                                    .background(
+                                                        color = LottoColors.Primary,
+                                                        shape = RoundedCornerShape(999.dp),
+                                                    ),
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            item {
+                Card(
+                    shape = RoundedCornerShape(LottoDimens.CardRadius),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                    colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                ) {
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
                             "자주 나온 번호 TOP 6",

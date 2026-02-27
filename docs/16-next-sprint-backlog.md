@@ -18,7 +18,7 @@
 - 기획/구현 상태 분리 리포팅 루틴 고정(`P-001`)
 
 ## 3. 우선순위 Medium
-- 통계 인사이트 확장(출처별 성과/ROI 트렌드/중복도 경고) (`C03`, `C04`, `C01`) - `C01` 1차 완료(2026-02-26) + `C03/C04` v2 완료(2026-02-27, 출처별/회차별 ROI% 계산·노출 + 회귀 테스트), CTA 연계+계측/로그 샘플 루틴 유지
+- 통계 인사이트 확장(출처별 성과/ROI 트렌드/중복도 경고) (`C03`, `C04`, `C02`, `C01`) - `C01` 1차 완료(2026-02-26) + `C03/C04` v2 완료(2026-02-27) + `C02` v1 완료(2026-02-27, 번호 구간 분포 히트맵), CTA 연계+계측/로그 샘플 루틴 유지
 - API/로컬 데이터 관측성 스펙 고도화 (`E01`, `L-010`, `L-011`) - v2 완료(2026-02-27, `ops_api_request`/`ops_storage_mutation` + `ops-core` 스키마 검증 + `evaluate-ops-observability-threshold.sh` 임계치 자동 판정)
 - 단위 테스트 게이트 플래키 감시(`Q01`) - v1 완료(2026-02-27, `run-unit-flaky-guard.sh` + `unit-flaky-guard.yml` 주기 실행 + 로컬 리포트 `unit_flaky_guard_local_2026-02-27.md`)
 - 릴리즈 위험 점수 모델 운영 반영(`L-012`) - v1 완료(2026-02-27, `calculate-release-risk-score.sh` + `release-risk-score.yml`)
