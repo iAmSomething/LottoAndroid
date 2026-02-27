@@ -23,12 +23,14 @@
   - 회귀 테스트/증적 추가: `HomeExternalLinkTest` PASS, 로컬 리포트 `docs/assets/distribution/location_store_search_local_2026-02-27.md`
   - `F01` v1 구현: Stats 커스텀 회차 범위 필터 추가(시작/끝 회차 직접 입력 + 적용 + 유효성 오류 표시)
   - 회귀 테스트/증적 추가: `StatsViewModelTest` 커스텀 필터 2건 PASS, 로컬 리포트 `docs/assets/distribution/stats_custom_period_local_2026-02-27.md`
+  - `F02` v1 구현: Settings 로컬 백업/복원 액션 추가(`tickets_backup_latest.json` 생성/복원)
+  - 회귀 테스트/증적 추가: `LocalTicketBackupServiceTest`, `SettingsViewModelTest` 백업/복원 케이스 PASS, 로컬 리포트 `docs/assets/distribution/ticket_backup_local_2026-02-27.md`
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
   - 실기기 미보유로 물리 디바이스 성능/워치 증적은 수집 불가
 - 다음 액션
-  - Low 우선순위 백로그 잔여(`F02`)를 단계 분해(백업 범위/저장소/복원 충돌정책)해 1차 설계 또는 스캐폴딩 착수
+  - `S39` 입력 정확성/중복 방지 항목 중 저장 후 복구 동선(T4)을 다음 사이클 우선 검토
 
 ## 2026-02-26
 - 완료 작업

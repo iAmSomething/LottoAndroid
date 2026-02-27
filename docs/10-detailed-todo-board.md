@@ -479,3 +479,8 @@
 - [x] AW-001 `StatsViewModel` 커스텀 회차 범위 필터 추가(시작/끝 회차 입력 + 유효성 오류 메시지)
 - [x] AW-002 `StatsScreen` 기간 카드에 `직접 입력` UI 추가(시작/끝 회차 + 적용 버튼)
 - [x] AW-003 회귀 테스트/증적 반영(`StatsViewModelTest` 커스텀 범위 2건, `docs/assets/distribution/stats_custom_period_local_2026-02-27.md`) 및 문서 동기화(`16`, `21`, `22`)
+
+## AX. 백업/복원(F02) v1 구현(2026-02-27 Cycle-48)
+- [x] AX-001 `TicketBackupService`/`LocalTicketBackupService` 추가(`tickets_backup_latest.json` 생성/복원)
+- [x] AX-002 `SettingsViewModel`/`SettingsScreen`에 백업/복원 액션 버튼 추가(성공/실패 메시지 노출)
+- [x] AX-003 회귀 테스트/증적 반영(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `docs/assets/distribution/ticket_backup_local_2026-02-27.md`) 및 문서 동기화(`16`, `21`, `22`)

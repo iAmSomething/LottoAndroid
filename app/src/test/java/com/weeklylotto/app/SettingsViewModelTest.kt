@@ -5,6 +5,8 @@ import com.weeklylotto.app.domain.model.ReminderConfig
 import com.weeklylotto.app.domain.service.MotionPreferenceStore
 import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
+import com.weeklylotto.app.domain.service.TicketBackupService
+import com.weeklylotto.app.domain.service.TicketBackupSummary
 import com.weeklylotto.app.feature.settings.SettingsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -84,6 +86,50 @@ class SettingsViewModelTest {
             assertThat(viewModel.uiState.value.reduceMotionEnabled).isTrue()
             assertThat(motionStore.savedValues).containsExactly(true)
         }
+
+    @Test
+    fun 백업성공시_성공메시지를_노출한다() =
+        runTest {
+            val backupService =
+                FakeTicketBackupService(
+                    backupResult = Result.success(TicketBackupSummary(2, 4, "tickets_backup_latest.json")),
+                )
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.backupTickets()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.message).isEqualTo("백업 파일 생성 완료 (2건, 4게임)")
+        }
+
+    @Test
+    fun 복원실패시_실패메시지를_노출한다() =
+        runTest {
+            val backupService =
+                FakeTicketBackupService(
+                    restoreResult = Result.failure(IllegalStateException("missing")),
+                )
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.restoreTicketsFromBackup()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.message).isEqualTo("백업 복원에 실패했습니다.")
+        }
 }
 
 private class FakeReminderConfigStore(
@@ -125,4 +171,13 @@ private class FakeMotionPreferenceStore(
         savedValues += enabled
         flow.value = enabled
     }
+}
+
+private class FakeTicketBackupService(
+    private val backupResult: Result<TicketBackupSummary> = Result.success(TicketBackupSummary(0, 0, "tickets_backup_latest.json")),
+    private val restoreResult: Result<TicketBackupSummary> = Result.success(TicketBackupSummary(0, 0, "tickets_backup_latest.json")),
+) : TicketBackupService {
+    override suspend fun backupCurrentTickets(): Result<TicketBackupSummary> = backupResult
+
+    override suspend fun restoreLatestBackup(): Result<TicketBackupSummary> = restoreResult
 }
