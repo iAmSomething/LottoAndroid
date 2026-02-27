@@ -186,6 +186,44 @@ fun ManualAddScreen(onBack: () -> Unit) {
             uiState.error?.let { message ->
                 Text(text = message, color = LottoColors.DangerText)
             }
+            uiState.duplicatePrompt?.let { prompt ->
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text(
+                            text =
+                                "동일 번호 ${prompt.duplicateGameCount}게임이 이미 있습니다. " +
+                                    "(${prompt.totalGameCount}게임 중)",
+                            color = LottoColors.TextPrimary,
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            MotionButton(
+                                onClick = viewModel::cancelDuplicateSave,
+                                modifier = Modifier.weight(1f),
+                            ) {
+                                Text("취소")
+                            }
+                            MotionButton(
+                                onClick = viewModel::saveExcludingDuplicates,
+                                modifier = Modifier.weight(1f),
+                            ) {
+                                Text("중복 제외 저장")
+                            }
+                        }
+                        MotionButton(
+                            onClick = viewModel::saveIncludingDuplicates,
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text("중복 포함 저장")
+                        }
+                    }
+                }
+            }
             MotionButton(
                 onClick = viewModel::save,
                 enabled = uiState.pendingGames.isNotEmpty() || uiState.selected.size == 6,
