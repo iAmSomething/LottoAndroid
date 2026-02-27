@@ -14,6 +14,7 @@ class ResultReminderWorker(
             id = 1002,
             title = "이번 주 로또 결과 확인",
             body = "저장한 번호의 당첨 결과를 확인해보세요.",
+            target = ReminderNotificationTarget.RESULT,
         )
         return Result.success()
     }

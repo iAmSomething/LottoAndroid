@@ -13,6 +13,8 @@
   - 계측 키 반영: `purchase_redirect_tap`, `purchase_redirect_confirm`, `purchase_redirect_fail`, `purchase_redirect_open_browser`, `purchase_redirect_copy_link`
   - `D03` v1 구현: Wear complication data source(`WeeklyLottoComplicationService`) 추가(SHORT/LONG_TEXT, 앱 실행 tap action)
   - Wear Manifest에 complication provider 등록 + update period 30분(`android.support.wearable.complications.UPDATE_PERIOD_SECONDS=1800`)
+  - `D04` v1 구현: 리마인더 알림 액션 `앱에서 열기`/`30분 뒤 다시 알림` 추가 및 `ReminderActionReceiver` 스누즈 재스케줄링 연동
+  - 회귀 테스트 추가: `ReminderNotificationTargetTest`(target key 복원/예외 케이스)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커

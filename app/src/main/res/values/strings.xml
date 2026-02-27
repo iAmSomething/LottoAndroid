@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">매주로또</string>
+    <string name="notification_action_open_app">앱에서 열기</string>
+    <string name="notification_action_remind_later">30분 뒤 다시 알림</string>
 </resources>
