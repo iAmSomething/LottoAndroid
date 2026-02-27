@@ -448,3 +448,8 @@
 - [x] AQ-001 `ResultViewModel` 초기 진입 시 `ResultViewTracker`의 최근 조회 회차를 우선 복원
 - [x] AQ-002 최근 조회 회차가 있는 경우 `fetchByRound` 경로로 우선 조회되도록 연동
 - [x] AQ-003 우선순위/아이디어 문서에 `A03` 완료 상태 동기화(`21`, `22`) 및 회귀 테스트 추가(`ResultViewModelTest`)
+
+## AR. 워치 컴플리케이션(D03) v1 구현(2026-02-27 Cycle-42)
+- [x] AR-001 Wear 모듈에 complication data source 의존성 추가(`watchface-complications-data-source-ktx`)
+- [x] AR-002 `WeeklyLottoComplicationService` 구현(SHORT/LONG_TEXT + 앱 실행 tap action)
+- [x] AR-003 Manifest/문자열/우선순위·아이디어 문서 동기화(`AndroidManifest.xml`, `wear strings`, `21`, `22`)

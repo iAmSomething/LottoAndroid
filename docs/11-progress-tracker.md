@@ -11,6 +11,8 @@
   - 실행 보드 동기화: `10-detailed-todo-board.md`에 `AQ` 사이클(`AQ-001~AQ-003`) 추가
   - `AP-005` 구현: Home에 `공식 홈페이지에서 구매하기` CTA 1차 노출, 1회 안내 모달, 외부 열기 실패 fallback(브라우저 재시도/링크 복사) 적용
   - 계측 키 반영: `purchase_redirect_tap`, `purchase_redirect_confirm`, `purchase_redirect_fail`, `purchase_redirect_open_browser`, `purchase_redirect_copy_link`
+  - `D03` v1 구현: Wear complication data source(`WeeklyLottoComplicationService`) 추가(SHORT/LONG_TEXT, 앱 실행 tap action)
+  - Wear Manifest에 complication provider 등록 + update period 30분(`android.support.wearable.complications.UPDATE_PERIOD_SECONDS=1800`)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
