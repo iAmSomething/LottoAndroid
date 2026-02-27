@@ -28,7 +28,7 @@ class ManualAddViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @Test
-    fun 이번주에_동일번호가_있으면_저장을_차단한다() =
+    fun 이번주에_동일번호가_있으면_선택지를_노출한다() =
         runTest {
             val duplicate = ticket(id = 1L, numbers = listOf(1, 2, 3, 4, 5, 6))
             val repository = ManualAddFakeTicketRepository(initial = listOf(duplicate))
@@ -39,8 +39,54 @@ class ManualAddViewModelTest {
             advanceUntilIdle()
 
             assertThat(viewModel.uiState.value.saved).isFalse()
-            assertThat(viewModel.uiState.value.error).isEqualTo("이미 이번 주에 동일 번호가 있습니다.")
+            assertThat(viewModel.uiState.value.error).isNull()
+            assertThat(viewModel.uiState.value.duplicatePrompt?.duplicateGameCount).isEqualTo(1)
             assertThat(repository.savedBundles).isEmpty()
+        }
+
+    @Test
+    fun 중복제외_저장을_선택하면_신규게임만_저장한다() =
+        runTest {
+            val duplicate = ticket(id = 1L, numbers = listOf(1, 2, 3, 4, 5, 6))
+            val repository = ManualAddFakeTicketRepository(initial = listOf(duplicate))
+            val viewModel = ManualAddViewModel(ticketRepository = repository)
+
+            listOf(1, 2, 3, 4, 5, 6).forEach(viewModel::toggleNumber)
+            viewModel.addSelectedGame()
+            viewModel.clear()
+            listOf(7, 8, 9, 10, 11, 12).forEach(viewModel::toggleNumber)
+            viewModel.addSelectedGame()
+
+            viewModel.save()
+            advanceUntilIdle()
+            viewModel.saveExcludingDuplicates()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.saved).isTrue()
+            assertThat(viewModel.uiState.value.savedGameCount).isEqualTo(1)
+            assertThat(repository.savedBundles).hasSize(1)
+            assertThat(repository.savedBundles.first().games.first().numbers.map { it.value })
+                .containsExactly(7, 8, 9, 10, 11, 12)
+        }
+
+    @Test
+    fun 중복포함_저장을_선택하면_중복게임도_저장한다() =
+        runTest {
+            val duplicate = ticket(id = 1L, numbers = listOf(1, 2, 3, 4, 5, 6))
+            val repository = ManualAddFakeTicketRepository(initial = listOf(duplicate))
+            val viewModel = ManualAddViewModel(ticketRepository = repository)
+
+            listOf(1, 2, 3, 4, 5, 6).forEach(viewModel::toggleNumber)
+            viewModel.save()
+            advanceUntilIdle()
+            viewModel.saveIncludingDuplicates()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.saved).isTrue()
+            assertThat(viewModel.uiState.value.savedGameCount).isEqualTo(1)
+            assertThat(repository.savedBundles).hasSize(1)
+            assertThat(repository.savedBundles.first().games.first().numbers.map { it.value })
+                .containsExactly(1, 2, 3, 4, 5, 6)
         }
 
     @Test

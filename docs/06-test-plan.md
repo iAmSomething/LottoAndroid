@@ -11,6 +11,7 @@
 - 6개 고유번호 생성
 - 1~45 범위 검증
 - 잠금 유지 + 잠금 제외 재생성 검증
+- 번호 직접 추가 저장 시 중복 감지 후 선택지(취소/중복 제외 저장/중복 포함 저장) 검증
 - 자동 검증: `NumberGeneratorViewModelTest`, `MainNavigationInstrumentedTest`
 
 ### QR 파싱

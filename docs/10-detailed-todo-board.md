@@ -484,3 +484,8 @@
 - [x] AX-001 `TicketBackupService`/`LocalTicketBackupService` 추가(`tickets_backup_latest.json` 생성/복원)
 - [x] AX-002 `SettingsViewModel`/`SettingsScreen`에 백업/복원 액션 버튼 추가(성공/실패 메시지 노출)
 - [x] AX-003 회귀 테스트/증적 반영(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `docs/assets/distribution/ticket_backup_local_2026-02-27.md`) 및 문서 동기화(`16`, `21`, `22`)
+
+## AY. 입력 중복 저장 선택지(S39-T2) v1 구현(2026-02-27 Cycle-49)
+- [x] AY-001 `ManualAddViewModel` 중복 감지 시 선택 상태(`duplicatePrompt`) 및 후속 액션(`취소/중복 제외 저장/중복 포함 저장`) 추가
+- [x] AY-002 `ManualAddScreen`에 중복 경고 카드와 선택 버튼 3종 추가
+- [x] AY-003 회귀 테스트/증적 반영(`ManualAddViewModelTest` 3건 추가, `docs/assets/distribution/manual_add_duplicate_prompt_local_2026-02-27.md`) 및 문서 동기화(`06`, `11`, `16`, `22`)
