@@ -26,6 +26,7 @@
 - 입력 정확성/중복 방지(`S39-T2`) - v1 완료(2026-02-27, ManualAdd 중복 경고 + 선택 저장 플로우 + 회귀 테스트)
 - 입력 정확성/복원성(`S39-T3`) - v1 완료(2026-02-27, ManualAdd 저장 실패 시 초안 유지 + 오류 안내 + 회귀 테스트)
 - 입력 정확성/복구동선(`S39-T4`) - v1 완료(2026-02-27, ManualAdd 저장 직후 undo + 계속 입력 동선 + 회귀 테스트)
+- 입력 정확성/중복요청 제어(`S39-T5`) - v1 완료(2026-02-27, ManualAdd 저장 debounce + 저장중 비활성화 + 회귀 테스트)
 - 설정/시크릿 파일 버전관리 정책 정리(`AE-005`, 시크릿 JSON 2종 포함) - v1 완료(2026-02-27, `check-secret-file-policy.sh` + `secret-policy-guard.yml`)
 - Firebase App Distribution 운영 검증(`AF-005`, dry-run/실배포 증적) - 완료(2026-02-26, `firebase_dry_run_2026-02-26.md`)
 - 배포 주기 점검 루틴 자동화(`I-023`) - 완료(2026-02-26, `firebase-distribution-routine.yml` 주간 스케줄 + `firebase-distribution-routine-check.sh` dry-run 체인 + 첫 CI 실행 run `22436650122` 증적 확보)

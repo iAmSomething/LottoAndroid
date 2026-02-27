@@ -499,3 +499,8 @@
 - [x] BB-001 `ManualAddViewModel`에 직전 저장 undo 상태/액션 추가(`lastSavedTicketId`, `undoLastSavedTicket`)
 - [x] BB-002 `ManualAddScreen`에 저장 완료 후 `실행 취소/계속 입력` 카드 추가(자동 뒤로가기 제거)
 - [x] BB-003 회귀 테스트/증적 반영(`ManualAddViewModelTest` undo 케이스, `docs/assets/distribution/manual_add_undo_after_save_local_2026-02-27.md`) 및 문서 동기화(`06`, `11`, `16`, `21`, `22`)
+
+## BC. 연속 저장 탭 차단(S39-T5) v1 구현(2026-02-27 Cycle-52)
+- [x] BC-001 `ManualAddViewModel` 저장 in-flight 상태(`isSaving`) 및 중복 요청 차단 가드 추가
+- [x] BC-002 `ManualAddScreen` 저장/중복 선택 버튼 비활성화 + `저장 중...` 안내 추가
+- [x] BC-003 회귀 테스트/증적 반영(`ManualAddViewModelTest` 연속 탭 1회 처리 케이스, `docs/assets/distribution/manual_add_save_debounce_local_2026-02-27.md`) 및 문서 동기화(`06`, `11`, `16`, `21`, `22`)

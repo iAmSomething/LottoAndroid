@@ -185,6 +185,9 @@ fun ManualAddScreen(onBack: () -> Unit) {
             uiState.error?.let { message ->
                 Text(text = message, color = LottoColors.DangerText)
             }
+            if (uiState.isSaving) {
+                Text(text = "저장 중...", color = LottoColors.TextSecondary)
+            }
             uiState.duplicatePrompt?.let { prompt ->
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Column(
@@ -203,12 +206,14 @@ fun ManualAddScreen(onBack: () -> Unit) {
                         ) {
                             MotionButton(
                                 onClick = viewModel::cancelDuplicateSave,
+                                enabled = !uiState.isSaving,
                                 modifier = Modifier.weight(1f),
                             ) {
                                 Text("취소")
                             }
                             MotionButton(
                                 onClick = viewModel::saveExcludingDuplicates,
+                                enabled = !uiState.isSaving,
                                 modifier = Modifier.weight(1f),
                             ) {
                                 Text("중복 제외 저장")
@@ -216,6 +221,7 @@ fun ManualAddScreen(onBack: () -> Unit) {
                         }
                         MotionButton(
                             onClick = viewModel::saveIncludingDuplicates,
+                            enabled = !uiState.isSaving,
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text("중복 포함 저장")
@@ -255,11 +261,13 @@ fun ManualAddScreen(onBack: () -> Unit) {
             }
             MotionButton(
                 onClick = viewModel::save,
-                enabled = uiState.pendingGames.isNotEmpty() || uiState.selected.size == 6,
+                enabled = (uiState.pendingGames.isNotEmpty() || uiState.selected.size == 6) && !uiState.isSaving,
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
-                    if (uiState.pendingGames.isNotEmpty()) {
+                    if (uiState.isSaving) {
+                        "저장 중..."
+                    } else if (uiState.pendingGames.isNotEmpty()) {
                         "${uiState.pendingGames.size}게임 저장"
                     } else {
                         "현재 선택 1게임 저장"

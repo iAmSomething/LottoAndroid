@@ -23,6 +23,7 @@ data class ManualAddUiState(
     val selected: List<Int> = emptyList(),
     val pendingGames: List<List<Int>> = emptyList(),
     val repeatCount: Int = 1,
+    val isSaving: Boolean = false,
     val saved: Boolean = false,
     val savedGameCount: Int = 0,
     val lastSavedGameCount: Int = 0,
@@ -126,6 +127,7 @@ class ManualAddViewModel(
 
     fun save() {
         val state = uiState.value
+        if (state.isSaving) return
         val gamesToSave =
             when {
                 state.pendingGames.isNotEmpty() -> state.pendingGames
@@ -137,6 +139,7 @@ class ManualAddViewModel(
             return
         }
         queuedGamesForDuplicateDecision = emptyList()
+        _uiState.update { it.copy(isSaving = true) }
 
         viewModelScope.launch {
             val existingSignatures = currentRoundSignatures()
@@ -145,6 +148,7 @@ class ManualAddViewModel(
                 queuedGamesForDuplicateDecision = gamesToSave
                 _uiState.update {
                     it.copy(
+                        isSaving = false,
                         saved = false,
                         error = null,
                         duplicatePrompt =
@@ -172,7 +176,8 @@ class ManualAddViewModel(
 
     fun saveExcludingDuplicates() {
         val queued = queuedGamesForDuplicateDecision
-        if (queued.isEmpty()) return
+        if (queued.isEmpty() || uiState.value.isSaving) return
+        _uiState.update { it.copy(isSaving = true) }
         viewModelScope.launch {
             val existingSignatures = currentRoundSignatures()
             val filtered = queued.filterNot { signature -> signature in existingSignatures }
@@ -180,6 +185,7 @@ class ManualAddViewModel(
                 queuedGamesForDuplicateDecision = emptyList()
                 _uiState.update {
                     it.copy(
+                        isSaving = false,
                         duplicatePrompt = null,
                         error = "중복 제외 시 저장할 게임이 없습니다.",
                     )
@@ -192,7 +198,8 @@ class ManualAddViewModel(
 
     fun saveIncludingDuplicates() {
         val queued = queuedGamesForDuplicateDecision
-        if (queued.isEmpty()) return
+        if (queued.isEmpty() || uiState.value.isSaving) return
+        _uiState.update { it.copy(isSaving = true) }
         viewModelScope.launch {
             persistGames(queued)
         }
@@ -256,6 +263,7 @@ class ManualAddViewModel(
         if (saved.isFailure) {
             _uiState.update {
                 it.copy(
+                    isSaving = false,
                     saved = false,
                     duplicatePrompt = null,
                     error = "저장에 실패했습니다. 다시 시도해 주세요.",
@@ -270,6 +278,7 @@ class ManualAddViewModel(
         queuedGamesForDuplicateDecision = emptyList()
         _uiState.update {
             it.copy(
+                isSaving = false,
                 selected = emptyList(),
                 pendingGames = emptyList(),
                 saved = true,
@@ -285,6 +294,7 @@ class ManualAddViewModel(
     fun consumeSaved() {
         _uiState.update {
             it.copy(
+                isSaving = false,
                 saved = false,
                 savedGameCount = 0,
                 duplicatePrompt = null,
