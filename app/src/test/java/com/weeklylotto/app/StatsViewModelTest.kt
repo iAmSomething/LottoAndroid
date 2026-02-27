@@ -189,6 +189,7 @@ class StatsViewModelTest {
             assertThat(generated.totalWinAmount).isEqualTo(5_000L)
             assertThat(generated.netProfitAmount).isEqualTo(4_000L)
             assertThat(generated.winRatePercent).isEqualTo(100)
+            assertThat(generated.roiPercent).isEqualTo(400)
 
             assertThat(manual.totalGames).isEqualTo(1)
             assertThat(manual.winningGames).isEqualTo(0)
@@ -196,6 +197,7 @@ class StatsViewModelTest {
             assertThat(manual.totalWinAmount).isEqualTo(0L)
             assertThat(manual.netProfitAmount).isEqualTo(-1_000L)
             assertThat(manual.winRatePercent).isEqualTo(0)
+            assertThat(manual.roiPercent).isEqualTo(-100)
 
             assertThat(qr.totalGames).isEqualTo(1)
             assertThat(qr.winningGames).isEqualTo(0)
@@ -203,6 +205,7 @@ class StatsViewModelTest {
             assertThat(qr.totalWinAmount).isEqualTo(0L)
             assertThat(qr.netProfitAmount).isEqualTo(-1_000L)
             assertThat(qr.winRatePercent).isEqualTo(0)
+            assertThat(qr.roiPercent).isEqualTo(-100)
         }
 
     @Test
@@ -260,6 +263,7 @@ class StatsViewModelTest {
             assertThat(trend.first().round).isEqualTo(1202)
             assertThat(trend.last().round).isEqualTo(1209)
             assertThat(trend.all { it.totalPurchaseAmount == 1_000L }).isTrue()
+            assertThat(trend.all { it.roiPercent == -100 }).isTrue()
         }
 
     @Test

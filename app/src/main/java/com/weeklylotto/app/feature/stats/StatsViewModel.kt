@@ -61,6 +61,13 @@ data class SourceStats(
         } else {
             (winningGames * 100) / totalGames
         }
+
+    val roiPercent: Int =
+        if (totalPurchaseAmount == 0L) {
+            0
+        } else {
+            ((netProfitAmount * 100) / totalPurchaseAmount).toInt()
+        }
 }
 
 data class RoiTrendPoint(
@@ -72,6 +79,13 @@ data class RoiTrendPoint(
     val totalWinAmount: Long = 0,
 ) {
     val netProfitAmount: Long = totalWinAmount - totalPurchaseAmount
+
+    val roiPercent: Int =
+        if (totalPurchaseAmount == 0L) {
+            0
+        } else {
+            ((netProfitAmount * 100) / totalPurchaseAmount).toInt()
+        }
 }
 
 class StatsViewModel(

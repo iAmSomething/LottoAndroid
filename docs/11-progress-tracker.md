@@ -37,6 +37,8 @@
   - 회귀 테스트/증적 추가: `HomeExternalLinkTest` PASS(공통 URL 빌더 회귀), 로컬 리포트 `docs/assets/distribution/purchase_redirect_result_settings_local_2026-02-27.md`
   - `E01` v2 구현: 운영 관측성 임계치 자동 판정 스크립트(`evaluate-ops-observability-threshold.sh`) 추가 + `run-ops-observability-check.sh` 연동
   - 임계치 증적 추가: 로컬 샘플 로그 기준 PASS 리포트 `docs/assets/distribution/ops_observability_threshold_local_2026-02-27.md`
+  - `C03/C04` v2 구현: 통계 출처 카드/회차 트렌드에 ROI% 계산·노출 추가(`SourceStats.roiPercent`, `RoiTrendPoint.roiPercent`)
+  - 회귀 테스트/증적 추가: `StatsViewModelTest` ROI% 케이스 PASS, 로컬 리포트 `docs/assets/distribution/stats_source_roi_local_2026-02-27.md`
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
