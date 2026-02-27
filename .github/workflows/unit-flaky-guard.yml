@@ -1,0 +1,32 @@
+name: Unit Flaky Guard
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1"
+
+jobs:
+  flaky-guard:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Cache Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run repeated unit test guard
+        run: ./scripts/run-unit-flaky-guard.sh --repeat 3 --report-file docs/assets/distribution/unit_flaky_guard_ci.md
+
+      - name: Upload flaky guard report
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-flaky-guard-report
+          path: docs/assets/distribution/unit_flaky_guard_ci.md

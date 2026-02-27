@@ -79,6 +79,11 @@
 - Reduce Motion 모드 동작 검증(축소 규칙 준수)
 - 저사양 기기 프레임 드롭 허용치 검증(jank 비율)
 
+### 플래키 감시
+- 단위 테스트 게이트 반복 실행 감시(`scripts/run-unit-flaky-guard.sh --repeat N`)
+- 주간 CI 루틴 감시(`.github/workflows/unit-flaky-guard.yml`)
+- 리포트 필수 필드: 반복 횟수, PASS/FAIL 카운트, 실행별 duration, 로그 경로
+
 ## 3. 테스트 더블 네이밍/스코프 규칙
 - 테스트 더블 클래스는 파일 단위 접두사로 시작한다. 예: `HomeFakeDrawRepository`, `ResultViewModelFakeResultViewTracker`
 - 동일 패키지 내 공용 이름(`FakeRepository`, `AlwaysFifthEvaluator`)은 금지한다.
