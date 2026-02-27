@@ -489,3 +489,8 @@
 - [x] AY-001 `ManualAddViewModel` 중복 감지 시 선택 상태(`duplicatePrompt`) 및 후속 액션(`취소/중복 제외 저장/중복 포함 저장`) 추가
 - [x] AY-002 `ManualAddScreen`에 중복 경고 카드와 선택 버튼 3종 추가
 - [x] AY-003 회귀 테스트/증적 반영(`ManualAddViewModelTest` 3건 추가, `docs/assets/distribution/manual_add_duplicate_prompt_local_2026-02-27.md`) 및 문서 동기화(`06`, `11`, `16`, `22`)
+
+## BA. 저장 실패 초안 복원(S39-T3) v1 구현(2026-02-27 Cycle-50)
+- [x] BA-001 `ManualAddViewModel` 저장 실패 처리 추가(실패 메시지 노출 + 초안/대기 게임 유지)
+- [x] BA-002 저장 실패 회귀 테스트 추가(`ManualAddViewModelTest`: save failure retains draft)
+- [x] BA-003 증적/문서 동기화(`docs/assets/distribution/manual_add_save_failure_recovery_local_2026-02-27.md`, `06`, `11`, `16`, `21`, `22`)
