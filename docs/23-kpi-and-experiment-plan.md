@@ -73,7 +73,7 @@
 | L-009 | 조합 중복도 경고 스펙 방향 정의 | `21-product-enhancement-ideas.md` C01 |
 | L-010 | API 지연/실패율 관측 지표 정의 | 2장 KPI, `22-prioritization-matrix.md` E01 |
 | L-011 | 로컬 데이터 무결성 점검 규칙 정의 | `21-product-enhancement-ideas.md` E02 |
-| L-012 | 릴리즈 위험 점수 산식 방향 정의 | `21-product-enhancement-ideas.md` E04 |
+| L-012 | 릴리즈 위험 점수 운영 반영(자동 산출/아티팩트 리포트) | `21-product-enhancement-ideas.md` E04, `.github/workflows/release-risk-score.yml` |
 | L-013 | KPI 대시보드 템플릿(핵심 KPI) 확정 | 2장 KPI |
 | L-014 | 실험 운영 주기(최소 2주) 확정 | 5장 측정/운영 규칙 |
 | L-015 | 실패 실험 종료/기록 규칙 확정 | 5장 측정/운영 규칙 |

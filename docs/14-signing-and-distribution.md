@@ -82,6 +82,17 @@
 ./scripts/run-ops-observability-check.sh --serial <adb-serial> --save-log docs/assets/distribution/ops_observability_YYYY-MM-DD.log
 ```
 
+### 3-1-e. 릴리즈 위험 점수 산출(권장)
+```bash
+./scripts/calculate-release-risk-score.sh \
+  --base-ref origin/main \
+  --head-ref HEAD \
+  --defect-count 0 \
+  --report-file docs/assets/distribution/release_risk_score_local_YYYY-MM-DD.md
+```
+- 산출값: 변경량/테스트 반영/결함 건수 기반 `0~100` 점수 + 위험 등급(`LOW/MEDIUM/HIGH/CRITICAL`)
+- CI 자동 산출: `.github/workflows/release-risk-score.yml` (PR, 주간 스케줄, 수동 실행)
+
 ## 3-1-1. CI 프리플라이트(ADB 없이)
 ```bash
 ./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing
@@ -148,6 +159,7 @@
 
 ### 6-4. GitHub Actions CI/CD 체인
 - 워크플로우:
+  - 릴리즈 위험 점수 리포트: `.github/workflows/release-risk-score.yml`
   - PR/머지 품질게이트: `.github/workflows/release-preflight.yml`
   - Firebase 자동 배포: `.github/workflows/firebase-distribution.yml`
   - Firebase 주기 점검(dry-run): `.github/workflows/firebase-distribution-routine.yml`
