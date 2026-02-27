@@ -494,3 +494,8 @@
 - [x] BA-001 `ManualAddViewModel` 저장 실패 처리 추가(실패 메시지 노출 + 초안/대기 게임 유지)
 - [x] BA-002 저장 실패 회귀 테스트 추가(`ManualAddViewModelTest`: save failure retains draft)
 - [x] BA-003 증적/문서 동기화(`docs/assets/distribution/manual_add_save_failure_recovery_local_2026-02-27.md`, `06`, `11`, `16`, `21`, `22`)
+
+## BB. 저장 직후 실행 취소(S39-T4) v1 구현(2026-02-27 Cycle-51)
+- [x] BB-001 `ManualAddViewModel`에 직전 저장 undo 상태/액션 추가(`lastSavedTicketId`, `undoLastSavedTicket`)
+- [x] BB-002 `ManualAddScreen`에 저장 완료 후 `실행 취소/계속 입력` 카드 추가(자동 뒤로가기 제거)
+- [x] BB-003 회귀 테스트/증적 반영(`ManualAddViewModelTest` undo 케이스, `docs/assets/distribution/manual_add_undo_after_save_local_2026-02-27.md`) 및 문서 동기화(`06`, `11`, `16`, `21`, `22`)

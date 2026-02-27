@@ -29,12 +29,14 @@
   - 회귀 테스트/증적 추가: `ManualAddViewModelTest` 중복 선택지 3건 PASS, 로컬 리포트 `docs/assets/distribution/manual_add_duplicate_prompt_local_2026-02-27.md`
   - `S39-T3` v1 구현: 번호 직접 추가 저장 실패 시 에러 메시지 노출 + 초안/대기 게임 유지
   - 회귀 테스트/증적 추가: `ManualAddViewModelTest` 저장 실패 복원 케이스 PASS, 로컬 리포트 `docs/assets/distribution/manual_add_save_failure_recovery_local_2026-02-27.md`
+  - `S39-T4` v1 구현: 번호 직접 추가 저장 직후 실행 취소 경로 추가(`실행 취소/계속 입력` 카드, 자동 뒤로가기 제거)
+  - 회귀 테스트/증적 추가: `ManualAddViewModelTest` undo 케이스 PASS, 로컬 리포트 `docs/assets/distribution/manual_add_undo_after_save_local_2026-02-27.md`
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
   - 실기기 미보유로 물리 디바이스 성능/워치 증적은 수집 불가
 - 다음 액션
-  - `S39` 입력 정확성/중복 방지 항목 중 저장 후 즉시 수정/undo 경로(T4)를 다음 사이클 우선 검토
+  - `S39` 접근성/성능 동등성(T5) 항목의 계측 테스트 시나리오를 다음 사이클 우선 검토
 
 ## 2026-02-26
 - 완료 작업

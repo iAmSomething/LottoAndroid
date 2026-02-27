@@ -49,7 +49,6 @@ fun ManualAddScreen(onBack: () -> Unit) {
         if (uiState.saved) {
             Toast.makeText(context, "${uiState.savedGameCount}게임 번호를 저장했습니다.", Toast.LENGTH_SHORT).show()
             viewModel.consumeSaved()
-            onBack()
         }
     }
 
@@ -220,6 +219,36 @@ fun ManualAddScreen(onBack: () -> Unit) {
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text("중복 포함 저장")
+                        }
+                    }
+                }
+            }
+            uiState.lastSavedTicketId?.let {
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text(
+                            text = "${uiState.lastSavedGameCount}게임 저장 완료",
+                            color = LottoColors.TextPrimary,
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            MotionButton(
+                                onClick = viewModel::undoLastSavedTicket,
+                                modifier = Modifier.weight(1f),
+                            ) {
+                                Text("실행 취소")
+                            }
+                            MotionButton(
+                                onClick = viewModel::dismissLastSavedAction,
+                                modifier = Modifier.weight(1f),
+                            ) {
+                                Text("계속 입력")
+                            }
                         }
                     }
                 }
