@@ -1,8 +1,6 @@
 package com.weeklylotto.app.feature.home
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -43,6 +41,10 @@ import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.domain.service.AnalyticsActionValue
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
+import com.weeklylotto.app.feature.common.OFFICIAL_PURCHASE_URL
+import com.weeklylotto.app.feature.common.PURCHASE_REDIRECT_NOTICE_SEEN_KEY
+import com.weeklylotto.app.feature.common.PURCHASE_REDIRECT_PREF_NAME
+import com.weeklylotto.app.feature.common.openExternalUrl
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.StatusBadge
 import com.weeklylotto.app.ui.component.TicketCard
@@ -693,23 +695,9 @@ fun HomeScreen(
     }
 }
 
-private fun openExternalUrl(
-    context: Context,
-    url: String,
-): Boolean =
-    runCatching {
-        context.startActivity(
-            Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-        )
-    }.isSuccess
-
 internal fun buildLottoStoreSearchUrl(query: String = LOTTO_STORE_SEARCH_QUERY): String {
     val encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8)
     return "https://www.google.com/maps/search/?api=1&query=$encodedQuery"
 }
 
-private const val OFFICIAL_PURCHASE_URL = "https://dhlottery.co.kr"
 private const val LOTTO_STORE_SEARCH_QUERY = "로또 판매점"
-private const val PURCHASE_REDIRECT_PREF_NAME = "purchase_redirect_notice"
-private const val PURCHASE_REDIRECT_NOTICE_SEEN_KEY = "notice_seen"

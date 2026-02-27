@@ -504,3 +504,8 @@
 - [x] BC-001 `ManualAddViewModel` 저장 in-flight 상태(`isSaving`) 및 중복 요청 차단 가드 추가
 - [x] BC-002 `ManualAddScreen` 저장/중복 선택 버튼 비활성화 + `저장 중...` 안내 추가
 - [x] BC-003 회귀 테스트/증적 반영(`ManualAddViewModelTest` 연속 탭 1회 처리 케이스, `docs/assets/distribution/manual_add_save_debounce_local_2026-02-27.md`) 및 문서 동기화(`06`, `11`, `16`, `21`, `22`)
+
+## BD. 구매 리다이렉트 확장(A05) v2 구현(2026-02-27 Cycle-53)
+- [x] BD-001 외부 링크 공통 유틸 분리(`ExternalLinkSupport`: 공식 URL/안내 flag/open helper)
+- [x] BD-002 Result 화면에 구매 CTA + 1회 안내 모달 + fallback(브라우저 열기/링크 복사) 추가
+- [x] BD-003 Settings 화면에 구매 CTA + 1회 안내 모달 + fallback 추가 및 문서/증적 동기화(`11`, `16`, `21`, `22`, `docs/assets/distribution/purchase_redirect_result_settings_local_2026-02-27.md`)
