@@ -51,4 +51,8 @@ object AnalyticsActionValue {
     const val PURCHASE_REDIRECT_FAIL = "purchase_redirect_fail"
     const val PURCHASE_REDIRECT_OPEN_BROWSER = "purchase_redirect_open_browser"
     const val PURCHASE_REDIRECT_COPY_LINK = "purchase_redirect_copy_link"
+    const val LOCATION_STORE_SEARCH_TAP = "location_store_search_tap"
+    const val LOCATION_STORE_SEARCH_OPEN_MAP = "location_store_search_open_map"
+    const val LOCATION_STORE_SEARCH_FAIL = "location_store_search_fail"
+    const val LOCATION_STORE_SEARCH_COPY_LINK = "location_store_search_copy_link"
 }

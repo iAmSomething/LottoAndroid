@@ -19,12 +19,14 @@
   - 로컬 플래키 가드 리허설: `--repeat 1 --tests "com.weeklylotto.app.ReminderNotificationTargetTest"` 실행 PASS 1/FAIL 0 (`docs/assets/distribution/unit_flaky_guard_local_2026-02-27.md`)
   - `L-012` v1 운영 반영: 릴리즈 위험 점수 산출 스크립트(`calculate-release-risk-score.sh`) + PR/주간 워크플로우(`release-risk-score.yml`) 추가
   - `AE-005` v1 운영 반영: 시크릿 파일 정책 점검 스크립트(`check-secret-file-policy.sh`) + PR/주간 워크플로우(`secret-policy-guard.yml`) 추가
+  - `F04` v1 구현: Home `근처 판매점 찾기` CTA 추가 + 지도 앱 열기 실패 fallback(다시 열기/링크 복사) 및 analytics action(`location_store_search_*`) 연동
+  - 회귀 테스트/증적 추가: `HomeExternalLinkTest` PASS, 로컬 리포트 `docs/assets/distribution/location_store_search_local_2026-02-27.md`
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
   - 실기기 미보유로 물리 디바이스 성능/워치 증적은 수집 불가
 - 다음 액션
-  - 실기기 블로커(`P-004`) 외 Low 우선순위 백로그(`F01/F02/F04`) 중 1건을 구현 단위로 분해해 착수
+  - Low 우선순위 백로그 잔여(`F01`, `F02`) 중 1건을 구현 단위로 분해해 착수
 
 ## 2026-02-26
 - 완료 작업

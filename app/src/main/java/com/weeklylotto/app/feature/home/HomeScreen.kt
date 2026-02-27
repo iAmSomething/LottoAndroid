@@ -30,11 +30,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -55,6 +55,8 @@ import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 import com.weeklylotto.app.ui.theme.LottoDimens
 import com.weeklylotto.app.ui.theme.LottoTypeTokens
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -70,11 +72,14 @@ fun HomeScreen(
     val analyticsLogger = AppGraph.analyticsLogger
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
-    val purchaseRedirectPreferences = remember(context) {
-        context.getSharedPreferences(PURCHASE_REDIRECT_PREF_NAME, Context.MODE_PRIVATE)
-    }
+    val lottoStoreSearchUrl = remember { buildLottoStoreSearchUrl() }
+    val purchaseRedirectPreferences =
+        remember(context) {
+            context.getSharedPreferences(PURCHASE_REDIRECT_PREF_NAME, Context.MODE_PRIVATE)
+        }
     var showPurchaseNoticeDialog by remember { mutableStateOf(false) }
     var showPurchaseFallbackDialog by remember { mutableStateOf(false) }
+    var showStoreSearchFallbackDialog by remember { mutableStateOf(false) }
     val viewModel =
         viewModel<HomeViewModel>(
             factory =
@@ -89,7 +94,7 @@ fun HomeScreen(
         )
     val uiState by viewModel.uiState.collectAsState()
     val openOfficialPurchase = {
-        val opened = openOfficialPurchaseUrl(context = context, url = OFFICIAL_PURCHASE_URL)
+        val opened = openExternalUrl(context = context, url = OFFICIAL_PURCHASE_URL)
         if (opened) {
             showPurchaseFallbackDialog = false
             analyticsLogger.log(
@@ -113,6 +118,33 @@ fun HomeScreen(
                     ),
             )
             showPurchaseFallbackDialog = true
+        }
+    }
+    val openNearbyStoreSearch = {
+        val opened = openExternalUrl(context = context, url = lottoStoreSearchUrl)
+        if (opened) {
+            showStoreSearchFallbackDialog = false
+            analyticsLogger.log(
+                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                params =
+                    mapOf(
+                        AnalyticsParamKey.SCREEN to "home",
+                        AnalyticsParamKey.COMPONENT to "lotto_store_search_cta",
+                        AnalyticsParamKey.ACTION to AnalyticsActionValue.LOCATION_STORE_SEARCH_OPEN_MAP,
+                    ),
+            )
+        } else {
+            analyticsLogger.log(
+                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                params =
+                    mapOf(
+                        AnalyticsParamKey.SCREEN to "home",
+                        AnalyticsParamKey.COMPONENT to "lotto_store_search_cta",
+                        AnalyticsParamKey.ACTION to AnalyticsActionValue.LOCATION_STORE_SEARCH_FAIL,
+                        AnalyticsParamKey.ERROR_TYPE to "map_open_failed",
+                    ),
+            )
+            showStoreSearchFallbackDialog = true
         }
     }
 
@@ -194,6 +226,51 @@ fun HomeScreen(
                         )
                         showPurchaseFallbackDialog = false
                         Toast.makeText(context, "링크를 복사했습니다.", Toast.LENGTH_SHORT).show()
+                    },
+                ) {
+                    Text("링크 복사")
+                }
+            },
+        )
+    }
+
+    if (showStoreSearchFallbackDialog) {
+        AlertDialog(
+            onDismissRequest = { showStoreSearchFallbackDialog = false },
+            title = { Text("지도 열기에 실패했어요") },
+            text = {
+                Text(
+                    "지도를 열지 못했습니다. 링크를 복사하거나 다시 시도해 주세요.",
+                    color = LottoColors.TextSecondary,
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        openNearbyStoreSearch()
+                        if (!showStoreSearchFallbackDialog) {
+                            Toast.makeText(context, "지도 앱에서 열었습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                ) {
+                    Text("다시 열기")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(lottoStoreSearchUrl))
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "home",
+                                    AnalyticsParamKey.COMPONENT to "lotto_store_search_cta",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.LOCATION_STORE_SEARCH_COPY_LINK,
+                                ),
+                        )
+                        showStoreSearchFallbackDialog = false
+                        Toast.makeText(context, "지도 링크를 복사했습니다.", Toast.LENGTH_SHORT).show()
                     },
                 ) {
                     Text("링크 복사")
@@ -399,6 +476,46 @@ fun HomeScreen(
                 }
             }
 
+            item {
+                Card(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .motionClickable {
+                                analyticsLogger.log(
+                                    event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                    params =
+                                        mapOf(
+                                            AnalyticsParamKey.SCREEN to "home",
+                                            AnalyticsParamKey.COMPONENT to "lotto_store_search_cta",
+                                            AnalyticsParamKey.ACTION to AnalyticsActionValue.LOCATION_STORE_SEARCH_TAP,
+                                        ),
+                                )
+                                openNearbyStoreSearch()
+                            },
+                    shape = RoundedCornerShape(LottoDimens.CardRadius),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                    colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(LottoDimens.ScreenPadding),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Text(
+                            text = "근처 판매점 찾기",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Black,
+                            color = LottoColors.PrimaryDark,
+                        )
+                        Text(
+                            text = "지도 앱에서 주변 로또 판매점을 바로 검색합니다.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LottoColors.TextMuted,
+                        )
+                    }
+                }
+            }
+
             if (uiState.hasUnseenResult && uiState.unseenRound != null) {
                 item {
                     Card(
@@ -576,7 +693,7 @@ fun HomeScreen(
     }
 }
 
-private fun openOfficialPurchaseUrl(
+private fun openExternalUrl(
     context: Context,
     url: String,
 ): Boolean =
@@ -587,6 +704,12 @@ private fun openOfficialPurchaseUrl(
         )
     }.isSuccess
 
+internal fun buildLottoStoreSearchUrl(query: String = LOTTO_STORE_SEARCH_QUERY): String {
+    val encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8)
+    return "https://www.google.com/maps/search/?api=1&query=$encodedQuery"
+}
+
 private const val OFFICIAL_PURCHASE_URL = "https://dhlottery.co.kr"
+private const val LOTTO_STORE_SEARCH_QUERY = "로또 판매점"
 private const val PURCHASE_REDIRECT_PREF_NAME = "purchase_redirect_notice"
 private const val PURCHASE_REDIRECT_NOTICE_SEEN_KEY = "notice_seen"
