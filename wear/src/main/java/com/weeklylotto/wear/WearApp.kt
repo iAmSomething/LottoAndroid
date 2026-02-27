@@ -53,9 +53,11 @@ import java.util.Locale
 import java.util.concurrent.Executors
 
 private const val APP_SCHEME = "weeklylotto"
+private const val APP_DEEP_LINK_HOST = "open"
 private const val APP_ROUTE_QR_SCAN = "qr_scan"
 private const val APP_ROUTE_RESULT = "result"
 private const val APP_ROUTE_SETTINGS = "settings"
+private val SUPPORTED_PHONE_HANDOFF_ROUTES = setOf(APP_ROUTE_QR_SCAN, APP_ROUTE_RESULT, APP_ROUTE_SETTINGS)
 
 @Composable
 fun WeeklyLottoWearApp() {
@@ -529,7 +531,11 @@ private class RemotePhoneHandoffLauncher(
         route: String,
         onResult: (Boolean) -> Unit,
     ) {
-        val deepLink = Uri.parse("$APP_SCHEME://$route")
+        if (route !in SUPPORTED_PHONE_HANDOFF_ROUTES) {
+            onResult(false)
+            return
+        }
+        val deepLink = buildPhoneHandoffUri(route)
         val intent =
             Intent(Intent.ACTION_VIEW)
                 .addCategory(Intent.CATEGORY_BROWSABLE)
@@ -551,6 +557,15 @@ private class RemotePhoneHandoffLauncher(
     fun close() {
         executor.shutdown()
     }
+
+    private fun buildPhoneHandoffUri(route: String): Uri =
+        Uri
+            .Builder()
+            .scheme(APP_SCHEME)
+            .authority(APP_DEEP_LINK_HOST)
+            .appendQueryParameter("route", route)
+            .appendQueryParameter("source", "wear")
+            .build()
 }
 
 private enum class WearDestination(
