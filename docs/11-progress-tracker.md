@@ -18,12 +18,13 @@
   - `Q01` v1 구현: 반복 실행 플래키 감시 스크립트(`run-unit-flaky-guard.sh`)와 주간 CI 워크플로우(`unit-flaky-guard.yml`) 추가
   - 로컬 플래키 가드 리허설: `--repeat 1 --tests "com.weeklylotto.app.ReminderNotificationTargetTest"` 실행 PASS 1/FAIL 0 (`docs/assets/distribution/unit_flaky_guard_local_2026-02-27.md`)
   - `L-012` v1 운영 반영: 릴리즈 위험 점수 산출 스크립트(`calculate-release-risk-score.sh`) + PR/주간 워크플로우(`release-risk-score.yml`) 추가
+  - `AE-005` v1 운영 반영: 시크릿 파일 정책 점검 스크립트(`check-secret-file-policy.sh`) + PR/주간 워크플로우(`secret-policy-guard.yml`) 추가
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
   - 실기기 미보유로 물리 디바이스 성능/워치 증적은 수집 불가
 - 다음 액션
-  - 실기기 블로커(`P-004`) 외 중간 우선순위 백로그 1건 추가 반영
+  - 실기기 블로커(`P-004`) 외 Low 우선순위 백로그(`F01/F02/F04`) 중 1건을 구현 단위로 분해해 착수
 
 ## 2026-02-26
 - 완료 작업

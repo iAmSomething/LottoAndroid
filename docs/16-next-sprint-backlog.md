@@ -23,7 +23,7 @@
 - 단위 테스트 게이트 플래키 감시(`Q01`) - v1 완료(2026-02-27, `run-unit-flaky-guard.sh` + `unit-flaky-guard.yml` 주기 실행 + 로컬 리포트 `unit_flaky_guard_local_2026-02-27.md`)
 - 릴리즈 위험 점수 모델 운영 반영(`L-012`) - v1 완료(2026-02-27, `calculate-release-risk-score.sh` + `release-risk-score.yml`)
 - 번호관리 빠른 액션 후속 최적화(`A02`) - 완료(2026-02-26, 카드 하단 `상세/이번주 복사/보관/삭제` + 단위 테스트 보강)
-- 설정/시크릿 파일 버전관리 정책 정리(`AE-005`, 시크릿 JSON 2종 포함)
+- 설정/시크릿 파일 버전관리 정책 정리(`AE-005`, 시크릿 JSON 2종 포함) - v1 완료(2026-02-27, `check-secret-file-policy.sh` + `secret-policy-guard.yml`)
 - Firebase App Distribution 운영 검증(`AF-005`, dry-run/실배포 증적) - 완료(2026-02-26, `firebase_dry_run_2026-02-26.md`)
 - 배포 주기 점검 루틴 자동화(`I-023`) - 완료(2026-02-26, `firebase-distribution-routine.yml` 주간 스케줄 + `firebase-distribution-routine-check.sh` dry-run 체인 + 첫 CI 실행 run `22436650122` 증적 확보)
 - AB-005 착수 승인 패키지 정리(`AJ-005`, 체크리스트/배포 증적/타이포 시안 2종) - 완료(2026-02-26)
