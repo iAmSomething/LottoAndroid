@@ -58,7 +58,7 @@ class ResultViewModel(
     val uiState: StateFlow<ResultUiState> = _uiState.asStateFlow()
 
     init {
-        refresh()
+        restoreLastViewedRoundAndRefresh()
     }
 
     fun refresh() {
@@ -77,6 +77,17 @@ class ResultViewModel(
 
     fun loadLatestFromError() {
         loadLatest()
+    }
+
+    private fun restoreLastViewedRoundAndRefresh() {
+        viewModelScope.launch {
+            val lastViewedRound = resultViewTracker.loadLastViewedRound()
+            if (lastViewedRound != null) {
+                loadByRound(lastViewedRound)
+            } else {
+                loadLatest()
+            }
+        }
     }
 
     private fun loadLatest() {
