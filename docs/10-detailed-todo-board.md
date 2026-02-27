@@ -453,3 +453,8 @@
 - [x] AR-001 Wear 모듈에 complication data source 의존성 추가(`watchface-complications-data-source-ktx`)
 - [x] AR-002 `WeeklyLottoComplicationService` 구현(SHORT/LONG_TEXT + 앱 실행 tap action)
 - [x] AR-003 Manifest/문자열/우선순위·아이디어 문서 동기화(`AndroidManifest.xml`, `wear strings`, `21`, `22`)
+
+## AS. 워치 알림 액션(D04) v1 구현(2026-02-27 Cycle-43)
+- [x] AS-001 알림 액션 타깃 모델 추가(`ReminderNotificationTarget`: 구매/결과 라우트+스누즈 키)
+- [x] AS-002 리마인더 알림 액션 추가(`앱에서 열기`, `30분 뒤 다시 알림`) + deep link 연동
+- [x] AS-003 `ReminderActionReceiver` 구현(스누즈 one-time work 재스케줄) + Manifest/백로그/아이디어 문서 동기화(`16`, `21`)

@@ -14,6 +14,7 @@ class PurchaseReminderWorker(
             id = 1001,
             title = "이번 주 로또 구매 시간",
             body = "구매하실 번호를 확인하고 QR로 등록해보세요.",
+            target = ReminderNotificationTarget.PURCHASE,
         )
         return Result.success()
     }
