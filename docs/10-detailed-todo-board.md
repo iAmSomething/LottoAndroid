@@ -515,3 +515,8 @@
 - [x] BE-001 `evaluate-ops-observability-threshold.sh` 추가(official/terminal failure rate + API/Storage p95 latency + sample gate)
 - [x] BE-002 `run-ops-observability-check.sh`에 임계치 판정 단계 연동(`--threshold-report`, `--skip-threshold-check` 옵션 포함)
 - [x] BE-003 로컬 증적/문서 동기화(`docs/assets/distribution/ops_observability_threshold_local_2026-02-27.md`, `06`, `07`, `11`, `14`, `16`, `21`, `22`)
+
+## BF. 통계 인사이트 C03/C04 v2 구현(2026-02-27 Cycle-55)
+- [x] BF-001 `StatsViewModel` 출처별/회차별 ROI% 계산 필드 추가(`SourceStats.roiPercent`, `RoiTrendPoint.roiPercent`)
+- [x] BF-002 `StatsScreen` 출처 카드/ROI 트렌드 카드에 ROI% 노출 추가
+- [x] BF-003 회귀 테스트/증적 반영(`StatsViewModelTest` ROI% 케이스, `docs/assets/distribution/stats_source_roi_local_2026-02-27.md`) 및 문서 동기화(`06`, `11`, `16`, `21`, `22`)

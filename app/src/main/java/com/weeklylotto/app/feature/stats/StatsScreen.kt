@@ -189,6 +189,11 @@ fun StatsScreen() {
                                         color = LottoColors.TextSecondary,
                                     )
                                     Text(
+                                        "ROI ${sourceStats.roiPercent}%",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = LottoColors.TextSecondary,
+                                    )
+                                    Text(
                                         "구매 ${sourceStats.totalPurchaseAmount.toWonLabel()} / 당첨 ${sourceStats.totalWinAmount.toWonLabel()}",
                                         style = MaterialTheme.typography.bodySmall,
                                         color = LottoColors.TextSecondary,
@@ -247,7 +252,7 @@ fun StatsScreen() {
                                             fontWeight = FontWeight.SemiBold,
                                         )
                                         Text(
-                                            point.netProfitAmount.toWonLabel(),
+                                            "${point.netProfitAmount.toWonLabel()} (${point.roiPercent}%)",
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Bold,
                                             color =
