@@ -13,15 +13,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -79,6 +83,38 @@ fun StatsScreen() {
                                     Text(if (selected) "✓ ${period.label}" else period.label)
                                 }
                             }
+                        }
+                        Text("직접 회차 범위", style = MaterialTheme.typography.bodySmall, color = LottoColors.TextMuted)
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            OutlinedTextField(
+                                modifier = Modifier.weight(1f),
+                                value = uiState.customStartRound,
+                                onValueChange = { viewModel.updateCustomRoundRange(it, uiState.customEndRound) },
+                                label = { Text("시작 회차") },
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            )
+                            OutlinedTextField(
+                                modifier = Modifier.weight(1f),
+                                value = uiState.customEndRound,
+                                onValueChange = { viewModel.updateCustomRoundRange(uiState.customStartRound, it) },
+                                label = { Text("끝 회차") },
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            )
+                            Button(onClick = { viewModel.applyCustomRoundRange() }) {
+                                Text("적용")
+                            }
+                        }
+                        uiState.customRangeError?.let { message ->
+                            Text(
+                                text = message,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = LottoColors.DangerText,
+                            )
                         }
                         Text("누적 구매 금액", style = MaterialTheme.typography.bodySmall, color = LottoColors.TextMuted)
                         Text(uiState.totalPurchaseAmount.toWonLabel(), fontWeight = FontWeight.Bold)

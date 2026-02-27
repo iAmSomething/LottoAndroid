@@ -474,3 +474,8 @@
 - [x] AV-001 Home `근처 판매점 찾기` CTA 추가(지도 앱 검색 링크 연동)
 - [x] AV-002 외부 열기 실패 fallback 추가(다시 열기/링크 복사 + analytics action 4종)
 - [x] AV-003 URL 빌더 회귀 테스트/증적 반영(`HomeExternalLinkTest`, `docs/assets/distribution/location_store_search_local_2026-02-27.md`) 및 문서 동기화(`16`, `21`, `22`)
+
+## AW. 고급 통계 커스텀 기간(F01) v1 구현(2026-02-27 Cycle-47)
+- [x] AW-001 `StatsViewModel` 커스텀 회차 범위 필터 추가(시작/끝 회차 입력 + 유효성 오류 메시지)
+- [x] AW-002 `StatsScreen` 기간 카드에 `직접 입력` UI 추가(시작/끝 회차 + 적용 버튼)
+- [x] AW-003 회귀 테스트/증적 반영(`StatsViewModelTest` 커스텀 범위 2건, `docs/assets/distribution/stats_custom_period_local_2026-02-27.md`) 및 문서 동기화(`16`, `21`, `22`)
