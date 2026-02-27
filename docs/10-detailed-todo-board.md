@@ -207,6 +207,7 @@
 - [x] L-025 운영 관측성 로그 샘플 수집 루틴 추가(`run-ops-observability-check.sh` + `verify-analytics-events.sh --profile ops-core`)
 - [x] L-026 릴리즈 위험 점수 운영 반영(`calculate-release-risk-score.sh` + `.github/workflows/release-risk-score.yml`)
 - [x] L-027 운영 관측성 임계치 자동 판정 루틴 추가(`evaluate-ops-observability-threshold.sh` + `run-ops-observability-check.sh` 연동)
+- [x] L-028 로컬 백업 무결성 점검 v1 구현(`verifyLatestBackupIntegrity`, Settings 버튼/메시지, `ops_data_integrity` 계측 + 단위 테스트)
 
 ## M. 스플래시/상호작용 모션 고도화
 - [x] M-001 스플래시 시나리오 정의(콜드/웜/오류 브리지)

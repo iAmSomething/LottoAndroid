@@ -25,6 +25,8 @@
   - 회귀 테스트/증적 추가: `StatsViewModelTest` 커스텀 필터 2건 PASS, 로컬 리포트 `docs/assets/distribution/stats_custom_period_local_2026-02-27.md`
   - `F02` v1 구현: Settings 로컬 백업/복원 액션 추가(`tickets_backup_latest.json` 생성/복원)
   - 회귀 테스트/증적 추가: `LocalTicketBackupServiceTest`, `SettingsViewModelTest` 백업/복원 케이스 PASS, 로컬 리포트 `docs/assets/distribution/ticket_backup_local_2026-02-27.md`
+  - `E02` v1 구현: 로컬 백업 무결성 점검 추가(`verifyLatestBackupIntegrity`, 중복/게임오류/깨진레코드 집계, Settings 점검 버튼/결과 메시지)
+  - 회귀 테스트/증적 추가: `LocalTicketBackupServiceTest`, `SettingsViewModelTest` 무결성 점검 케이스 PASS, 로컬 리포트 `docs/assets/distribution/backup_integrity_local_2026-02-27.md`
   - `S39-T2` v1 구현: 번호 직접 추가 저장 시 중복 감지 선택지(`취소/중복 제외 저장/중복 포함 저장`) 추가
   - 회귀 테스트/증적 추가: `ManualAddViewModelTest` 중복 선택지 3건 PASS, 로컬 리포트 `docs/assets/distribution/manual_add_duplicate_prompt_local_2026-02-27.md`
   - `S39-T3` v1 구현: 번호 직접 추가 저장 실패 시 에러 메시지 노출 + 초안/대기 게임 유지

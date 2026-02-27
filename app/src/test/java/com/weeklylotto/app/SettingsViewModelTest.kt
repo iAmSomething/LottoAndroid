@@ -6,6 +6,7 @@ import com.weeklylotto.app.domain.service.MotionPreferenceStore
 import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
 import com.weeklylotto.app.domain.service.TicketBackupService
+import com.weeklylotto.app.domain.service.TicketBackupIntegritySummary
 import com.weeklylotto.app.domain.service.TicketBackupSummary
 import com.weeklylotto.app.feature.settings.SettingsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -130,6 +131,73 @@ class SettingsViewModelTest {
 
             assertThat(viewModel.uiState.value.message).isEqualTo("백업 복원에 실패했습니다.")
         }
+
+    @Test
+    fun 무결성점검_문제없음이면_정상메시지를_노출한다() =
+        runTest {
+            val backupService =
+                FakeTicketBackupService(
+                    integrityResult =
+                        Result.success(
+                            TicketBackupIntegritySummary(
+                                ticketCount = 2,
+                                gameCount = 3,
+                                duplicateTicketCount = 0,
+                                invalidGameCount = 0,
+                                brokenTicketCount = 0,
+                                issueCount = 0,
+                                fileName = "tickets_backup_latest.json",
+                            ),
+                        ),
+                )
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.verifyBackupIntegrity()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.message).isEqualTo("무결성 점검 완료 (문제 없음: 2건)")
+        }
+
+    @Test
+    fun 무결성점검_문제발견이면_요약메시지를_노출한다() =
+        runTest {
+            val backupService =
+                FakeTicketBackupService(
+                    integrityResult =
+                        Result.success(
+                            TicketBackupIntegritySummary(
+                                ticketCount = 4,
+                                gameCount = 6,
+                                duplicateTicketCount = 1,
+                                invalidGameCount = 2,
+                                brokenTicketCount = 1,
+                                issueCount = 4,
+                                fileName = "tickets_backup_latest.json",
+                            ),
+                        ),
+                )
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.verifyBackupIntegrity()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.message)
+                .isEqualTo("무결성 점검 완료 (문제 4건: 중복 1, 게임오류 2, 레코드오류 1)")
+        }
 }
 
 private class FakeReminderConfigStore(
@@ -176,8 +244,22 @@ private class FakeMotionPreferenceStore(
 private class FakeTicketBackupService(
     private val backupResult: Result<TicketBackupSummary> = Result.success(TicketBackupSummary(0, 0, "tickets_backup_latest.json")),
     private val restoreResult: Result<TicketBackupSummary> = Result.success(TicketBackupSummary(0, 0, "tickets_backup_latest.json")),
+    private val integrityResult: Result<TicketBackupIntegritySummary> =
+        Result.success(
+            TicketBackupIntegritySummary(
+                ticketCount = 0,
+                gameCount = 0,
+                duplicateTicketCount = 0,
+                invalidGameCount = 0,
+                brokenTicketCount = 0,
+                issueCount = 0,
+                fileName = "tickets_backup_latest.json",
+            ),
+        ),
 ) : TicketBackupService {
     override suspend fun backupCurrentTickets(): Result<TicketBackupSummary> = backupResult
 
     override suspend fun restoreLatestBackup(): Result<TicketBackupSummary> = restoreResult
+
+    override suspend fun verifyLatestBackupIntegrity(): Result<TicketBackupIntegritySummary> = integrityResult
 }
