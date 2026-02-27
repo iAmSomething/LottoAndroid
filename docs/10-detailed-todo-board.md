@@ -464,3 +464,8 @@
 - [x] AT-001 반복 실행 플래키 감시 스크립트 추가(`scripts/run-unit-flaky-guard.sh`)
 - [x] AT-002 주간 CI 워크플로우 추가(`.github/workflows/unit-flaky-guard.yml`) + 리포트 아티팩트 업로드
 - [x] AT-003 로컬 리허설 증적 생성(`docs/assets/distribution/unit_flaky_guard_local_2026-02-27.md`) 및 문서 동기화(`16`, `22`)
+
+## AU. 시크릿 파일 정책 자동 가드(AE-005) v1 구현(2026-02-27 Cycle-45)
+- [x] AU-001 시크릿 파일 정책 점검 스크립트 추가(`scripts/check-secret-file-policy.sh`, tracked/.gitignore/local candidate 판정)
+- [x] AU-002 PR/주간 점검 워크플로우 추가(`.github/workflows/secret-policy-guard.yml`) + 리포트 아티팩트 업로드
+- [x] AU-003 로컬 리허설 증적 생성(`docs/assets/distribution/secret_policy_guard_local_2026-02-27.md`) 및 문서 동기화(`07`, `14`, `16`)
