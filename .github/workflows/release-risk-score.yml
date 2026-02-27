@@ -1,0 +1,55 @@
+name: Release Risk Score
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      defect_count:
+        description: Known unresolved defects count
+        required: false
+        default: "0"
+  schedule:
+    - cron: "0 3 * * 1"
+
+jobs:
+  calculate-risk-score:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Calculate release risk score
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          DEFECT_COUNT_INPUT: ${{ github.event.inputs.defect_count || '0' }}
+        run: |
+          set -euo pipefail
+
+          BASE_REF="origin/main"
+          HEAD_REF="HEAD"
+          DEFECT_COUNT="${DEFECT_COUNT_INPUT}"
+
+          if [[ "${EVENT_NAME}" == "pull_request" ]]; then
+            BASE_REF="${PR_BASE_SHA}"
+            HEAD_REF="${PR_HEAD_SHA}"
+          fi
+
+          REPORT_PATH="docs/assets/distribution/release_risk_score_${GITHUB_RUN_ID}.md"
+          ./scripts/calculate-release-risk-score.sh \
+            --base-ref "${BASE_REF}" \
+            --head-ref "${HEAD_REF}" \
+            --defect-count "${DEFECT_COUNT}" \
+            --report-file "${REPORT_PATH}"
+
+      - name: Upload release risk score report
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-risk-score-${{ github.run_id }}
+          path: docs/assets/distribution/release_risk_score_${{ github.run_id }}.md

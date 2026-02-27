@@ -205,6 +205,7 @@
 - [x] L-023 통계 CTA 로그 샘플 수집 루틴 추가(`run-analytics-sample-check.sh` + `verify-analytics-events.sh --profile stats-cta`)
 - [x] L-024 API/로컬 저장 관측성 1차 코드 반영(`DrawApiClient`: `ops_api_request`, `RoomTicketRepository`: `ops_storage_mutation`)
 - [x] L-025 운영 관측성 로그 샘플 수집 루틴 추가(`run-ops-observability-check.sh` + `verify-analytics-events.sh --profile ops-core`)
+- [x] L-026 릴리즈 위험 점수 운영 반영(`calculate-release-risk-score.sh` + `.github/workflows/release-risk-score.yml`)
 
 ## M. 스플래시/상호작용 모션 고도화
 - [x] M-001 스플래시 시나리오 정의(콜드/웜/오류 브리지)

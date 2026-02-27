@@ -21,7 +21,7 @@
 - 통계 인사이트 확장(출처별 성과/ROI 트렌드/중복도 경고) (`C03`, `C04`, `C01`) - `C03`, `C04`, `C01` 1차 완료(2026-02-26, 출처별 성과 + ROI 트렌드 + 조합 중복도 경고 카드/집계/테스트) / CTA 연계+계측 완료(2026-02-26, `Stats -> Generator` + `interaction_cta_press`) / 로그 샘플 루틴 추가(2026-02-26, `run-analytics-sample-check.sh`, `verify-analytics-events.sh --profile stats-cta`)
 - API/로컬 데이터 관측성 스펙 고도화 (`E01`, `L-010`, `L-011`) - 1차 코드/샘플 검증 완료(2026-02-26, `ops_api_request`/`ops_storage_mutation` + `ops-core` 로그 검증), 운영 임계치 자동 판정은 후속
 - 단위 테스트 게이트 플래키 감시(`Q01`) - v1 완료(2026-02-27, `run-unit-flaky-guard.sh` + `unit-flaky-guard.yml` 주기 실행 + 로컬 리포트 `unit_flaky_guard_local_2026-02-27.md`)
-- 릴리즈 위험 점수 모델 운영 반영(`L-012`)
+- 릴리즈 위험 점수 모델 운영 반영(`L-012`) - v1 완료(2026-02-27, `calculate-release-risk-score.sh` + `release-risk-score.yml`)
 - 번호관리 빠른 액션 후속 최적화(`A02`) - 완료(2026-02-26, 카드 하단 `상세/이번주 복사/보관/삭제` + 단위 테스트 보강)
 - 설정/시크릿 파일 버전관리 정책 정리(`AE-005`, 시크릿 JSON 2종 포함)
 - Firebase App Distribution 운영 검증(`AF-005`, dry-run/실배포 증적) - 완료(2026-02-26, `firebase_dry_run_2026-02-26.md`)

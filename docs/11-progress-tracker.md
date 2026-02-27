@@ -17,12 +17,13 @@
   - 회귀 테스트 추가: `ReminderNotificationTargetTest`(target key 복원/예외 케이스)
   - `Q01` v1 구현: 반복 실행 플래키 감시 스크립트(`run-unit-flaky-guard.sh`)와 주간 CI 워크플로우(`unit-flaky-guard.yml`) 추가
   - 로컬 플래키 가드 리허설: `--repeat 1 --tests "com.weeklylotto.app.ReminderNotificationTargetTest"` 실행 PASS 1/FAIL 0 (`docs/assets/distribution/unit_flaky_guard_local_2026-02-27.md`)
+  - `L-012` v1 운영 반영: 릴리즈 위험 점수 산출 스크립트(`calculate-release-risk-score.sh`) + PR/주간 워크플로우(`release-risk-score.yml`) 추가
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
   - 실기기 미보유로 물리 디바이스 성능/워치 증적은 수집 불가
 - 다음 액션
-  - 다음 코드 반영 후보인 `AP-005`(공식 구매 리다이렉트 범위 확정) 착수
+  - 실기기 블로커(`P-004`) 외 중간 우선순위 백로그 1건 추가 반영
 
 ## 2026-02-26
 - 완료 작업
