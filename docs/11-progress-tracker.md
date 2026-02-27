@@ -33,6 +33,8 @@
   - 회귀 테스트/증적 추가: `ManualAddViewModelTest` undo 케이스 PASS, 로컬 리포트 `docs/assets/distribution/manual_add_undo_after_save_local_2026-02-27.md`
   - `S39-T5` v1 구현: 번호 직접 추가 저장 연속 탭 차단(`isSaving` 가드 + 저장 중 버튼 비활성화)
   - 회귀 테스트/증적 추가: `ManualAddViewModelTest` 연속 탭 1회 처리 케이스 PASS, 로컬 리포트 `docs/assets/distribution/manual_add_save_debounce_local_2026-02-27.md`
+  - `A05` v2 구현: 구매 리다이렉트 CTA를 Result/Settings로 확장(1회 안내 모달 + fallback + analytics)
+  - 회귀 테스트/증적 추가: `HomeExternalLinkTest` PASS(공통 URL 빌더 회귀), 로컬 리포트 `docs/assets/distribution/purchase_redirect_result_settings_local_2026-02-27.md`
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커

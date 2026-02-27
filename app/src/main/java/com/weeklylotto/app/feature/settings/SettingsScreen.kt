@@ -1,6 +1,7 @@
 package com.weeklylotto.app.feature.settings
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -20,13 +22,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
+import com.weeklylotto.app.domain.service.AnalyticsActionValue
+import com.weeklylotto.app.domain.service.AnalyticsEvent
+import com.weeklylotto.app.domain.service.AnalyticsParamKey
+import com.weeklylotto.app.feature.common.OFFICIAL_PURCHASE_URL
+import com.weeklylotto.app.feature.common.PURCHASE_REDIRECT_NOTICE_SEEN_KEY
+import com.weeklylotto.app.feature.common.PURCHASE_REDIRECT_PREF_NAME
+import com.weeklylotto.app.feature.common.openExternalUrl
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.MotionButton
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
@@ -34,7 +48,15 @@ import com.weeklylotto.app.ui.theme.LottoColors
 
 @Composable
 fun SettingsScreen(onNavigateBack: () -> Unit) {
+    val analyticsLogger = AppGraph.analyticsLogger
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
+    val purchaseRedirectPreferences =
+        remember(context) {
+            context.getSharedPreferences(PURCHASE_REDIRECT_PREF_NAME, Context.MODE_PRIVATE)
+        }
+    var showPurchaseNoticeDialog by remember { mutableStateOf(false) }
+    var showPurchaseFallbackDialog by remember { mutableStateOf(false) }
     val viewModel =
         viewModel<SettingsViewModel>(
             factory =
@@ -48,6 +70,33 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                 },
         )
     val uiState by viewModel.uiState.collectAsState()
+    val openOfficialPurchase = {
+        val opened = openExternalUrl(context = context, url = OFFICIAL_PURCHASE_URL)
+        if (opened) {
+            showPurchaseFallbackDialog = false
+            analyticsLogger.log(
+                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                params =
+                    mapOf(
+                        AnalyticsParamKey.SCREEN to "settings",
+                        AnalyticsParamKey.COMPONENT to "purchase_redirect_cta",
+                        AnalyticsParamKey.ACTION to AnalyticsActionValue.PURCHASE_REDIRECT_OPEN_BROWSER,
+                    ),
+            )
+        } else {
+            analyticsLogger.log(
+                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                params =
+                    mapOf(
+                        AnalyticsParamKey.SCREEN to "settings",
+                        AnalyticsParamKey.COMPONENT to "purchase_redirect_cta",
+                        AnalyticsParamKey.ACTION to AnalyticsActionValue.PURCHASE_REDIRECT_FAIL,
+                        AnalyticsParamKey.ERROR_TYPE to "external_open_failed",
+                    ),
+            )
+            showPurchaseFallbackDialog = true
+        }
+    }
     val requiresNotificationPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
     val hasNotificationPermission =
         !requiresNotificationPermission ||
@@ -79,6 +128,92 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             viewModel.clearMessage()
         }
+    }
+
+    if (showPurchaseNoticeDialog) {
+        AlertDialog(
+            onDismissRequest = { showPurchaseNoticeDialog = false },
+            title = { Text("외부 페이지 이동 안내") },
+            text = {
+                Text(
+                    "구매는 동행복권 공식 홈페이지에서만 가능합니다. " +
+                        "성인 인증과 구매 가능 시간을 확인한 뒤 이동해 주세요.",
+                    color = LottoColors.TextSecondary,
+                )
+            },
+            confirmButton = {
+                androidx.compose.material3.TextButton(
+                    onClick = {
+                        purchaseRedirectPreferences.edit()
+                            .putBoolean(PURCHASE_REDIRECT_NOTICE_SEEN_KEY, true)
+                            .apply()
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "settings",
+                                    AnalyticsParamKey.COMPONENT to "purchase_redirect_cta",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.PURCHASE_REDIRECT_CONFIRM,
+                                ),
+                        )
+                        showPurchaseNoticeDialog = false
+                        openOfficialPurchase()
+                    },
+                ) {
+                    Text("이동")
+                }
+            },
+            dismissButton = {
+                androidx.compose.material3.TextButton(onClick = { showPurchaseNoticeDialog = false }) {
+                    Text("취소")
+                }
+            },
+        )
+    }
+
+    if (showPurchaseFallbackDialog) {
+        AlertDialog(
+            onDismissRequest = { showPurchaseFallbackDialog = false },
+            title = { Text("열기에 실패했어요") },
+            text = {
+                Text(
+                    "외부 브라우저 실행에 실패했습니다. 링크를 복사하거나 다시 시도해 주세요.",
+                    color = LottoColors.TextSecondary,
+                )
+            },
+            confirmButton = {
+                androidx.compose.material3.TextButton(
+                    onClick = {
+                        openOfficialPurchase()
+                        if (!showPurchaseFallbackDialog) {
+                            Toast.makeText(context, "브라우저에서 열었습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                ) {
+                    Text("브라우저로 열기")
+                }
+            },
+            dismissButton = {
+                androidx.compose.material3.TextButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(OFFICIAL_PURCHASE_URL))
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "settings",
+                                    AnalyticsParamKey.COMPONENT to "purchase_redirect_cta",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.PURCHASE_REDIRECT_COPY_LINK,
+                                ),
+                        )
+                        showPurchaseFallbackDialog = false
+                        Toast.makeText(context, "링크를 복사했습니다.", Toast.LENGTH_SHORT).show()
+                    },
+                ) {
+                    Text("링크 복사")
+                }
+            },
+        )
     }
 
     Column(modifier = Modifier.fillMaxSize().background(LottoColors.Background)) {
@@ -172,6 +307,33 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                     ) {
                         Text("최근 백업 복원")
                     }
+                }
+
+                MotionButton(
+                    onClick = {
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "settings",
+                                    AnalyticsParamKey.COMPONENT to "purchase_redirect_cta",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.PURCHASE_REDIRECT_TAP,
+                                ),
+                        )
+                        val noticeSeen =
+                            purchaseRedirectPreferences.getBoolean(
+                                PURCHASE_REDIRECT_NOTICE_SEEN_KEY,
+                                false,
+                            )
+                        if (noticeSeen) {
+                            openOfficialPurchase()
+                        } else {
+                            showPurchaseNoticeDialog = true
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("공식 홈페이지에서 구매하기")
                 }
             }
         }
