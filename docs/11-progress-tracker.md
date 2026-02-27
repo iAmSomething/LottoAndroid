@@ -21,12 +21,14 @@
   - `AE-005` v1 운영 반영: 시크릿 파일 정책 점검 스크립트(`check-secret-file-policy.sh`) + PR/주간 워크플로우(`secret-policy-guard.yml`) 추가
   - `F04` v1 구현: Home `근처 판매점 찾기` CTA 추가 + 지도 앱 열기 실패 fallback(다시 열기/링크 복사) 및 analytics action(`location_store_search_*`) 연동
   - 회귀 테스트/증적 추가: `HomeExternalLinkTest` PASS, 로컬 리포트 `docs/assets/distribution/location_store_search_local_2026-02-27.md`
+  - `F01` v1 구현: Stats 커스텀 회차 범위 필터 추가(시작/끝 회차 직접 입력 + 적용 + 유효성 오류 표시)
+  - 회귀 테스트/증적 추가: `StatsViewModelTest` 커스텀 필터 2건 PASS, 로컬 리포트 `docs/assets/distribution/stats_custom_period_local_2026-02-27.md`
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
   - 실기기 미보유로 물리 디바이스 성능/워치 증적은 수집 불가
 - 다음 액션
-  - Low 우선순위 백로그 잔여(`F01`, `F02`) 중 1건을 구현 단위로 분해해 착수
+  - Low 우선순위 백로그 잔여(`F02`)를 단계 분해(백업 범위/저장소/복원 충돌정책)해 1차 설계 또는 스캐폴딩 착수
 
 ## 2026-02-26
 - 완료 작업

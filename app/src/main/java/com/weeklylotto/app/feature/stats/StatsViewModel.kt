@@ -27,6 +27,7 @@ enum class StatsPeriod(
     ALL("전체"),
     RECENT_4_WEEKS("최근 4주"),
     RECENT_8_WEEKS("최근 8주"),
+    CUSTOM("직접 입력"),
 }
 
 data class StatsUiState(
@@ -36,6 +37,9 @@ data class StatsUiState(
     val totalGames: Int = 0,
     val winningGames: Int = 0,
     val selectedPeriod: StatsPeriod = StatsPeriod.ALL,
+    val customStartRound: String = "",
+    val customEndRound: String = "",
+    val customRangeError: String? = null,
     val sourceStats: List<SourceStats> = TicketSource.entries.map { SourceStats(source = it) },
     val roiTrend: List<RoiTrendPoint> = emptyList(),
 ) {
@@ -92,7 +96,40 @@ class StatsViewModel(
 
     fun setPeriod(period: StatsPeriod) {
         if (_uiState.value.selectedPeriod == period) return
-        _uiState.update { it.copy(selectedPeriod = period) }
+        _uiState.update { it.copy(selectedPeriod = period, customRangeError = null) }
+        recalculateStats()
+    }
+
+    fun updateCustomRoundRange(
+        startRound: String,
+        endRound: String,
+    ) {
+        _uiState.update {
+            it.copy(
+                customStartRound = startRound.filter(Char::isDigit).take(4),
+                customEndRound = endRound.filter(Char::isDigit).take(4),
+                customRangeError = null,
+            )
+        }
+    }
+
+    fun applyCustomRoundRange() {
+        val startRound = _uiState.value.customStartRound.toIntOrNull()
+        val endRound = _uiState.value.customEndRound.toIntOrNull()
+        val error =
+            when {
+                _uiState.value.customStartRound.isBlank() || _uiState.value.customEndRound.isBlank() ->
+                    "시작/끝 회차를 모두 입력하세요."
+                startRound == null || endRound == null -> "회차는 숫자만 입력하세요."
+                startRound <= 0 || endRound <= 0 -> "회차는 1 이상이어야 합니다."
+                startRound > endRound -> "시작 회차는 끝 회차보다 클 수 없습니다."
+                else -> null
+            }
+        if (error != null) {
+            _uiState.update { it.copy(customRangeError = error) }
+            return
+        }
+        _uiState.update { it.copy(selectedPeriod = StatsPeriod.CUSTOM, customRangeError = null) }
         recalculateStats()
     }
 
@@ -213,6 +250,11 @@ class StatsViewModel(
             StatsPeriod.RECENT_8_WEEKS -> {
                 val cutoff = Instant.now().minus(56, ChronoUnit.DAYS)
                 bundles.filter { it.createdAt >= cutoff }
+            }
+            StatsPeriod.CUSTOM -> {
+                val startRound = _uiState.value.customStartRound.toIntOrNull() ?: return emptyList()
+                val endRound = _uiState.value.customEndRound.toIntOrNull() ?: return emptyList()
+                bundles.filter { it.round.number in startRound..endRound }
             }
         }
     }

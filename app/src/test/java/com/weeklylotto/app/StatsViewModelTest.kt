@@ -106,6 +106,62 @@ class StatsViewModelTest {
         }
 
     @Test
+    fun 커스텀_회차_필터는_지정_범위만_포함한다() =
+        runTest {
+            val bundle1203 =
+                ticket(
+                    round = Round(1203, LocalDate.of(2026, 3, 28)),
+                    numbers = listOf(3, 14, 25, 31, 38, 42),
+                    createdAt = Instant.now(),
+                )
+            val bundle1205 =
+                ticket(
+                    round = Round(1205, LocalDate.of(2026, 4, 11)),
+                    numbers = listOf(7, 8, 9, 10, 11, 12),
+                    createdAt = Instant.now(),
+                )
+
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(listOf(bundle1203, bundle1205)),
+                    drawRepository = StatsDrawRepository(draw(bundle1205.round)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            viewModel.updateCustomRoundRange(startRound = "1203", endRound = "1204")
+            viewModel.applyCustomRoundRange()
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(state.selectedPeriod).isEqualTo(StatsPeriod.CUSTOM)
+            assertThat(state.customRangeError).isNull()
+            assertThat(state.totalGames).isEqualTo(1)
+            assertThat(state.totalPurchaseAmount).isEqualTo(1_000L)
+        }
+
+    @Test
+    fun 커스텀_회차_필터는_잘못된_범위면_오류를_표시한다() =
+        runTest {
+            val round = Round(1206, LocalDate.of(2026, 4, 18))
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(listOf(ticket(round, listOf(1, 2, 3, 4, 5, 6), Instant.now()))),
+                    drawRepository = StatsDrawRepository(draw(round)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            viewModel.updateCustomRoundRange(startRound = "1210", endRound = "1200")
+            viewModel.applyCustomRoundRange()
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+            assertThat(state.selectedPeriod).isEqualTo(StatsPeriod.ALL)
+            assertThat(state.customRangeError).isEqualTo("시작 회차는 끝 회차보다 클 수 없습니다.")
+        }
+
+    @Test
     fun 출처별_성과가_자동_수동_QR로_집계된다() =
         runTest {
             val round = Round(1205, LocalDate.of(2026, 4, 11))
