@@ -10,6 +10,7 @@ import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.feature.manualadd.ManualAddViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -127,6 +128,22 @@ class ManualAddViewModelTest {
         }
 
     @Test
+    fun 저장요청을_연속탭해도_한번만_처리한다() =
+        runTest {
+            val repository = ManualAddFakeTicketRepository(initial = emptyList(), saveDelayMillis = 1_000L)
+            val viewModel = ManualAddViewModel(ticketRepository = repository)
+
+            listOf(1, 2, 3, 4, 5, 6).forEach(viewModel::toggleNumber)
+            viewModel.save()
+            viewModel.save()
+            advanceUntilIdle()
+
+            assertThat(repository.saveInvocationCount).isEqualTo(1)
+            assertThat(repository.savedBundles).hasSize(1)
+            assertThat(viewModel.uiState.value.isSaving).isFalse()
+        }
+
+    @Test
     fun 이번주_동일번호가_없으면_정상_저장한다() =
         runTest {
             val existing = ticket(id = 1L, numbers = listOf(1, 2, 3, 4, 5, 6))
@@ -209,9 +226,11 @@ private fun ticket(
 private class ManualAddFakeTicketRepository(
     initial: List<TicketBundle>,
     private val failOnSave: Boolean = false,
+    private val saveDelayMillis: Long = 0L,
 ) : TicketRepository {
     private val all = MutableStateFlow(initial)
     val savedBundles: MutableList<TicketBundle> = mutableListOf()
+    var saveInvocationCount: Int = 0
 
     override fun observeAllTickets(): Flow<List<TicketBundle>> = all.asStateFlow()
 
@@ -221,8 +240,12 @@ private class ManualAddFakeTicketRepository(
         all.map { list -> list.filter { it.round.number == round.number } }
 
     override suspend fun save(bundle: TicketBundle) {
+        saveInvocationCount += 1
         if (failOnSave) {
             throw IllegalStateException("save failed")
+        }
+        if (saveDelayMillis > 0L) {
+            delay(saveDelayMillis)
         }
         savedBundles.add(bundle)
         all.update { it + bundle.copy(id = (it.maxOfOrNull { t -> t.id } ?: 0L) + 1L) }
