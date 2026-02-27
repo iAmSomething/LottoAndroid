@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">매주로또 워치</string>
+    <string name="complication_provider_name">매주로또 컴플리케이션</string>
+    <string name="complication_title">매주로또</string>
+    <string name="complication_text_short">이번주 확인</string>
+    <string name="complication_text_long">이번주 번호/결과 확인</string>
+    <string name="complication_content_description">매주로또 앱을 열어 이번주 번호와 결과를 확인</string>
 </resources>
