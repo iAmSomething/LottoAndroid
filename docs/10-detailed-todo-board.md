@@ -458,3 +458,8 @@
 - [x] AS-001 알림 액션 타깃 모델 추가(`ReminderNotificationTarget`: 구매/결과 라우트+스누즈 키)
 - [x] AS-002 리마인더 알림 액션 추가(`앱에서 열기`, `30분 뒤 다시 알림`) + deep link 연동
 - [x] AS-003 `ReminderActionReceiver` 구현(스누즈 one-time work 재스케줄) + Manifest/백로그/아이디어 문서 동기화(`16`, `21`)
+
+## AT. 단위 테스트 플래키 감시(Q01) v1 구현(2026-02-27 Cycle-44)
+- [x] AT-001 반복 실행 플래키 감시 스크립트 추가(`scripts/run-unit-flaky-guard.sh`)
+- [x] AT-002 주간 CI 워크플로우 추가(`.github/workflows/unit-flaky-guard.yml`) + 리포트 아티팩트 업로드
+- [x] AT-003 로컬 리허설 증적 생성(`docs/assets/distribution/unit_flaky_guard_local_2026-02-27.md`) 및 문서 동기화(`16`, `22`)
