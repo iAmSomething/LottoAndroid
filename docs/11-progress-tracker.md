@@ -14,6 +14,8 @@
   - `D03` v1 구현: Wear complication data source(`WeeklyLottoComplicationService`) 추가(SHORT/LONG_TEXT, 앱 실행 tap action)
   - Wear Manifest에 complication provider 등록 + update period 30분(`android.support.wearable.complications.UPDATE_PERIOD_SECONDS=1800`)
   - `D04` v1 구현: 리마인더 알림 액션 `앱에서 열기`/`30분 뒤 다시 알림` 추가 및 `ReminderActionReceiver` 스누즈 재스케줄링 연동
+  - `D02` v1 안정화: 워치 핸드오프 딥링크를 `weeklylotto://open?route=` 계약으로 정규화(QR/결과/설정 공통)
+  - 회귀 테스트/증적 추가: `AppDeepLinkTest` PASS + `:wear:assembleDebug` 성공, 로컬 리포트 `docs/assets/distribution/wear_phone_handoff_local_2026-02-27.md`
   - 회귀 테스트 추가: `ReminderNotificationTargetTest`(target key 복원/예외 케이스)
   - `Q01` v1 구현: 반복 실행 플래키 감시 스크립트(`run-unit-flaky-guard.sh`)와 주간 CI 워크플로우(`unit-flaky-guard.yml`) 추가
   - 로컬 플래키 가드 리허설: `--repeat 1 --tests "com.weeklylotto.app.ReminderNotificationTargetTest"` 실행 PASS 1/FAIL 0 (`docs/assets/distribution/unit_flaky_guard_local_2026-02-27.md`)

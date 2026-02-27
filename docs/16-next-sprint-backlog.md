@@ -11,7 +11,7 @@
 - 실폰트 자산 적용 트랙 실행(`AB-005`, `AB-006`) 후 카드/아이콘 폴리시 확장(`AB-007`, `AB-008`) - 완료(2026-02-26)
 - 실폰트 자산 패키지/라이선스 체크리스트 선행 확정(`AG-005`, `AH-005`) - 완료(2026-02-26, `31`, `30`)
 - Wear OS v1 실제 화면 구현(placeholder → Home/Numbers/Result/Settings 4화면) (`D01`, `K-001`~`K-012`) - 완료(2026-02-26, `wear/src/main/java/com/weeklylotto/wear/WearApp.kt`)
-- 워치→폰 핸드오프 최소 경로 구현(`D02`, `K-009`~`K-012`) - 완료(2026-02-26, `wear-remote-interactions` + 딥링크 핸드오프)
+- 워치→폰 핸드오프 최소 경로 구현(`D02`, `K-009`~`K-012`) - 완료(2026-02-27, `wear-remote-interactions` + `weeklylotto://open?route=` 딥링크 계약 안정화 + 라우팅 테스트)
 - 핵심 상호작용 모션 2차 코드 적용(`G03`, `INT-01`~`INT-05`) - 2차 확대 완료(2026-02-26, `motionClickable` + Home/Result CTA/시트 + Manage/Home 리스트 `animateItem`)
 - Reduce Motion 실제 설정/동작 반영(`G06`, `M-012`) - 완료(2026-02-26, Settings 토글 + DataStore + Splash/컴포넌트 반영)
 - EXP-05/06 계측 이벤트 훅 + 샘플 검증 자동화 완료(`M-016`~`M-018`) - 완료(2026-02-26, `AnalyticsActionValue` + `scripts/verify-analytics-events.sh`)
