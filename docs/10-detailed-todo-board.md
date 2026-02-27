@@ -469,3 +469,8 @@
 - [x] AU-001 시크릿 파일 정책 점검 스크립트 추가(`scripts/check-secret-file-policy.sh`, tracked/.gitignore/local candidate 판정)
 - [x] AU-002 PR/주간 점검 워크플로우 추가(`.github/workflows/secret-policy-guard.yml`) + 리포트 아티팩트 업로드
 - [x] AU-003 로컬 리허설 증적 생성(`docs/assets/distribution/secret_policy_guard_local_2026-02-27.md`) 및 문서 동기화(`07`, `14`, `16`)
+
+## AV. 위치 연계 CTA(F04) v1 구현(2026-02-27 Cycle-46)
+- [x] AV-001 Home `근처 판매점 찾기` CTA 추가(지도 앱 검색 링크 연동)
+- [x] AV-002 외부 열기 실패 fallback 추가(다시 열기/링크 복사 + analytics action 4종)
+- [x] AV-003 URL 빌더 회귀 테스트/증적 반영(`HomeExternalLinkTest`, `docs/assets/distribution/location_store_search_local_2026-02-27.md`) 및 문서 동기화(`16`, `21`, `22`)
