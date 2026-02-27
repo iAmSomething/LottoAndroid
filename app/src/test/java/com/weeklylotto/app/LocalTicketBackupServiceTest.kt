@@ -2,6 +2,9 @@ package com.weeklylotto.app
 
 import com.google.common.truth.Truth.assertThat
 import com.weeklylotto.app.data.repository.LocalTicketBackupService
+import com.weeklylotto.app.domain.service.AnalyticsEvent
+import com.weeklylotto.app.domain.service.AnalyticsLogger
+import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.domain.model.GameMode
 import com.weeklylotto.app.domain.model.GameSlot
 import com.weeklylotto.app.domain.model.LottoGame
@@ -19,6 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.nio.file.Files
+import java.time.Instant
 import java.time.LocalDate
 
 class LocalTicketBackupServiceTest {
@@ -80,6 +84,107 @@ class LocalTicketBackupServiceTest {
 
             assertThat(result.isFailure).isTrue()
         }
+
+    @Test
+    fun 무결성점검시_정상백업은_문제없음으로_요약한다() =
+        runTest {
+            val repository =
+                BackupFakeTicketRepository(
+                    listOf(
+                        backupTicket(id = 1L, round = 1201, numbers = listOf(1, 2, 3, 4, 5, 6)),
+                        backupTicket(id = 2L, round = 1200, numbers = listOf(7, 8, 9, 10, 11, 12)),
+                    ),
+                )
+            val backupFile = Files.createTempDirectory("ticket-backup-integrity-pass").resolve("tickets_backup_latest.json").toFile()
+            val analytics = RecordingAnalyticsLogger()
+            val service =
+                LocalTicketBackupService(
+                    ticketRepository = repository,
+                    backupFile = backupFile,
+                    analyticsLogger = analytics,
+                )
+            service.backupCurrentTickets().getOrThrow()
+
+            val summary = service.verifyLatestBackupIntegrity().getOrThrow()
+
+            assertThat(summary.ticketCount).isEqualTo(2)
+            assertThat(summary.gameCount).isEqualTo(2)
+            assertThat(summary.issueCount).isEqualTo(0)
+            assertThat(summary.duplicateTicketCount).isEqualTo(0)
+            assertThat(summary.invalidGameCount).isEqualTo(0)
+            assertThat(summary.brokenTicketCount).isEqualTo(0)
+            val event = analytics.events.single()
+            assertThat(event.first).isEqualTo(AnalyticsEvent.OPS_DATA_INTEGRITY)
+            assertThat(event.second[AnalyticsParamKey.STATUS]).isEqualTo("pass")
+            assertThat(event.second[AnalyticsParamKey.ISSUE_COUNT]).isEqualTo("0")
+        }
+
+    @Test
+    fun 무결성점검시_중복게임오류깨진레코드를_집계한다() =
+        runTest {
+            val backupFile = Files.createTempDirectory("ticket-backup-integrity-warn").resolve("tickets_backup_latest.json").toFile()
+            val analytics = RecordingAnalyticsLogger()
+            val service =
+                LocalTicketBackupService(
+                    ticketRepository = BackupFakeTicketRepository(emptyList()),
+                    backupFile = backupFile,
+                    analyticsLogger = analytics,
+                )
+            backupFile.writeText(
+                """
+                {
+                  "schemaVersion": 1,
+                  "exportedAt": "2026-02-27T00:00:00Z",
+                  "tickets": [
+                    {
+                      "roundNumber": 1201,
+                      "drawDate": "2026-03-07",
+                      "source": "MANUAL",
+                      "status": "PENDING",
+                      "createdAt": "2026-02-27T00:00:00Z",
+                      "games": [{"numbers": [1, 2, 3, 4, 5, 6]}]
+                    },
+                    {
+                      "roundNumber": 1201,
+                      "drawDate": "2026-03-07",
+                      "source": "MANUAL",
+                      "status": "PENDING",
+                      "createdAt": "2026-02-27T00:00:00Z",
+                      "games": [{"numbers": [1, 2, 3, 4, 5, 6]}]
+                    },
+                    {
+                      "roundNumber": 1201,
+                      "drawDate": "2026-03-07",
+                      "source": "MANUAL",
+                      "status": "PENDING",
+                      "createdAt": "2026-02-27T01:00:00Z",
+                      "games": [{"numbers": [1, 1, 3, 4, 5, 6]}]
+                    },
+                    {
+                      "drawDate": "2026-03-07",
+                      "source": "MANUAL",
+                      "status": "PENDING",
+                      "createdAt": "2026-02-27T01:00:00Z",
+                      "games": [{"numbers": [7, 8, 9, 10, 11, 12]}]
+                    }
+                  ]
+                }
+                """.trimIndent(),
+            )
+
+            val summary = service.verifyLatestBackupIntegrity().getOrThrow()
+
+            assertThat(summary.ticketCount).isEqualTo(4)
+            assertThat(summary.gameCount).isEqualTo(2)
+            assertThat(summary.duplicateTicketCount).isEqualTo(1)
+            assertThat(summary.invalidGameCount).isEqualTo(1)
+            assertThat(summary.brokenTicketCount).isEqualTo(1)
+            assertThat(summary.issueCount).isEqualTo(3)
+            val event = analytics.events.single()
+            assertThat(event.first).isEqualTo(AnalyticsEvent.OPS_DATA_INTEGRITY)
+            assertThat(event.second[AnalyticsParamKey.STATUS]).isEqualTo("warn")
+            assertThat(event.second[AnalyticsParamKey.ISSUE_COUNT]).isEqualTo("3")
+        }
 }
 
 private fun backupTicket(
@@ -92,6 +197,7 @@ private fun backupTicket(
         round = Round(number = round, drawDate = LocalDate.of(2026, 3, 7)),
         source = TicketSource.MANUAL,
         status = TicketStatus.PENDING,
+        createdAt = Instant.parse("2026-02-27T00:00:00Z"),
         games =
             listOf(
                 LottoGame(
@@ -133,4 +239,15 @@ private class BackupFakeTicketRepository(
     }
 
     fun observeSnapshot(): List<TicketBundle> = all.value
+}
+
+private class RecordingAnalyticsLogger : AnalyticsLogger {
+    val events: MutableList<Pair<String, Map<String, String>>> = mutableListOf()
+
+    override fun log(
+        event: String,
+        params: Map<String, String>,
+    ) {
+        events += event to params
+    }
 }

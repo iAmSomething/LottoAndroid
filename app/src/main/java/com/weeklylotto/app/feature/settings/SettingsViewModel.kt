@@ -118,6 +118,26 @@ class SettingsViewModel(
         }
     }
 
+    fun verifyBackupIntegrity() {
+        viewModelScope.launch {
+            ticketBackupService
+                .verifyLatestBackupIntegrity()
+                .onSuccess { summary ->
+                    val message =
+                        if (summary.issueCount == 0) {
+                            "무결성 점검 완료 (문제 없음: ${summary.ticketCount}건)"
+                        } else {
+                            "무결성 점검 완료 (문제 ${summary.issueCount}건: 중복 ${summary.duplicateTicketCount}, 게임오류 ${summary.invalidGameCount}, 레코드오류 ${summary.brokenTicketCount})"
+                        }
+                    _uiState.update { it.copy(message = message) }
+                }.onFailure {
+                    _uiState.update { state ->
+                        state.copy(message = "무결성 점검에 실패했습니다.")
+                    }
+                }
+        }
+    }
+
     fun clearMessage() {
         _uiState.update { it.copy(message = null) }
     }

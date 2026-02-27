@@ -310,6 +310,13 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                 }
 
                 MotionButton(
+                    onClick = viewModel::verifyBackupIntegrity,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("백업 무결성 점검")
+                }
+
+                MotionButton(
                     onClick = {
                         analyticsLogger.log(
                             event = AnalyticsEvent.INTERACTION_CTA_PRESS,

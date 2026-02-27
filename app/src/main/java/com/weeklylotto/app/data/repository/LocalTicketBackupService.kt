@@ -8,8 +8,13 @@ import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
+import com.weeklylotto.app.domain.service.AnalyticsEvent
+import com.weeklylotto.app.domain.service.AnalyticsLogger
+import com.weeklylotto.app.domain.service.AnalyticsParamKey
+import com.weeklylotto.app.domain.service.NoOpAnalyticsLogger
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.TicketBackupService
+import com.weeklylotto.app.domain.service.TicketBackupIntegritySummary
 import com.weeklylotto.app.domain.service.TicketBackupSummary
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
@@ -34,6 +39,7 @@ class LocalTicketBackupService(
     private val ticketRepository: TicketRepository,
     private val backupFile: File,
     private val json: Json = Json { ignoreUnknownKeys = true },
+    private val analyticsLogger: AnalyticsLogger = NoOpAnalyticsLogger,
 ) : TicketBackupService {
     override suspend fun backupCurrentTickets(): Result<TicketBackupSummary> =
         runCatching {
@@ -84,6 +90,69 @@ class LocalTicketBackupService(
             TicketBackupSummary(
                 ticketCount = restoredTickets.size,
                 gameCount = restoredTickets.sumOf { it.games.size },
+                fileName = backupFile.name,
+            )
+        }
+
+    override suspend fun verifyLatestBackupIntegrity(): Result<TicketBackupIntegritySummary> =
+        runCatching {
+            require(backupFile.exists()) { "백업 파일이 없습니다." }
+            val root = json.parseToJsonElement(backupFile.readText(StandardCharsets.UTF_8)).jsonObject
+            val version = root.requiredInt("schemaVersion")
+            require(version == BACKUP_SCHEMA_VERSION) {
+                "지원하지 않는 백업 버전입니다. version=$version"
+            }
+
+            val tickets = root.requiredArray("tickets")
+            var gameCount = 0
+            var invalidGameCount = 0
+            var brokenTicketCount = 0
+            val signatureCount = mutableMapOf<String, Int>()
+
+            tickets.forEach { ticketElement ->
+                val ticketObject = ticketElement as? JsonObject
+                if (ticketObject == null) {
+                    brokenTicketCount += 1
+                    return@forEach
+                }
+
+                val parsed = ticketObject.toIntegrityTicketOrNull()
+                if (parsed == null) {
+                    brokenTicketCount += 1
+                    return@forEach
+                }
+
+                gameCount += parsed.gameSignatures.size
+                invalidGameCount += parsed.invalidGameCount
+                signatureCount[parsed.signature] = signatureCount.getOrDefault(parsed.signature, 0) + 1
+            }
+
+            val duplicateTicketCount =
+                signatureCount
+                    .values
+                    .sumOf { count -> (count - 1).coerceAtLeast(0) }
+            val issueCount = duplicateTicketCount + invalidGameCount + brokenTicketCount
+            val status = if (issueCount == 0) "pass" else "warn"
+
+            analyticsLogger.log(
+                event = AnalyticsEvent.OPS_DATA_INTEGRITY,
+                params =
+                    mapOf(
+                        AnalyticsParamKey.SCREEN to "settings",
+                        AnalyticsParamKey.COMPONENT to "backup_integrity",
+                        AnalyticsParamKey.ACTION to "verify",
+                        AnalyticsParamKey.STATUS to status,
+                        AnalyticsParamKey.ISSUE_COUNT to issueCount.toString(),
+                    ),
+            )
+
+            TicketBackupIntegritySummary(
+                ticketCount = tickets.size,
+                gameCount = gameCount,
+                duplicateTicketCount = duplicateTicketCount,
+                invalidGameCount = invalidGameCount,
+                brokenTicketCount = brokenTicketCount,
+                issueCount = issueCount,
                 fileName = backupFile.name,
             )
         }
@@ -169,3 +238,60 @@ private fun JsonObject.requiredArray(key: String): JsonArray =
 
 private fun JsonElement.requiredIntValue(): Int =
     this.jsonPrimitive.intOrNull ?: error("백업 데이터 숫자 값이 올바르지 않습니다.")
+
+private data class IntegrityTicket(
+    val signature: String,
+    val gameSignatures: List<String>,
+    val invalidGameCount: Int,
+)
+
+private fun JsonObject.toIntegrityTicketOrNull(): IntegrityTicket? {
+    val roundNumber = this["roundNumber"]?.jsonPrimitive?.intOrNull ?: return null
+    val drawDate = this["drawDate"]?.jsonPrimitive?.contentOrNull ?: return null
+    val source = this["source"]?.jsonPrimitive?.contentOrNull ?: return null
+    val status = this["status"]?.jsonPrimitive?.contentOrNull ?: return null
+    val createdAt = this["createdAt"]?.jsonPrimitive?.contentOrNull ?: return null
+    val games = this["games"]?.jsonArray ?: return null
+
+    var invalidGameCount = 0
+    val gameSignatures = mutableListOf<String>()
+    games.forEach { gameElement ->
+        val gameObject = gameElement as? JsonObject
+        val numbers =
+            gameObject
+                ?.get("numbers")
+                ?.jsonArray
+                ?.mapNotNull { value -> value.jsonPrimitive.intOrNull }
+                ?: emptyList()
+        val isValid =
+            numbers.size == 6 &&
+                numbers.toSet().size == 6 &&
+                numbers.all { number -> number in 1..45 }
+        if (!isValid) {
+            invalidGameCount += 1
+            return@forEach
+        }
+        val sortedSignature = numbers.sorted().joinToString(separator = "-")
+        gameSignatures += sortedSignature
+    }
+
+    val ticketSignature =
+        buildString {
+            append(roundNumber)
+            append('|')
+            append(drawDate)
+            append('|')
+            append(source)
+            append('|')
+            append(status)
+            append('|')
+            append(createdAt)
+            append('|')
+            append(gameSignatures.sorted().joinToString(separator = ","))
+        }
+    return IntegrityTicket(
+        signature = ticketSignature,
+        gameSignatures = gameSignatures,
+        invalidGameCount = invalidGameCount,
+    )
+}
