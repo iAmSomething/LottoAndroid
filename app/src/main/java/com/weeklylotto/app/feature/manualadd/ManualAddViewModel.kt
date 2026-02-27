@@ -207,7 +207,7 @@ class ManualAddViewModel(
     private suspend fun persistGames(gamesToSave: List<List<Int>>) {
         val today = LocalDate.now()
         val drawDate = RoundEstimator.nextDrawDate(today)
-        ticketRepository.save(
+        val bundleToSave =
             TicketBundle(
                 round = Round(RoundEstimator.currentSalesRound(today), drawDate),
                 source = TicketSource.MANUAL,
@@ -220,8 +220,18 @@ class ManualAddViewModel(
                             mode = GameMode.MANUAL,
                         )
                     },
-            ),
-        )
+            )
+        val saved = runCatching { ticketRepository.save(bundleToSave) }
+        if (saved.isFailure) {
+            _uiState.update {
+                it.copy(
+                    saved = false,
+                    duplicatePrompt = null,
+                    error = "저장에 실패했습니다. 다시 시도해 주세요.",
+                )
+            }
+            return
+        }
         queuedGamesForDuplicateDecision = emptyList()
         _uiState.update {
             it.copy(

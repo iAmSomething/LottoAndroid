@@ -90,6 +90,24 @@ class ManualAddViewModelTest {
         }
 
     @Test
+    fun 저장실패시_초안을_유지하고_에러를_노출한다() =
+        runTest {
+            val repository = ManualAddFakeTicketRepository(initial = emptyList(), failOnSave = true)
+            val viewModel = ManualAddViewModel(ticketRepository = repository)
+
+            listOf(7, 8, 9, 10, 11, 12).forEach(viewModel::toggleNumber)
+            viewModel.addSelectedGame()
+
+            viewModel.save()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.saved).isFalse()
+            assertThat(viewModel.uiState.value.error).isEqualTo("저장에 실패했습니다. 다시 시도해 주세요.")
+            assertThat(viewModel.uiState.value.pendingGames).containsExactly(listOf(7, 8, 9, 10, 11, 12))
+            assertThat(repository.savedBundles).isEmpty()
+        }
+
+    @Test
     fun 이번주_동일번호가_없으면_정상_저장한다() =
         runTest {
             val existing = ticket(id = 1L, numbers = listOf(1, 2, 3, 4, 5, 6))
@@ -171,6 +189,7 @@ private fun ticket(
 
 private class ManualAddFakeTicketRepository(
     initial: List<TicketBundle>,
+    private val failOnSave: Boolean = false,
 ) : TicketRepository {
     private val all = MutableStateFlow(initial)
     val savedBundles: MutableList<TicketBundle> = mutableListOf()
@@ -183,6 +202,9 @@ private class ManualAddFakeTicketRepository(
         all.map { list -> list.filter { it.round.number == round.number } }
 
     override suspend fun save(bundle: TicketBundle) {
+        if (failOnSave) {
+            throw IllegalStateException("save failed")
+        }
         savedBundles.add(bundle)
         all.update { it + bundle.copy(id = (it.maxOfOrNull { t -> t.id } ?: 0L) + 1L) }
     }
