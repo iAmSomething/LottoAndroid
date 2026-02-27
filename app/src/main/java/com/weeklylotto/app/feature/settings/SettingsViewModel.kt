@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weeklylotto.app.domain.model.ReminderConfig
 import com.weeklylotto.app.domain.service.MotionPreferenceStore
+import com.weeklylotto.app.domain.service.NoOpTicketBackupService
 import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
+import com.weeklylotto.app.domain.service.TicketBackupService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +26,7 @@ class SettingsViewModel(
     private val reminderConfigStore: ReminderConfigStore,
     private val reminderScheduler: ReminderScheduler,
     private val motionPreferenceStore: MotionPreferenceStore,
+    private val ticketBackupService: TicketBackupService = NoOpTicketBackupService,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
@@ -76,6 +79,42 @@ class SettingsViewModel(
             reminderConfigStore.save(config)
             reminderScheduler.schedule(config)
             _uiState.update { it.copy(message = "알림 설정을 저장했습니다.") }
+        }
+    }
+
+    fun backupTickets() {
+        viewModelScope.launch {
+            ticketBackupService
+                .backupCurrentTickets()
+                .onSuccess { summary ->
+                    _uiState.update {
+                        it.copy(
+                            message = "백업 파일 생성 완료 (${summary.ticketCount}건, ${summary.gameCount}게임)",
+                        )
+                    }
+                }.onFailure {
+                    _uiState.update { state ->
+                        state.copy(message = "백업 파일 생성에 실패했습니다.")
+                    }
+                }
+        }
+    }
+
+    fun restoreTicketsFromBackup() {
+        viewModelScope.launch {
+            ticketBackupService
+                .restoreLatestBackup()
+                .onSuccess { summary ->
+                    _uiState.update {
+                        it.copy(
+                            message = "백업 복원 완료 (${summary.ticketCount}건, ${summary.gameCount}게임)",
+                        )
+                    }
+                }.onFailure {
+                    _uiState.update { state ->
+                        state.copy(message = "백업 복원에 실패했습니다.")
+                    }
+                }
         }
     }
 

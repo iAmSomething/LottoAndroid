@@ -13,6 +13,7 @@ import com.weeklylotto.app.data.qr.QrTicketParser
 import com.weeklylotto.app.data.repository.DefaultResultEvaluator
 import com.weeklylotto.app.data.repository.DefaultWidgetDataProvider
 import com.weeklylotto.app.data.repository.GlanceWidgetRefreshScheduler
+import com.weeklylotto.app.data.repository.LocalTicketBackupService
 import com.weeklylotto.app.data.repository.RandomNumberGenerator
 import com.weeklylotto.app.data.repository.RemoteDrawRepository
 import com.weeklylotto.app.data.repository.RoomTicketRepository
@@ -26,8 +27,10 @@ import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
 import com.weeklylotto.app.domain.service.ResultEvaluator
 import com.weeklylotto.app.domain.service.ResultViewTracker
+import com.weeklylotto.app.domain.service.TicketBackupService
 import com.weeklylotto.app.domain.service.WidgetDataProvider
 import com.weeklylotto.app.domain.service.WidgetRefreshScheduler
+import java.io.File
 
 object AppGraph {
     private val lock = Any()
@@ -122,6 +125,13 @@ object AppGraph {
             return checkNotNull(motionPreferenceStoreInternal)
         }
 
+    private var ticketBackupServiceInternal: TicketBackupService? = null
+    val ticketBackupService: TicketBackupService
+        get() {
+            ensureDependenciesInitialized()
+            return checkNotNull(ticketBackupServiceInternal)
+        }
+
     fun init(context: Context) {
         if (initialized) {
             return
@@ -170,6 +180,11 @@ object AppGraph {
             val motionPreferenceStore = DataStoreMotionPreferenceStore(appContext)
             val widgetDataProvider = DefaultWidgetDataProvider(ticketRepository, drawRepository, resultEvaluator)
             val qrParser = QrTicketParser()
+            val ticketBackupService =
+                LocalTicketBackupService(
+                    ticketRepository = ticketRepository,
+                    backupFile = File(appContext.filesDir, "backups/tickets_backup_latest.json"),
+                )
 
             widgetRefreshSchedulerInternal = refreshScheduler
             ticketRepositoryInternal = ticketRepository
@@ -183,6 +198,7 @@ object AppGraph {
             widgetDataProviderInternal = widgetDataProvider
             qrTicketParserInternal = qrParser
             analyticsLoggerInternal = analyticsLogger
+            ticketBackupServiceInternal = ticketBackupService
         }
     }
 }

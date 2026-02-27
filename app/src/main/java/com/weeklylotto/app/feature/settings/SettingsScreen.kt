@@ -43,6 +43,7 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                         reminderConfigStore = AppGraph.reminderConfigStore,
                         reminderScheduler = AppGraph.reminderScheduler,
                         motionPreferenceStore = AppGraph.motionPreferenceStore,
+                        ticketBackupService = AppGraph.ticketBackupService,
                     )
                 },
         )
@@ -153,6 +154,24 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text("알림 설정 저장")
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    MotionButton(
+                        onClick = viewModel::backupTickets,
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text("백업 파일 생성")
+                    }
+                    MotionButton(
+                        onClick = viewModel::restoreTicketsFromBackup,
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text("최근 백업 복원")
+                    }
                 }
             }
         }
