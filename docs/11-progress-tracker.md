@@ -6,6 +6,9 @@
 
 ## 2026-03-01
 - 완료 작업
+  - `B04` v1 구현: 목표 기반 구매 알림 정책 추가(토요일 18시 이전 미등록 시 리마인드, 등록 완료 시 알림 스킵)
+  - 워커 연동: `PurchaseReminderWorker`에서 현재 회차 티켓 존재 여부 조회 후 정책 기반 제목/본문/스킵 처리
+  - 회귀 테스트/증적 추가: `PurchaseReminderPolicyTest` PASS, 로컬 리포트 `docs/assets/distribution/goal_reminder_b04_local_2026-03-01.md`
   - `A01` v1 구현: Number Generator에 원탭 저장 CTA 추가(`랜덤 생성 후 바로 저장`, 잠금 제외 재생성 + 즉시 저장)
   - 회귀 테스트/증적 추가: `NumberGeneratorViewModelTest` PASS, 로컬 리포트 `docs/assets/distribution/generator_one_tap_save_local_2026-03-01.md`
   - `E03` v1 구현: 크래시/ANR 자동 분류 템플릿 스크립트 추가(`scripts/classify-crash-anr-template.sh`, adb/log-file 입력 + Markdown 리포트 출력)
