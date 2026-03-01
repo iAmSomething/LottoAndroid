@@ -15,6 +15,7 @@ import com.weeklylotto.app.domain.service.NumberGenerator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -27,12 +28,23 @@ data class NumberGeneratorUiState(
     val manualInputError: String? = null,
 )
 
+@Suppress("TooManyFunctions")
 class NumberGeneratorViewModel(
     private val numberGenerator: NumberGenerator,
     private val ticketRepository: TicketRepository,
+    private val random: Random = Random.Default,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NumberGeneratorUiState(games = numberGenerator.generateInitialGames()))
     val uiState: StateFlow<NumberGeneratorUiState> = _uiState.asStateFlow()
+    private var historicalBundles: List<TicketBundle> = emptyList()
+
+    init {
+        viewModelScope.launch {
+            ticketRepository.observeAllTickets().collect { bundles ->
+                historicalBundles = bundles
+            }
+        }
+    }
 
     fun selectSlot(slot: GameSlot) {
         _uiState.update { it.copy(selectedSlot = slot, manualInputError = null) }
@@ -125,6 +137,22 @@ class NumberGeneratorViewModel(
         saveCurrentAsWeeklyTicket(successMessage = "잠금 번호 기준으로 새 번호를 생성해 저장했습니다.")
     }
 
+    fun generatePreferredPatternGames() {
+        _uiState.update { state ->
+            val result =
+                generatePreferredPatternGames(
+                    currentGames = state.games,
+                    history = historicalBundles,
+                    random = random,
+                )
+            state.copy(
+                games = result.games,
+                manualInputError = null,
+                toastMessage = result.message,
+            )
+        }
+    }
+
     fun saveCurrentAsWeeklyTicket(
         successMessage: String = "이번 주 번호를 저장했습니다. 동일 회차 자동번호는 최신 저장본으로 갱신됩니다.",
     ) {
@@ -173,12 +201,103 @@ private data class ManualApplyResult(
     val manualInputError: String? = null,
 )
 
+private data class PreferredPatternResult(
+    val games: List<LottoGame>,
+    val message: String,
+)
+
 private enum class ManualApplyAction {
     REPLACED,
     LOCKED_EXISTING,
     ALREADY_LOCKED,
     ALL_LOCKED,
     INVALID_TARGET,
+}
+
+private fun generatePreferredPatternGames(
+    currentGames: List<LottoGame>,
+    history: List<TicketBundle>,
+    random: Random,
+): PreferredPatternResult {
+    val result =
+        if (currentGames.isEmpty()) {
+            PreferredPatternResult(
+                games = currentGames,
+                message = "추천 생성 대상이 없습니다.",
+            )
+        } else {
+            val frequencies =
+                history
+                    .asSequence()
+                    .flatMap { bundle -> bundle.games.asSequence() }
+                    .flatMap { game -> game.numbers.asSequence() }
+                    .groupingBy { number -> number.value }
+                    .eachCount()
+
+            if (frequencies.isEmpty()) {
+                PreferredPatternResult(
+                    games = currentGames,
+                    message = "추천 데이터가 없어 현재 번호를 유지합니다.",
+                )
+            } else {
+                val topNumbers =
+                    frequencies
+                        .entries
+                        .sortedByDescending { it.value }
+                        .take(3)
+                        .map { it.key }
+
+                val recommended =
+                    currentGames.map { game ->
+                        game.copy(
+                            numbers = pickWeightedUniqueNumbers(frequencies, random),
+                            lockedNumbers = emptySet(),
+                            mode = GameMode.AUTO,
+                        )
+                    }
+                val topSummary = topNumbers.joinToString(", ") { number -> number.toString().padStart(2, '0') }
+                PreferredPatternResult(
+                    games = recommended,
+                    message = "선호 패턴 추천 번호를 생성했습니다. (상위 빈도: $topSummary)",
+                )
+            }
+        }
+
+    return result
+}
+
+private fun pickWeightedUniqueNumbers(
+    frequencies: Map<Int, Int>,
+    random: Random,
+): List<LottoNumber> {
+    val available = (1..45).toMutableSet()
+    val chosen = mutableListOf<LottoNumber>()
+
+    repeat(6) {
+        var totalWeight = 0
+        val weights =
+            available.associateWith { number ->
+                // Keep all numbers selectable while biasing towards frequent picks.
+                val weight = (frequencies[number] ?: 0) + 1
+                totalWeight += weight
+                weight
+            }
+
+        var threshold = random.nextInt(totalWeight)
+        var selected = available.first()
+        for (number in available.sorted()) {
+            threshold -= weights.getValue(number)
+            if (threshold < 0) {
+                selected = number
+                break
+            }
+        }
+
+        available.remove(selected)
+        chosen += LottoNumber(selected)
+    }
+
+    return chosen.sortedBy { it.value }
 }
 
 private fun validateManualInput(rawInput: String): ManualInputValidation =

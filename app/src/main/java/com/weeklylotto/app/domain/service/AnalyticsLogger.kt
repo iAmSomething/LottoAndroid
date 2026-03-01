@@ -56,4 +56,5 @@ object AnalyticsActionValue {
     const val LOCATION_STORE_SEARCH_FAIL = "location_store_search_fail"
     const val LOCATION_STORE_SEARCH_COPY_LINK = "location_store_search_copy_link"
     const val DUPLICATE_WARNING_GENERATE = "duplicate_warning_generate"
+    const val PREFERRED_PATTERN_GENERATE = "preferred_pattern_generate"
 }
