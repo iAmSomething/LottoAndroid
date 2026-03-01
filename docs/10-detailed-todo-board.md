@@ -38,6 +38,7 @@
 - [x] B-022 개인 루틴 캘린더 v1 추가(최근 8주 구매/결과확인 히스토리 카드, `B01`)
 - [x] B-023 목표 기반 구매 알림 v1(토요일 18시 이전 미등록 리마인드 + 등록완료 시 스킵, `B04`)
 - [x] B-024 미확인 결과 리마인드 v1(최신회차 티켓 보유 + 미확인 시 결과 확인 알림, `B02`)
+- [x] B-025 주간 리포트 카드 v1 보강(당첨률/결과확인 상태 지표 추가, `B03`)
 
 ## C. QR 등록
 - [x] C-001 QR URL 파서(2포맷) 구현
@@ -219,6 +220,7 @@
 - [x] L-030 개인 루틴 캘린더 v1 구현(`HomeViewModel.routineHistory`, Home 루틴 카드, 최근 확인 회차 tracker 확장)
 - [x] L-031 목표 기반 구매 알림 v1 구현(`PurchaseReminderWorker` 등록여부 기반 발송/스킵 정책 + 정책 테스트)
 - [x] L-032 미확인 결과 리마인드 v1 구현(`ResultReminderWorker` 미확인 기준 발송/스킵 정책 + 정책 테스트)
+- [x] L-033 주간 리포트 카드 v1 보강(`WeeklyReportSummary` 지표 확장 + Home 카드 노출 + 회귀 테스트)
 
 ## M. 스플래시/상호작용 모션 고도화
 - [x] M-001 스플래시 시나리오 정의(콜드/웜/오류 브리지)
@@ -557,3 +559,8 @@
 - [x] BK-001 결과 리마인더 정책 함수 추가(`resolveResultReminderMessage`: 최신회차/티켓보유/확인여부 분기)
 - [x] BK-002 `ResultReminderWorker`에 미확인 결과 기준 발송/스킵 로직 연동(최신회차 fetch + 티켓/확인상태 조회)
 - [x] BK-003 정책 회귀 테스트/증적 반영(`ResultReminderPolicyTest`, `docs/assets/distribution/unseen_result_reminder_b02_local_2026-03-01.md`) 및 문서 동기화(`11`, `16`, `21`, `22`)
+
+## BL. 주간 리포트 카드(B03) v1 보강(2026-03-01 Cycle-61)
+- [x] BL-001 `WeeklyReportSummary` 지표 확장(`winningRatePercent`, `resultViewed`)
+- [x] BL-002 Home 주간 리포트 카드에 당첨률/결과확인 상태 노출 추가
+- [x] BL-003 회귀 테스트/증적 반영(`HomeViewModelTest`, `docs/assets/distribution/weekly_report_card_b03_local_2026-03-01.md`) 및 문서 동기화(`11`, `16`, `21`, `22`)

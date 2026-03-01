@@ -73,6 +73,8 @@ class HomeViewModelTest {
             assertThat(state.weeklyReport?.winningGames).isEqualTo(2)
             assertThat(state.weeklyReport?.totalPurchaseAmount).isEqualTo(2_000L)
             assertThat(state.weeklyReport?.totalWinningAmount).isEqualTo(10_000L)
+            assertThat(state.weeklyReport?.winningRatePercent).isEqualTo(100)
+            assertThat(state.weeklyReport?.resultViewed).isFalse()
             assertThat(state.routineHistory).hasSize(8)
             assertThat(state.routineHistory.first().round).isEqualTo(1212)
             assertThat(state.routineHistory.first().purchasedGames).isEqualTo(2)
@@ -81,6 +83,30 @@ class HomeViewModelTest {
             assertThat(state.routineHistory[1].resultViewed).isTrue()
             assertThat(state.routineHistory[2].round).isEqualTo(1210)
             assertThat(state.routineHistory[2].resultViewed).isTrue()
+        }
+
+    @Test
+    fun 최신회차를_이미_확인한_경우_주간리포트_확인상태를_true로_표시한다() =
+        runTest {
+            val drawRound = Round(1212, LocalDate.of(2026, 2, 21))
+            val draw =
+                DrawResult(
+                    round = drawRound,
+                    mainNumbers = listOf(3, 12, 19, 24, 35, 41).map(::LottoNumber),
+                    bonus = LottoNumber(7),
+                    drawDate = LocalDate.of(2026, 2, 21),
+                )
+            val viewModel =
+                HomeViewModel(
+                    ticketRepository = HomeFakeTicketRepository(listOf(bundle(id = 1L, round = drawRound, games = 1))),
+                    drawRepository = HomeFakeDrawRepository(draw),
+                    resultEvaluator = HomeAlwaysFifthEvaluator,
+                    resultViewTracker = HomeFakeResultViewTracker(lastViewedRound = 1212),
+                )
+
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.weeklyReport?.resultViewed).isTrue()
         }
 }
 
