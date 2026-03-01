@@ -29,6 +29,12 @@ data class WeeklyReportSummary(
     val netProfitAmount: Long get() = totalWinningAmount - totalPurchaseAmount
 }
 
+data class RoutineHistoryEntry(
+    val round: Int,
+    val purchasedGames: Int,
+    val resultViewed: Boolean,
+)
+
 data class HomeUiState(
     val currentRound: Int,
     val drawDate: LocalDate,
@@ -37,6 +43,7 @@ data class HomeUiState(
     val hasUnseenResult: Boolean = false,
     val unseenRound: Int? = null,
     val weeklyReport: WeeklyReportSummary? = null,
+    val routineHistory: List<RoutineHistoryEntry> = emptyList(),
 ) {
     companion object {
         fun initial(): HomeUiState {
@@ -57,6 +64,10 @@ class HomeViewModel(
     private val resultEvaluator: ResultEvaluator,
     private val resultViewTracker: ResultViewTracker,
 ) : ViewModel() {
+    private companion object {
+        const val ROUTINE_HISTORY_WEEKS = 8
+    }
+
     private val _uiState = MutableStateFlow(HomeUiState.initial())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
@@ -64,6 +75,7 @@ class HomeViewModel(
     private var latestDrawRound: Int? = null
     private var latestDraw: DrawResult? = null
     private var lastViewedRound: Int? = null
+    private var recentViewedRounds: Set<Int> = emptySet()
 
     init {
         viewModelScope.launch {
@@ -79,6 +91,8 @@ class HomeViewModel(
         }
         viewModelScope.launch {
             lastViewedRound = resultViewTracker.loadLastViewedRound()
+            recentViewedRounds =
+                resultViewTracker.loadRecentViewedRounds(limit = ROUTINE_HISTORY_WEEKS).toSet()
             recalculateResultInsights()
         }
         viewModelScope.launch {
@@ -131,12 +145,28 @@ class HomeViewModel(
 
         val viewedRound = lastViewedRound ?: 0
         val hasUnseenResult = totalGames > 0 && drawRound > viewedRound
+        val historyBaseRound = drawRound.coerceAtLeast(1)
+        val routineHistory =
+            (historyBaseRound downTo (historyBaseRound - ROUTINE_HISTORY_WEEKS + 1).coerceAtLeast(1))
+                .map { roundNumber ->
+                    val purchasedGames =
+                        allTickets
+                            .asSequence()
+                            .filter { bundle -> bundle.round.number == roundNumber }
+                            .sumOf { bundle -> bundle.games.size }
+                    RoutineHistoryEntry(
+                        round = roundNumber,
+                        purchasedGames = purchasedGames,
+                        resultViewed = roundNumber in recentViewedRounds,
+                    )
+                }
 
         _uiState.update { state ->
             state.copy(
                 hasUnseenResult = hasUnseenResult,
                 unseenRound = if (hasUnseenResult) drawRound else null,
                 weeklyReport = report,
+                routineHistory = routineHistory,
             )
         }
     }

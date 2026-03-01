@@ -56,7 +56,11 @@ class HomeViewModelTest {
                     ticketRepository = ticketRepository,
                     drawRepository = HomeFakeDrawRepository(draw),
                     resultEvaluator = HomeAlwaysFifthEvaluator,
-                    resultViewTracker = HomeFakeResultViewTracker(lastViewedRound = 1211),
+                    resultViewTracker =
+                        HomeFakeResultViewTracker(
+                            lastViewedRound = 1211,
+                            recentViewedRounds = listOf(1211, 1210),
+                        ),
                 )
 
             advanceUntilIdle()
@@ -69,6 +73,14 @@ class HomeViewModelTest {
             assertThat(state.weeklyReport?.winningGames).isEqualTo(2)
             assertThat(state.weeklyReport?.totalPurchaseAmount).isEqualTo(2_000L)
             assertThat(state.weeklyReport?.totalWinningAmount).isEqualTo(10_000L)
+            assertThat(state.routineHistory).hasSize(8)
+            assertThat(state.routineHistory.first().round).isEqualTo(1212)
+            assertThat(state.routineHistory.first().purchasedGames).isEqualTo(2)
+            assertThat(state.routineHistory.first().resultViewed).isFalse()
+            assertThat(state.routineHistory[1].round).isEqualTo(1211)
+            assertThat(state.routineHistory[1].resultViewed).isTrue()
+            assertThat(state.routineHistory[2].round).isEqualTo(1210)
+            assertThat(state.routineHistory[2].resultViewed).isTrue()
         }
 }
 
@@ -108,8 +120,11 @@ private class HomeFakeDrawRepository(
 
 private class HomeFakeResultViewTracker(
     private val lastViewedRound: Int?,
+    private val recentViewedRounds: List<Int> = emptyList(),
 ) : ResultViewTracker {
     override suspend fun loadLastViewedRound(): Int? = lastViewedRound
+
+    override suspend fun loadRecentViewedRounds(limit: Int): List<Int> = recentViewedRounds.take(limit)
 
     override suspend fun markRoundViewed(roundNumber: Int) = Unit
 }
