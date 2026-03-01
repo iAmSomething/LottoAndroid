@@ -15,6 +15,7 @@ import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.ResultEvaluator
+import com.weeklylotto.app.feature.stats.DuplicateWarningLevel
 import com.weeklylotto.app.feature.stats.StatsPeriod
 import com.weeklylotto.app.feature.stats.StatsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -146,7 +147,10 @@ class StatsViewModelTest {
             val round = Round(1206, LocalDate.of(2026, 4, 18))
             val viewModel =
                 StatsViewModel(
-                    ticketRepository = StatsTicketRepository(listOf(ticket(round, listOf(1, 2, 3, 4, 5, 6), Instant.now()))),
+                    ticketRepository =
+                        StatsTicketRepository(
+                            listOf(ticket(round, listOf(1, 2, 3, 4, 5, 6), Instant.now())),
+                        ),
                     drawRepository = StatsDrawRepository(draw(round)),
                     resultEvaluator = OneWinEvaluator,
                 )
@@ -331,6 +335,59 @@ class StatsViewModelTest {
 
             assertThat(distribution).hasSize(5)
             assertThat(distribution.all { it.count == 0 && it.percent == 0 }).isTrue()
+        }
+
+    @Test
+    fun 조합_중복도_경고는_중복률과_최다반복_조합을_계산한다() =
+        runTest {
+            val round = Round(1213, LocalDate.of(2026, 5, 16))
+            val repeated1 = ticket(round, listOf(1, 2, 3, 4, 5, 6), Instant.now())
+            val repeated2 = ticket(round, listOf(1, 2, 3, 4, 5, 6), Instant.now())
+            val unique = ticket(round, listOf(7, 8, 9, 10, 11, 12), Instant.now())
+
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(listOf(repeated1, repeated2, unique)),
+                    drawRepository = StatsDrawRepository(draw(round)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            val insight = viewModel.uiState.value.duplicateInsight
+
+            assertThat(insight.duplicateGameCount).isEqualTo(1)
+            assertThat(insight.duplicatedCombinationCount).isEqualTo(1)
+            assertThat(insight.duplicateRatePercent).isEqualTo(33)
+            assertThat(insight.level).isEqualTo(DuplicateWarningLevel.WATCH)
+            assertThat(insight.mostRepeatedCount).isEqualTo(2)
+            assertThat(insight.mostRepeatedCombination.map { it.value })
+                .containsExactly(1, 2, 3, 4, 5, 6)
+                .inOrder()
+        }
+
+    @Test
+    fun 조합_중복도가_없으면_안정_상태를_유지한다() =
+        runTest {
+            val round = Round(1214, LocalDate.of(2026, 5, 23))
+            val bundleA = ticket(round, listOf(1, 2, 3, 4, 5, 6), Instant.now())
+            val bundleB = ticket(round, listOf(7, 8, 9, 10, 11, 12), Instant.now())
+
+            val viewModel =
+                StatsViewModel(
+                    ticketRepository = StatsTicketRepository(listOf(bundleA, bundleB)),
+                    drawRepository = StatsDrawRepository(draw(round)),
+                    resultEvaluator = OneWinEvaluator,
+                )
+
+            advanceUntilIdle()
+            val insight = viewModel.uiState.value.duplicateInsight
+
+            assertThat(insight.duplicateGameCount).isEqualTo(0)
+            assertThat(insight.duplicatedCombinationCount).isEqualTo(0)
+            assertThat(insight.duplicateRatePercent).isEqualTo(0)
+            assertThat(insight.level).isEqualTo(DuplicateWarningLevel.STABLE)
+            assertThat(insight.mostRepeatedCombination).isEmpty()
+            assertThat(insight.mostRepeatedCount).isEqualTo(0)
         }
 }
 

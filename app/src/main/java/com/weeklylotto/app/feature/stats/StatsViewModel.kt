@@ -43,9 +43,26 @@ data class StatsUiState(
     val sourceStats: List<SourceStats> = TicketSource.entries.map { SourceStats(source = it) },
     val roiTrend: List<RoiTrendPoint> = emptyList(),
     val numberDistribution: List<NumberRangeBucket> = defaultNumberRangeBuckets(),
+    val duplicateInsight: DuplicateCombinationInsight = DuplicateCombinationInsight(),
 ) {
     val netProfitAmount: Long = totalWinAmount - totalPurchaseAmount
 }
+
+enum class DuplicateWarningLevel {
+    STABLE,
+    WATCH,
+    WARNING,
+}
+
+data class DuplicateCombinationInsight(
+    val duplicateRatePercent: Int = 0,
+    val duplicateGameCount: Int = 0,
+    val duplicatedCombinationCount: Int = 0,
+    val mostRepeatedCombination: List<LottoNumber> = emptyList(),
+    val mostRepeatedCount: Int = 0,
+    val level: DuplicateWarningLevel = DuplicateWarningLevel.STABLE,
+    val recommendation: String = "현재 조합 다양성이 안정적입니다.",
+)
 
 data class NumberRangeBucket(
     val label: String,
@@ -156,6 +173,7 @@ class StatsViewModel(
         recalculateStats()
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun recalculateStats() {
         calculateJob?.cancel()
         calculateJob =
@@ -261,9 +279,56 @@ class StatsViewModel(
                                     0
                                 } else {
                                     (count * 100) / totalPickedNumbers
-                                },
+                            },
                         )
                     }
+
+                val combinationCounts =
+                    games
+                        .map { game -> game.numbers.map { number -> number.value }.sorted() }
+                        .groupingBy { it }
+                        .eachCount()
+                val duplicatedCombinationCounts = combinationCounts.filterValues { it > 1 }
+                val duplicateGameCount = duplicatedCombinationCounts.values.sumOf { count -> count - 1 }
+                val duplicateRatePercent =
+                    if (games.isEmpty()) {
+                        0
+                    } else {
+                        (duplicateGameCount * 100) / games.size
+                    }
+                val mostRepeatedEntry = duplicatedCombinationCounts.maxByOrNull { it.value }
+                val duplicateLevel =
+                    when {
+                        duplicateRatePercent >= 35 -> DuplicateWarningLevel.WARNING
+                        duplicateRatePercent >= 15 -> DuplicateWarningLevel.WATCH
+                        else -> DuplicateWarningLevel.STABLE
+                    }
+                val leastPickedBucket = numberDistribution.minByOrNull { bucket -> bucket.count }
+                val recommendation =
+                    when (duplicateLevel) {
+                        DuplicateWarningLevel.WARNING ->
+                            if (leastPickedBucket != null) {
+                                "${leastPickedBucket.label} 구간 번호를 2개 이상 섞어서 중복을 낮춰보세요."
+                            } else {
+                                "중복 조합이 높습니다. 번호 2개 이상을 교체해 다양성을 높여보세요."
+                            }
+                        DuplicateWarningLevel.WATCH -> "최근 반복 조합이 늘고 있어요. 저장 전 1~2개 번호 교체를 권장합니다."
+                        DuplicateWarningLevel.STABLE -> "현재 조합 다양성이 안정적입니다."
+                    }
+                val duplicateInsight =
+                    DuplicateCombinationInsight(
+                        duplicateRatePercent = duplicateRatePercent,
+                        duplicateGameCount = duplicateGameCount,
+                        duplicatedCombinationCount = duplicatedCombinationCounts.size,
+                        mostRepeatedCombination =
+                            mostRepeatedEntry
+                                ?.key
+                                ?.map(::LottoNumber)
+                                .orEmpty(),
+                        mostRepeatedCount = mostRepeatedEntry?.value ?: 0,
+                        level = duplicateLevel,
+                        recommendation = recommendation,
+                    )
 
                 _uiState.update {
                     it.copy(
@@ -275,6 +340,7 @@ class StatsViewModel(
                         sourceStats = sourceStats,
                         roiTrend = roiTrend,
                         numberDistribution = numberDistribution,
+                        duplicateInsight = duplicateInsight,
                     )
                 }
             }

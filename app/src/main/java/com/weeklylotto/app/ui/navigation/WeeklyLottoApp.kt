@@ -116,7 +116,9 @@ fun WeeklyLottoApp(initialRoute: String? = null) {
                 ResultScreen()
             }
             composable(AppDestination.Stats.route) {
-                StatsScreen()
+                StatsScreen(
+                    onNavigateGenerator = { navController.navigate(AppDestination.Generator.route) },
+                )
             }
             composable(AppDestination.Settings.route) {
                 SettingsScreen(onNavigateBack = { navController.popBackStack() })

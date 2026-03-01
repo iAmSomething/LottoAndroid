@@ -55,4 +55,5 @@ object AnalyticsActionValue {
     const val LOCATION_STORE_SEARCH_OPEN_MAP = "location_store_search_open_map"
     const val LOCATION_STORE_SEARCH_FAIL = "location_store_search_fail"
     const val LOCATION_STORE_SEARCH_COPY_LINK = "location_store_search_copy_link"
+    const val DUPLICATE_WARNING_GENERATE = "duplicate_warning_generate"
 }
