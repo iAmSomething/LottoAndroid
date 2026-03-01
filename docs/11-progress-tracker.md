@@ -6,6 +6,9 @@
 
 ## 2026-03-01
 - 완료 작업
+  - `B02` v1 구현: 미확인 결과 리마인드 정책 추가(최신 회차 티켓 보유 + 결과 미확인 상태에서만 결과 확인 알림 발송)
+  - 워커 연동: `ResultReminderWorker`에서 최신 회차/티켓 보유/최근 확인 회차를 조회해 발송 여부 결정
+  - 회귀 테스트/증적 추가: `ResultReminderPolicyTest` PASS, 로컬 리포트 `docs/assets/distribution/unseen_result_reminder_b02_local_2026-03-01.md`
   - `B04` v1 구현: 목표 기반 구매 알림 정책 추가(토요일 18시 이전 미등록 시 리마인드, 등록 완료 시 알림 스킵)
   - 워커 연동: `PurchaseReminderWorker`에서 현재 회차 티켓 존재 여부 조회 후 정책 기반 제목/본문/스킵 처리
   - 회귀 테스트/증적 추가: `PurchaseReminderPolicyTest` PASS, 로컬 리포트 `docs/assets/distribution/goal_reminder_b04_local_2026-03-01.md`

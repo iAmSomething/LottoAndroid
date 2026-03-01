@@ -37,6 +37,7 @@
 - [x] B-021 번호 생성 원탭 저장 플로우 추가(잠금 제외 재생성 + 즉시 저장 CTA, `A01` v1)
 - [x] B-022 개인 루틴 캘린더 v1 추가(최근 8주 구매/결과확인 히스토리 카드, `B01`)
 - [x] B-023 목표 기반 구매 알림 v1(토요일 18시 이전 미등록 리마인드 + 등록완료 시 스킵, `B04`)
+- [x] B-024 미확인 결과 리마인드 v1(최신회차 티켓 보유 + 미확인 시 결과 확인 알림, `B02`)
 
 ## C. QR 등록
 - [x] C-001 QR URL 파서(2포맷) 구현
@@ -217,6 +218,7 @@
 - [x] L-029 크래시/ANR 자동 분류 템플릿 v1 구현(`scripts/classify-crash-anr-template.sh`, 분류 리포트 자동 생성)
 - [x] L-030 개인 루틴 캘린더 v1 구현(`HomeViewModel.routineHistory`, Home 루틴 카드, 최근 확인 회차 tracker 확장)
 - [x] L-031 목표 기반 구매 알림 v1 구현(`PurchaseReminderWorker` 등록여부 기반 발송/스킵 정책 + 정책 테스트)
+- [x] L-032 미확인 결과 리마인드 v1 구현(`ResultReminderWorker` 미확인 기준 발송/스킵 정책 + 정책 테스트)
 
 ## M. 스플래시/상호작용 모션 고도화
 - [x] M-001 스플래시 시나리오 정의(콜드/웜/오류 브리지)
@@ -550,3 +552,8 @@
 - [x] BJ-001 구매 리마인더 정책 함수 추가(`resolvePurchaseReminderMessage`: 토요일 18시 이전 미등록/등록완료/기타시간 분기)
 - [x] BJ-002 `PurchaseReminderWorker`에 현재 회차 티켓 존재 여부 기반 발송/스킵 로직 연동
 - [x] BJ-003 정책 회귀 테스트/증적 반영(`PurchaseReminderPolicyTest`, `docs/assets/distribution/goal_reminder_b04_local_2026-03-01.md`) 및 문서 동기화(`11`, `16`, `21`, `22`)
+
+## BK. 미확인 결과 리마인드(B02) v1 구현(2026-03-01 Cycle-60)
+- [x] BK-001 결과 리마인더 정책 함수 추가(`resolveResultReminderMessage`: 최신회차/티켓보유/확인여부 분기)
+- [x] BK-002 `ResultReminderWorker`에 미확인 결과 기준 발송/스킵 로직 연동(최신회차 fetch + 티켓/확인상태 조회)
+- [x] BK-003 정책 회귀 테스트/증적 반영(`ResultReminderPolicyTest`, `docs/assets/distribution/unseen_result_reminder_b02_local_2026-03-01.md`) 및 문서 동기화(`11`, `16`, `21`, `22`)
