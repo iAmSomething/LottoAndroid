@@ -3,6 +3,7 @@ package com.weeklylotto.app
 import com.google.common.truth.Truth.assertThat
 import com.weeklylotto.app.data.qr.QrTicketParser
 import com.weeklylotto.app.domain.error.AppResult
+import com.weeklylotto.app.domain.error.AppError
 import org.junit.Test
 
 class QrTicketParserTest {
@@ -66,5 +67,32 @@ class QrTicketParserTest {
         val result = parser.parse(input)
 
         assertThat(result).isInstanceOf(AppResult.Failure::class.java)
+        val failure = result as AppResult.Failure
+        val error = failure.error as AppError.ParseError
+        assertThat(error.message).contains("[qr:unsupported_format]")
+    }
+
+    @Test
+    fun `query 형식에서 numbers 누락이면 payload 실패코드를 반환한다`() {
+        val input = "https://example.com?drwNo=1100"
+
+        val result = parser.parse(input)
+
+        assertThat(result).isInstanceOf(AppResult.Failure::class.java)
+        val failure = result as AppResult.Failure
+        val error = failure.error as AppError.ParseError
+        assertThat(error.message).contains("[qr:missing_payload]")
+    }
+
+    @Test
+    fun `query 형식에서 회차가 숫자가 아니면 invalid_round 실패코드를 반환한다`() {
+        val input = "https://example.com?drwNo=abc&numbers=1,2,3,4,5,6"
+
+        val result = parser.parse(input)
+
+        assertThat(result).isInstanceOf(AppResult.Failure::class.java)
+        val failure = result as AppResult.Failure
+        val error = failure.error as AppError.ParseError
+        assertThat(error.message).contains("[qr:invalid_round]")
     }
 }

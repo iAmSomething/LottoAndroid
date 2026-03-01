@@ -8,6 +8,8 @@
 - 완료 작업
   - `A03` 구현: Result 초기 진입 시 최근 조회 회차를 기본값으로 복원하도록 `ResultViewModel` 로직 반영
   - 회귀 테스트 추가: `ResultViewModelTest`에 최근 조회 회차 우선 조회 케이스 추가
+  - `A04` v1 구현: QR 파싱 실패 코드 분류(`unsupported_format`/`missing_payload`/`invalid_round`/`invalid_number`) 및 유형별 가이드 타이틀/메시지 반영
+  - 회귀 테스트/증적 추가: `QrTicketParserTest`, `QrScanViewModelTest` PASS, 로컬 리포트 `docs/assets/distribution/qr_failure_guide_local_2026-02-27.md`
   - 실행 보드 동기화: `10-detailed-todo-board.md`에 `AQ` 사이클(`AQ-001~AQ-003`) 추가
   - `AP-005` 구현: Home에 `공식 홈페이지에서 구매하기` CTA 1차 노출, 1회 안내 모달, 외부 열기 실패 fallback(브라우저 재시도/링크 복사) 적용
   - 계측 키 반영: `purchase_redirect_tap`, `purchase_redirect_confirm`, `purchase_redirect_fail`, `purchase_redirect_open_browser`, `purchase_redirect_copy_link`
