@@ -82,7 +82,9 @@
 - API 요청 관측 이벤트(`ops_api_request`)의 source/round/latency/status/error_type 스키마 검증
 - 저장소 mutation 관측 이벤트(`ops_storage_mutation`)의 operation/latency/status 스키마 검증
 - 임계치 자동 판정: official failure rate/terminal failure rate/API p95/storage failure rate/storage p95 기준 PASS/FAIL 검증
+- 크래시/ANR 자동 분류 템플릿 검증: 카테고리/심각도/owner/즉시조치 매핑 리포트 생성 검증
 - 자동 검증: `run-ops-observability-check.sh`, `verify-analytics-events.sh --profile ops-core`, `evaluate-ops-observability-threshold.sh`
+- 자동 검증(보강): `classify-crash-anr-template.sh --log-file <path> --report-file <path>`
 
 ### 모션/상호작용
 - 스플래시 콜드/웜 실행 시간 검증(목표 900ms 이하/축약 300ms)
