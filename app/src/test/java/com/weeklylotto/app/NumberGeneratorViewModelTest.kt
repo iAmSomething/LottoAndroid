@@ -11,11 +11,19 @@ import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.NumberGenerator
 import com.weeklylotto.app.feature.generator.NumberGeneratorViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class NumberGeneratorViewModelTest {
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     @Test
     fun 수동입력_빈값이면_에러메시지를_노출한다() {
         val viewModel =
@@ -98,6 +106,36 @@ class NumberGeneratorViewModelTest {
             .isEqualTo("잠금되지 않은 번호를 교체 대상으로 선택해주세요.")
     }
 
+    @Test
+    fun 원탭_생성저장은_재생성결과를_저장한다() =
+        runTest {
+            val regeneratedGame =
+                LottoGame(
+                    slot = GameSlot.A,
+                    numbers = listOf(2, 8, 14, 20, 26, 32).map(::LottoNumber),
+                )
+            val repository = FakeTicketRepository()
+            val generator =
+                FakeNumberGenerator(
+                    initialGames = baseGames(),
+                    regeneratedGames = listOf(regeneratedGame),
+                )
+            val viewModel =
+                NumberGeneratorViewModel(
+                    numberGenerator = generator,
+                    ticketRepository = repository,
+                )
+
+            viewModel.regenerateAndSaveAsWeeklyTicket()
+            advanceUntilIdle()
+
+            assertThat(generator.regenerateCallCount).isEqualTo(1)
+            assertThat(repository.savedBundles).hasSize(1)
+            assertThat(repository.savedBundles.first().games.first().numbers.map { it.value })
+                .containsExactly(2, 8, 14, 20, 26, 32)
+            assertThat(viewModel.uiState.value.toastMessage).isEqualTo("잠금 번호 기준으로 새 번호를 생성해 저장했습니다.")
+        }
+
     private fun baseGames(): List<LottoGame> =
         listOf(
             LottoGame(
@@ -109,20 +147,30 @@ class NumberGeneratorViewModelTest {
 
 private class FakeNumberGenerator(
     private val initialGames: List<LottoGame>,
+    private val regeneratedGames: List<LottoGame> = initialGames,
 ) : NumberGenerator {
+    var regenerateCallCount: Int = 0
+
     override fun generateInitialGames(gameCount: Int): List<LottoGame> = initialGames
 
-    override fun regenerateExceptLocked(games: List<LottoGame>): List<LottoGame> = games
+    override fun regenerateExceptLocked(games: List<LottoGame>): List<LottoGame> {
+        regenerateCallCount += 1
+        return regeneratedGames
+    }
 }
 
 private class FakeTicketRepository : TicketRepository {
+    val savedBundles: MutableList<TicketBundle> = mutableListOf()
+
     override fun observeAllTickets(): Flow<List<TicketBundle>> = flowOf(emptyList())
 
     override fun observeCurrentRoundTickets(): Flow<List<TicketBundle>> = flowOf(emptyList())
 
     override fun observeTicketsByRound(round: Round): Flow<List<TicketBundle>> = flowOf(emptyList())
 
-    override suspend fun save(bundle: TicketBundle) = Unit
+    override suspend fun save(bundle: TicketBundle) {
+        savedBundles += bundle
+    }
 
     override suspend fun update(bundle: TicketBundle) = Unit
 
