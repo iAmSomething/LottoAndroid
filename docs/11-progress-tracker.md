@@ -4,6 +4,18 @@
 - 날짜 형식: `YYYY-MM-DD`
 - 필수 항목: 완료 작업, 미완료 작업, 블로커, 다음 액션
 
+## 2026-03-01
+- 완료 작업
+  - `A06` v1 구현: 외부 이동 1회 안내 모달을 현재 시각 기반 구매 시간 안내로 고도화(`OPEN`/`CLOSING_SOON`/`CLOSED`)
+  - 공통 정책 반영: `buildPurchaseRedirectNotice` 추가 후 Home/Result/Settings 안내 문구 공통 적용
+  - 회귀 테스트/증적 추가: `PurchaseRedirectNoticeTest`, `HomeExternalLinkTest` PASS, 로컬 리포트 `docs/assets/distribution/purchase_notice_window_local_2026-03-01.md`
+- 미완료 작업
+  - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
+- 블로커
+  - 실기기 미보유로 물리 디바이스 성능/워치 증적은 수집 불가
+- 다음 액션
+  - 구매 리다이렉트 안내 문구의 정책 변경(공식 구매 시간 변동) 대응을 위해 서버/원격 설정 기반으로 분리 검토
+
 ## 2026-02-27
 - 완료 작업
   - `A03` 구현: Result 초기 진입 시 최근 조회 회차를 기본값으로 복원하도록 `ResultViewModel` 로직 반영
