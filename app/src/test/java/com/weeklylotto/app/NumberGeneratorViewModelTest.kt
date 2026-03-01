@@ -7,6 +7,7 @@ import com.weeklylotto.app.domain.model.LottoGame
 import com.weeklylotto.app.domain.model.LottoNumber
 import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
+import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.NumberGenerator
@@ -136,6 +137,58 @@ class NumberGeneratorViewModelTest {
             assertThat(viewModel.uiState.value.toastMessage).isEqualTo("잠금 번호 기준으로 새 번호를 생성해 저장했습니다.")
         }
 
+    @Test
+    fun 선호패턴_추천생성은_히스토리빈도기반으로_5게임을_재구성한다() =
+        runTest {
+            val history =
+                listOf(
+                    ticketBundleWithSingleGame(1, 2, 3, 4, 5, 6),
+                    ticketBundleWithSingleGame(1, 2, 3, 7, 8, 9),
+                    ticketBundleWithSingleGame(1, 2, 10, 11, 12, 13),
+                )
+            val initialGames =
+                GameSlot.entries.take(5).map { slot ->
+                    LottoGame(
+                        slot = slot,
+                        numbers = listOf(20, 21, 22, 23, 24, 25).map(::LottoNumber),
+                    )
+                }
+            val viewModel =
+                NumberGeneratorViewModel(
+                    numberGenerator = FakeNumberGenerator(initialGames),
+                    ticketRepository = FakeTicketRepository(allTickets = history),
+                    random = kotlin.random.Random(0),
+                )
+
+            advanceUntilIdle()
+            viewModel.generatePreferredPatternGames()
+
+            val state = viewModel.uiState.value
+            assertThat(state.games).hasSize(5)
+            assertThat(state.games.all { game -> game.numbers.size == 6 && game.numbers.distinct().size == 6 }).isTrue()
+            assertThat(state.games.all { game -> game.lockedNumbers.isEmpty() && game.mode == GameMode.AUTO }).isTrue()
+            assertThat(state.toastMessage).contains("선호 패턴 추천 번호를 생성했습니다.")
+        }
+
+    @Test
+    fun 선호패턴_추천생성은_히스토리가_없으면_현재번호를_유지한다() =
+        runTest {
+            val initialGames = baseGames()
+            val viewModel =
+                NumberGeneratorViewModel(
+                    numberGenerator = FakeNumberGenerator(initialGames),
+                    ticketRepository = FakeTicketRepository(allTickets = emptyList()),
+                    random = kotlin.random.Random(0),
+                )
+
+            advanceUntilIdle()
+            viewModel.generatePreferredPatternGames()
+
+            val state = viewModel.uiState.value
+            assertThat(state.games).isEqualTo(initialGames)
+            assertThat(state.toastMessage).isEqualTo("추천 데이터가 없어 현재 번호를 유지합니다.")
+        }
+
     private fun baseGames(): List<LottoGame> =
         listOf(
             LottoGame(
@@ -159,14 +212,18 @@ private class FakeNumberGenerator(
     }
 }
 
-private class FakeTicketRepository : TicketRepository {
+private class FakeTicketRepository(
+    allTickets: List<TicketBundle> = emptyList(),
+) : TicketRepository {
     val savedBundles: MutableList<TicketBundle> = mutableListOf()
+    private val tickets = allTickets
 
-    override fun observeAllTickets(): Flow<List<TicketBundle>> = flowOf(emptyList())
+    override fun observeAllTickets(): Flow<List<TicketBundle>> = flowOf(tickets)
 
-    override fun observeCurrentRoundTickets(): Flow<List<TicketBundle>> = flowOf(emptyList())
+    override fun observeCurrentRoundTickets(): Flow<List<TicketBundle>> = flowOf(tickets)
 
-    override fun observeTicketsByRound(round: Round): Flow<List<TicketBundle>> = flowOf(emptyList())
+    override fun observeTicketsByRound(round: Round): Flow<List<TicketBundle>> =
+        flowOf(tickets.filter { it.round.number == round.number })
 
     override suspend fun save(bundle: TicketBundle) {
         savedBundles += bundle
@@ -183,3 +240,10 @@ private class FakeTicketRepository : TicketRepository {
 
     override suspend fun deleteByIds(ids: Set<Long>) = Unit
 }
+
+private fun ticketBundleWithSingleGame(vararg numbers: Int): TicketBundle =
+    TicketBundle(
+        round = Round(number = 1000 + numbers.first(), drawDate = java.time.LocalDate.of(2026, 1, 1)),
+        games = listOf(LottoGame(slot = GameSlot.A, numbers = numbers.map(::LottoNumber))),
+        source = TicketSource.GENERATED,
+    )

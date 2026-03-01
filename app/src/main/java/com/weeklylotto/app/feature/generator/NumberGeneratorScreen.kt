@@ -400,6 +400,23 @@ fun NumberGeneratorScreen() {
                             params =
                                 mapOf(
                                     AnalyticsParamKey.SCREEN to "generator",
+                                    AnalyticsParamKey.COMPONENT to "preferred_pattern_generate",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.PREFERRED_PATTERN_GENERATE,
+                                ),
+                        )
+                        viewModel.generatePreferredPatternGames()
+                    },
+                ) {
+                    Text("선호 패턴 추천 생성")
+                }
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "generator",
                                     AnalyticsParamKey.COMPONENT to "regenerate_except_locked",
                                     AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                 ),

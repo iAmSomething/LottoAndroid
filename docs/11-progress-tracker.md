@@ -28,6 +28,9 @@
   - `C01` v2 구현: 통계 중복도 경고 고도화(중복률/중복게임수/최다반복 조합 계산 + 추천 문구 + 번호생성 CTA)
   - 내비게이션/계측 연동: `StatsScreen` CTA에서 Generator 이동 및 `interaction_cta_press(component=duplicate_warning_card, action=duplicate_warning_generate)` 이벤트 추가
   - 회귀 테스트/증적 추가: `StatsViewModelTest` 중복도 경고/안정 상태 2건 PASS, 로컬 리포트 `docs/assets/distribution/stats_duplicate_recommendation_local_2026-03-01.md`
+  - `F03` v1 구현: Number Generator에 `선호 패턴 추천 생성` CTA 추가(과거 티켓 번호 빈도 기반 5게임 재구성)
+  - 뷰모델 확장: `NumberGeneratorViewModel.generatePreferredPatternGames` 추가 + 빈도 가중치 기반 추천 알고리즘/메시지 반영
+  - 회귀 테스트/증적 추가: `NumberGeneratorViewModelTest` 신규 2건 PASS, 로컬 리포트 `docs/assets/distribution/generator_preferred_pattern_local_2026-03-01.md`
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
