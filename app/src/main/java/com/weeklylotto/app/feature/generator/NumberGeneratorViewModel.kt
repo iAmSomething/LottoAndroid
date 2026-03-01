@@ -114,7 +114,20 @@ class NumberGeneratorViewModel(
         }
     }
 
-    fun saveCurrentAsWeeklyTicket() {
+    fun regenerateAndSaveAsWeeklyTicket() {
+        _uiState.update { state ->
+            state.copy(
+                games = numberGenerator.regenerateExceptLocked(state.games),
+                manualInputError = null,
+                toastMessage = null,
+            )
+        }
+        saveCurrentAsWeeklyTicket(successMessage = "잠금 번호 기준으로 새 번호를 생성해 저장했습니다.")
+    }
+
+    fun saveCurrentAsWeeklyTicket(
+        successMessage: String = "이번 주 번호를 저장했습니다. 동일 회차 자동번호는 최신 저장본으로 갱신됩니다.",
+    ) {
         viewModelScope.launch {
             val today = LocalDate.now()
             val drawDate = RoundEstimator.nextDrawDate(today)
@@ -132,7 +145,7 @@ class NumberGeneratorViewModel(
             ticketRepository.save(bundle)
             _uiState.update {
                 it.copy(
-                    toastMessage = "이번 주 번호를 저장했습니다. 동일 회차 자동번호는 최신 저장본으로 갱신됩니다.",
+                    toastMessage = successMessage,
                     manualInputError = null,
                 )
             }

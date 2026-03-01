@@ -417,6 +417,23 @@ fun NumberGeneratorScreen() {
                             params =
                                 mapOf(
                                     AnalyticsParamKey.SCREEN to "generator",
+                                    AnalyticsParamKey.COMPONENT to "regenerate_save_weekly_ticket",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
+                                ),
+                        )
+                        viewModel.regenerateAndSaveAsWeeklyTicket()
+                    },
+                ) {
+                    Text("랜덤 생성 후 바로 저장")
+                }
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "generator",
                                     AnalyticsParamKey.COMPONENT to "save_weekly_ticket",
                                     AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                 ),
