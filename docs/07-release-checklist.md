@@ -16,6 +16,7 @@
 - [x] Firebase 배포 주기 점검 첫 CI 실행 증적 확보(run `22436650122`, artifact `firebase_routine_ci_22436650122.md`)
 - [x] 운영 관측성 샘플 검증 루틴 추가(`./scripts/run-ops-observability-check.sh`, `verify-analytics-events --profile ops-core`)
 - [x] 운영 관측성 임계치 자동 판정 루틴 추가(`./scripts/evaluate-ops-observability-threshold.sh`, `run-ops-observability-check --threshold-report`)
+- [x] 크래시/ANR 자동 분류 템플릿 루틴 추가(`./scripts/classify-crash-anr-template.sh --log-file <path> --report-file <path>`)
 - [x] 릴리즈 위험 점수 자동 산출 루틴 추가(`./scripts/calculate-release-risk-score.sh`, `.github/workflows/release-risk-score.yml`)
 - [x] 시크릿 파일 정책 자동 가드 추가(`./scripts/check-secret-file-policy.sh`, `.github/workflows/secret-policy-guard.yml`)
 

@@ -8,6 +8,8 @@
 - 완료 작업
   - `A01` v1 구현: Number Generator에 원탭 저장 CTA 추가(`랜덤 생성 후 바로 저장`, 잠금 제외 재생성 + 즉시 저장)
   - 회귀 테스트/증적 추가: `NumberGeneratorViewModelTest` PASS, 로컬 리포트 `docs/assets/distribution/generator_one_tap_save_local_2026-03-01.md`
+  - `E03` v1 구현: 크래시/ANR 자동 분류 템플릿 스크립트 추가(`scripts/classify-crash-anr-template.sh`, adb/log-file 입력 + Markdown 리포트 출력)
+  - 리허설 증적 추가: 샘플 로그 기준 분류 리포트 생성 PASS(`docs/assets/distribution/crash_anr_classification_local_2026-03-01.md`)
   - `A06` v1 구현: 외부 이동 1회 안내 모달을 현재 시각 기반 구매 시간 안내로 고도화(`OPEN`/`CLOSING_SOON`/`CLOSED`)
   - 공통 정책 반영: `buildPurchaseRedirectNotice` 추가 후 Home/Result/Settings 안내 문구 공통 적용
   - 회귀 테스트/증적 추가: `PurchaseRedirectNoticeTest`, `HomeExternalLinkTest` PASS, 로컬 리포트 `docs/assets/distribution/purchase_notice_window_local_2026-03-01.md`

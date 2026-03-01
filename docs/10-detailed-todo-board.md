@@ -212,6 +212,7 @@
 - [x] L-026 릴리즈 위험 점수 운영 반영(`calculate-release-risk-score.sh` + `.github/workflows/release-risk-score.yml`)
 - [x] L-027 운영 관측성 임계치 자동 판정 루틴 추가(`evaluate-ops-observability-threshold.sh` + `run-ops-observability-check.sh` 연동)
 - [x] L-028 로컬 백업 무결성 점검 v1 구현(`verifyLatestBackupIntegrity`, Settings 버튼/메시지, `ops_data_integrity` 계측 + 단위 테스트)
+- [x] L-029 크래시/ANR 자동 분류 템플릿 v1 구현(`scripts/classify-crash-anr-template.sh`, 분류 리포트 자동 생성)
 
 ## M. 스플래시/상호작용 모션 고도화
 - [x] M-001 스플래시 시나리오 정의(콜드/웜/오류 브리지)
@@ -530,3 +531,8 @@
 - [x] BG-001 `StatsViewModel` 번호 구간 분포 모델/집계 추가(`NumberRangeBucket`, 1-9/10-19/20-29/30-39/40-45)
 - [x] BG-002 `StatsScreen`에 번호 구간 분포 히트맵 카드 추가(구간별 개수/비율 + 바 시각화)
 - [x] BG-003 회귀 테스트/증적 반영(`StatsViewModelTest` 2건 추가, `docs/assets/distribution/stats_number_distribution_local_2026-02-27.md`) 및 문서 동기화(`06`, `11`, `16`, `21`, `22`)
+
+## BH. 크래시/ANR 자동 분류 템플릿(E03) v1 구현(2026-03-01 Cycle-57)
+- [x] BH-001 크래시/ANR 분류 스크립트 추가(`scripts/classify-crash-anr-template.sh`, adb/log-file 입력 + Markdown 리포트 출력)
+- [x] BH-002 규칙 기반 카테고리/심각도/owner/즉시조치 매핑 템플릿 구현(`anr_startup`, `anr_main_thread_block`, `crash_runtime` 등)
+- [x] BH-003 샘플 로그 리허설 증적/문서 동기화(`docs/assets/distribution/crash_anr_classification_local_2026-03-01.md`, `11`, `16`, `21`, `22`)

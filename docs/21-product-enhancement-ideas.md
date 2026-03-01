@@ -44,7 +44,7 @@
 ## E. 운영/품질
 - `IDEA-E01` API 응답 품질 모니터링(지연/실패율) - v2 완료(2026-02-27, `ops_api_request`/`ops_storage_mutation` 임계치 자동 판정 스크립트 + ops 체크 루틴 연동)
 - `IDEA-E02` 로컬 데이터 무결성 점검 잡(스키마/중복/깨진 레코드) - v1 완료(2026-02-27, 백업 JSON 점검 + Settings 점검 버튼 + `ops_data_integrity` 이벤트)
-- `IDEA-E03` 크래시/ANR 자동 분류 템플릿
+- `IDEA-E03` 크래시/ANR 자동 분류 템플릿 - v1 완료(2026-03-01, `classify-crash-anr-template.sh` + 분류/심각도/owner 템플릿 리포트 자동 생성)
 - `IDEA-E04` 릴리즈 위험 점수(테스트 커버리지/변경량 기반) - v1 운영 반영 완료(2026-02-27, 스크립트 + PR/주간 워크플로우)
 
 ## F. 비즈니스/확장 실험
