@@ -323,6 +323,8 @@ private class ResultViewModelFakeResultViewTracker(
 
     override suspend fun loadLastViewedRound(): Int? = lastViewedRound
 
+    override suspend fun loadRecentViewedRounds(limit: Int): List<Int> = listOfNotNull(lastViewedRound).take(limit)
+
     override suspend fun markRoundViewed(roundNumber: Int) {
         markedRounds += roundNumber
         lastViewedRound = roundNumber

@@ -617,6 +617,72 @@ fun HomeScreen(
                 }
             }
 
+            if (uiState.routineHistory.isNotEmpty()) {
+                item {
+                    Card(
+                        shape = RoundedCornerShape(LottoDimens.CardRadius),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                        colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(LottoDimens.ScreenPadding),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Text(
+                                text = "최근 8주 루틴 히스토리",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            uiState.routineHistory.forEach { history ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = "${history.round}회",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = LottoColors.TextSecondary,
+                                    )
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Text(
+                                            text =
+                                                if (history.purchasedGames > 0) {
+                                                    "구매 ${history.purchasedGames}게임"
+                                                } else {
+                                                    "미구매"
+                                                },
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color =
+                                                if (history.purchasedGames > 0) {
+                                                    LottoColors.Primary
+                                                } else {
+                                                    LottoColors.TextMuted
+                                                },
+                                            fontWeight = FontWeight.SemiBold,
+                                        )
+                                        Text(
+                                            text = if (history.resultViewed) "결과 확인" else "미확인",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color =
+                                                if (history.resultViewed) {
+                                                    LottoColors.PrimaryDark
+                                                } else {
+                                                    LottoColors.TextMuted
+                                                },
+                                            fontWeight = FontWeight.SemiBold,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
