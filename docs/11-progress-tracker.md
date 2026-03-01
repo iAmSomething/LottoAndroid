@@ -25,6 +25,9 @@
   - `A06` v1 구현: 외부 이동 1회 안내 모달을 현재 시각 기반 구매 시간 안내로 고도화(`OPEN`/`CLOSING_SOON`/`CLOSED`)
   - 공통 정책 반영: `buildPurchaseRedirectNotice` 추가 후 Home/Result/Settings 안내 문구 공통 적용
   - 회귀 테스트/증적 추가: `PurchaseRedirectNoticeTest`, `HomeExternalLinkTest` PASS, 로컬 리포트 `docs/assets/distribution/purchase_notice_window_local_2026-03-01.md`
+  - `C01` v2 구현: 통계 중복도 경고 고도화(중복률/중복게임수/최다반복 조합 계산 + 추천 문구 + 번호생성 CTA)
+  - 내비게이션/계측 연동: `StatsScreen` CTA에서 Generator 이동 및 `interaction_cta_press(component=duplicate_warning_card, action=duplicate_warning_generate)` 이벤트 추가
+  - 회귀 테스트/증적 추가: `StatsViewModelTest` 중복도 경고/안정 상태 2건 PASS, 로컬 리포트 `docs/assets/distribution/stats_duplicate_recommendation_local_2026-03-01.md`
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커

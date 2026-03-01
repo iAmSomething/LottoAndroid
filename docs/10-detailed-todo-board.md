@@ -221,6 +221,7 @@
 - [x] L-031 목표 기반 구매 알림 v1 구현(`PurchaseReminderWorker` 등록여부 기반 발송/스킵 정책 + 정책 테스트)
 - [x] L-032 미확인 결과 리마인드 v1 구현(`ResultReminderWorker` 미확인 기준 발송/스킵 정책 + 정책 테스트)
 - [x] L-033 주간 리포트 카드 v1 보강(`WeeklyReportSummary` 지표 확장 + Home 카드 노출 + 회귀 테스트)
+- [x] L-034 통계 중복도 기반 추천 액션 v2 구현(`duplicateInsight` 계산 + Stats 경고 카드 추천 문구/최다반복 조합 + Generator CTA/계측)
 
 ## M. 스플래시/상호작용 모션 고도화
 - [x] M-001 스플래시 시나리오 정의(콜드/웜/오류 브리지)

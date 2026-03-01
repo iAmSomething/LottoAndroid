@@ -25,11 +25,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
+import com.weeklylotto.app.domain.service.AnalyticsActionValue
+import com.weeklylotto.app.domain.service.AnalyticsEvent
+import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.LottoBall
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.format.toSourceChipLabel
@@ -40,7 +44,9 @@ import com.weeklylotto.app.ui.theme.LottoDimens
 import kotlin.math.abs
 
 @Composable
-fun StatsScreen() {
+@Suppress("CyclomaticComplexMethod")
+fun StatsScreen(onNavigateGenerator: () -> Unit = {}) {
+    val analyticsLogger = AppGraph.analyticsLogger
     val viewModel =
         viewModel<StatsViewModel>(
             factory =
@@ -129,6 +135,80 @@ fun StatsScreen() {
                             style = MaterialTheme.typography.bodySmall,
                             color = LottoColors.TextMuted,
                         )
+                    }
+                }
+            }
+
+            item {
+                val insight = uiState.duplicateInsight
+                val levelLabel =
+                    when (insight.level) {
+                        DuplicateWarningLevel.WARNING -> "주의"
+                        DuplicateWarningLevel.WATCH -> "관찰"
+                        DuplicateWarningLevel.STABLE -> "안정"
+                    }
+                val levelColor =
+                    when (insight.level) {
+                        DuplicateWarningLevel.WARNING -> LottoColors.DangerText
+                        DuplicateWarningLevel.WATCH -> Color(0xFFB26A00)
+                        DuplicateWarningLevel.STABLE -> LottoColors.SuccessText
+                    }
+                Card(
+                    shape = RoundedCornerShape(LottoDimens.CardRadius),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
+                    colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Text(
+                            "조합 중복도 경고",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            "중복률 ${insight.duplicateRatePercent}% · 중복 게임 ${insight.duplicateGameCount}개 · 반복 조합 ${insight.duplicatedCombinationCount}건",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LottoColors.TextSecondary,
+                        )
+                        Text(
+                            "위험도 $levelLabel",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = levelColor,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        if (insight.mostRepeatedCombination.isNotEmpty()) {
+                            Text(
+                                "최다 반복 조합 (${insight.mostRepeatedCount}회)",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = LottoColors.TextSecondary,
+                            )
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                insight.mostRepeatedCombination.forEach { LottoBall(number = it.value) }
+                            }
+                        }
+                        Text(
+                            insight.recommendation,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = LottoColors.TextSecondary,
+                        )
+                        Button(
+                            onClick = {
+                                analyticsLogger.log(
+                                    event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                    params =
+                                        mapOf(
+                                            AnalyticsParamKey.SCREEN to "stats",
+                                            AnalyticsParamKey.COMPONENT to "duplicate_warning_card",
+                                            AnalyticsParamKey.ACTION to AnalyticsActionValue.DUPLICATE_WARNING_GENERATE,
+                                        ),
+                                )
+                                onNavigateGenerator()
+                            },
+                        ) {
+                            Text("중복 줄이기 번호 생성")
+                        }
                     }
                 }
             }
