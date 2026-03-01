@@ -25,8 +25,11 @@ data class WeeklyReportSummary(
     val winningGames: Int,
     val totalPurchaseAmount: Long,
     val totalWinningAmount: Long,
+    val resultViewed: Boolean,
 ) {
     val netProfitAmount: Long get() = totalWinningAmount - totalPurchaseAmount
+    val winningRatePercent: Int
+        get() = if (totalGames == 0) 0 else ((winningGames * 100.0) / totalGames).toInt()
 }
 
 data class RoutineHistoryEntry(
@@ -141,6 +144,7 @@ class HomeViewModel(
                 winningGames = winningGames,
                 totalPurchaseAmount = totalGames * 1_000L,
                 totalWinningAmount = totalWinningAmount,
+                resultViewed = (drawRound in recentViewedRounds) || ((lastViewedRound ?: 0) >= drawRound),
             )
 
         val viewedRound = lastViewedRound ?: 0

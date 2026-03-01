@@ -602,6 +602,17 @@ fun HomeScreen(
                                 color = LottoColors.TextSecondary,
                             )
                             Text(
+                                text =
+                                    "당첨률 ${report.winningRatePercent}% · 결과 " +
+                                        if (report.resultViewed) {
+                                            "확인 완료"
+                                        } else {
+                                            "미확인"
+                                        },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = LottoColors.TextSecondary,
+                            )
+                            Text(
                                 text = "구매 ${report.totalPurchaseAmount.toWonLabel()} / 당첨 ${report.totalWinningAmount.toWonLabel()}",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = LottoColors.TextSecondary,

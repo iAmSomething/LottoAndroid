@@ -6,6 +6,9 @@
 
 ## 2026-03-01
 - 완료 작업
+  - `B03` v1 보강: 주간 리포트 카드에 당첨률/결과확인 상태 지표 추가
+  - 뷰모델 확장: `WeeklyReportSummary`에 `winningRatePercent`, `resultViewed` 계산 필드 추가
+  - 회귀 테스트/증적 추가: `HomeViewModelTest` PASS, 로컬 리포트 `docs/assets/distribution/weekly_report_card_b03_local_2026-03-01.md`
   - `B02` v1 구현: 미확인 결과 리마인드 정책 추가(최신 회차 티켓 보유 + 결과 미확인 상태에서만 결과 확인 알림 발송)
   - 워커 연동: `ResultReminderWorker`에서 최신 회차/티켓 보유/최근 확인 회차를 조회해 발송 여부 결정
   - 회귀 테스트/증적 추가: `ResultReminderPolicyTest` PASS, 로컬 리포트 `docs/assets/distribution/unseen_result_reminder_b02_local_2026-03-01.md`
