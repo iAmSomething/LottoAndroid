@@ -2,6 +2,7 @@ package com.weeklylotto.app.feature.qr
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.weeklylotto.app.data.qr.QrParseFailureType
 import com.weeklylotto.app.data.qr.QrTicketParser
 import com.weeklylotto.app.domain.error.AppError
 import com.weeklylotto.app.domain.error.AppResult
@@ -31,6 +32,7 @@ data class QrScanUiState(
     val savedTicketCount: Int = 0,
     val lastSavedRound: Int? = null,
     val consecutiveFailureCount: Int = 0,
+    val failureGuideTitle: String? = null,
     val failureGuideMessage: String? = null,
     val pendingScan: PendingScanTicket? = null,
 ) {
@@ -42,6 +44,11 @@ class QrScanViewModel(
     private val parser: QrTicketParser,
     private val ticketRepository: TicketRepository,
 ) : ViewModel() {
+    private data class FailureGuide(
+        val title: String,
+        val message: String,
+    )
+
     private val _uiState = MutableStateFlow(QrScanUiState())
     val uiState: StateFlow<QrScanUiState> = _uiState.asStateFlow()
 
@@ -55,6 +62,7 @@ class QrScanViewModel(
                 savedTicketCount = 0,
                 lastSavedRound = null,
                 consecutiveFailureCount = 0,
+                failureGuideTitle = null,
                 failureGuideMessage = null,
                 pendingScan = null,
             )
@@ -70,11 +78,13 @@ class QrScanViewModel(
         viewModelScope.launch {
             when (val parsed = parser.parse(rawUrl)) {
                 is AppResult.Failure -> {
+                    val guide = toFailureGuide(parsed.error)
                     _uiState.update {
                         it.copy(
-                            latestMessage = "파싱 실패: ${parsed.error}",
+                            latestMessage = "${guide.title}: 스캔 환경을 조정한 뒤 다시 시도하세요.",
                             consecutiveFailureCount = it.consecutiveFailureCount + 1,
-                            failureGuideMessage = toFailureGuide(parsed.error),
+                            failureGuideTitle = guide.title,
+                            failureGuideMessage = guide.message,
                             pendingScan = null,
                         )
                     }
@@ -84,12 +94,13 @@ class QrScanViewModel(
                     val ticket = parsed.value
                     if (ticket.games.isEmpty()) {
                         _uiState.update {
-                            it.copy(
-                                latestMessage = "QR에 게임 정보가 없습니다.",
-                                consecutiveFailureCount = it.consecutiveFailureCount + 1,
-                                failureGuideMessage = "티켓 QR이 완전히 보이도록 촬영해 다시 시도하세요.",
-                                pendingScan = null,
-                            )
+                                it.copy(
+                                    latestMessage = "QR에 게임 정보가 없습니다.",
+                                    consecutiveFailureCount = it.consecutiveFailureCount + 1,
+                                    failureGuideTitle = "게임 정보 누락",
+                                    failureGuideMessage = "티켓 QR이 완전히 보이도록 촬영해 다시 시도하세요.",
+                                    pendingScan = null,
+                                )
                         }
                         return@launch
                     }
@@ -102,6 +113,7 @@ class QrScanViewModel(
                                 it.copy(
                                     latestMessage = "QR 번호 형식이 올바르지 않습니다. (각 게임은 6개 번호)",
                                     consecutiveFailureCount = it.consecutiveFailureCount + 1,
+                                    failureGuideTitle = "번호 형식 오류",
                                     failureGuideMessage = "QR 일부가 가려졌을 수 있습니다. 용지 한 장만 가까이 촬영해 다시 시도하세요.",
                                     pendingScan = null,
                                 )
@@ -122,6 +134,7 @@ class QrScanViewModel(
                         it.copy(
                             latestMessage = "QR 인식 완료: ${ticket.round}회차 ${games.size}게임",
                             consecutiveFailureCount = 0,
+                            failureGuideTitle = null,
                             failureGuideMessage = null,
                             pendingScan = PendingScanTicket(round = ticket.round, games = games),
                         )
@@ -148,6 +161,7 @@ class QrScanViewModel(
                     savedTicketCount = it.savedTicketCount + 1,
                     lastSavedRound = pending.round,
                     consecutiveFailureCount = 0,
+                    failureGuideTitle = null,
                     failureGuideMessage = null,
                     pendingScan = null,
                 )
@@ -164,7 +178,13 @@ class QrScanViewModel(
     }
 
     fun clearFailureGuide() {
-        _uiState.update { it.copy(consecutiveFailureCount = 0, failureGuideMessage = null) }
+        _uiState.update {
+            it.copy(
+                consecutiveFailureCount = 0,
+                failureGuideTitle = null,
+                failureGuideMessage = null,
+            )
+        }
     }
 
     private fun nextSaturday(from: LocalDate): LocalDate {
@@ -175,18 +195,42 @@ class QrScanViewModel(
         return candidate
     }
 
-    private fun toFailureGuide(error: AppError): String =
+    private fun toFailureGuide(error: AppError): FailureGuide =
         when (error) {
-            is AppError.ParseError ->
-                when {
-                    error.message.contains("지원하지 않는", ignoreCase = true) ->
-                        "동행복권 QR이 맞는지 확인하고, 용지를 10~15도 기울여 반사를 줄인 뒤 우측 상단 QR을 다시 맞춰주세요."
-                    error.message.contains("payload", ignoreCase = true) ->
-                        "QR 정보가 일부만 인식되었습니다. 저조도면 플래시를 켜고, 용지 한 장만 프레임에 넣어 다시 스캔하세요."
-                    else ->
-                        "QR 인식이 불안정합니다. 손떨림을 줄이고 15~20cm 거리에서 다시 시도하세요. 반사가 있으면 각도를 살짝 틀어주세요."
+            is AppError.ParseError -> {
+                when (QrParseFailureType.fromMessage(error.message)) {
+                    QrParseFailureType.UNSUPPORTED_FORMAT ->
+                        FailureGuide(
+                            title = "지원 형식 확인",
+                            message = "동행복권 QR URL인지 확인하고, 용지를 10~15도 기울여 반사를 줄인 뒤 우측 상단 QR을 다시 맞춰주세요.",
+                        )
+                    QrParseFailureType.MISSING_PAYLOAD ->
+                        FailureGuide(
+                            title = "QR 정보 누락",
+                            message = "QR 정보가 일부만 인식되었습니다. 저조도면 플래시를 켜고, 용지 한 장만 프레임에 넣어 다시 스캔하세요.",
+                        )
+                    QrParseFailureType.INVALID_ROUND ->
+                        FailureGuide(
+                            title = "회차 정보 오류",
+                            message = "QR 문자열의 회차 정보가 손상되었을 수 있습니다. 카메라 초점을 맞춘 뒤 다시 촬영하세요.",
+                        )
+                    QrParseFailureType.INVALID_NUMBER ->
+                        FailureGuide(
+                            title = "번호 정보 오류",
+                            message = "번호 데이터가 깨졌습니다. 화면 반사와 손떨림을 줄이고 한 장씩 다시 스캔하세요.",
+                        )
+                    QrParseFailureType.UNKNOWN ->
+                        FailureGuide(
+                            title = "인식 불안정",
+                            message = "QR 인식이 불안정합니다. 손떨림을 줄이고 15~20cm 거리에서 다시 시도하세요. 반사가 있으면 각도를 살짝 틀어주세요.",
+                        )
                 }
+            }
 
-            else -> "일시적인 오류입니다. 플래시/각도 조정 후 다시 시도하거나 수동 입력을 이용하세요."
+            else ->
+                FailureGuide(
+                    title = "일시적 오류",
+                    message = "플래시/각도 조정 후 다시 시도하거나 수동 입력을 이용하세요.",
+                )
         }
 }

@@ -372,6 +372,14 @@ fun QrScanScreen(onBack: () -> Unit) {
                                     color = Color(0xFFEF6C00),
                                     fontWeight = FontWeight.Bold,
                                 )
+                                uiState.failureGuideTitle?.let { title ->
+                                    Text(
+                                        text = title,
+                                        color = Color(0xFF6D4C41),
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 12.sp,
+                                    )
+                                }
                                 uiState.failureGuideMessage?.let { guide ->
                                     Text(
                                         text = guide,
