@@ -44,6 +44,8 @@ import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.feature.common.OFFICIAL_PURCHASE_URL
 import com.weeklylotto.app.feature.common.PURCHASE_REDIRECT_NOTICE_SEEN_KEY
 import com.weeklylotto.app.feature.common.PURCHASE_REDIRECT_PREF_NAME
+import com.weeklylotto.app.feature.common.PurchaseRedirectWindowStatus
+import com.weeklylotto.app.feature.common.buildPurchaseRedirectNotice
 import com.weeklylotto.app.feature.common.openExternalUrl
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.StatusBadge
@@ -79,6 +81,7 @@ fun HomeScreen(
         remember(context) {
             context.getSharedPreferences(PURCHASE_REDIRECT_PREF_NAME, Context.MODE_PRIVATE)
         }
+    val purchaseRedirectNotice = remember { buildPurchaseRedirectNotice() }
     var showPurchaseNoticeDialog by remember { mutableStateOf(false) }
     var showPurchaseFallbackDialog by remember { mutableStateOf(false) }
     var showStoreSearchFallbackDialog by remember { mutableStateOf(false) }
@@ -155,10 +158,15 @@ fun HomeScreen(
             onDismissRequest = { showPurchaseNoticeDialog = false },
             title = { Text("외부 페이지 이동 안내") },
             text = {
+                val messageColor =
+                    when (purchaseRedirectNotice.status) {
+                        PurchaseRedirectWindowStatus.CLOSED -> Color(0xFFD32F2F)
+                        PurchaseRedirectWindowStatus.CLOSING_SOON -> Color(0xFFEF6C00)
+                        PurchaseRedirectWindowStatus.OPEN -> LottoColors.TextSecondary
+                    }
                 Text(
-                    "구매는 동행복권 공식 홈페이지에서만 가능합니다. " +
-                        "성인 인증과 구매 가능 시간을 확인한 뒤 이동해 주세요.",
-                    color = LottoColors.TextSecondary,
+                    purchaseRedirectNotice.message,
+                    color = messageColor,
                 )
             },
             confirmButton = {

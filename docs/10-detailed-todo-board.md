@@ -11,6 +11,7 @@
 - [x] A-004 CI 워크플로우(`assembleDebug`, `test`, `ktlint`, `detekt`) 구성
 - [x] A-005 기본 테마/리소스/앱 아이콘 설정
 - [x] A-006 AGP를 compileSdk 35 정식 지원 버전으로 상향
+- [x] A-007 외부 이동 1회 안내 모달 고도화(현재 시각 기반 구매 시간 안내 + Home/Result/Settings 공통 반영)
 
 ## B. 번호 생성/관리
 - [x] B-001 5게임 자동 생성 로직 구현
