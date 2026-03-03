@@ -38,3 +38,6 @@
 1. `docs/10-detailed-todo-board.md`의 `P-004` 링크를 최신 증적으로 갱신
 2. `docs/18-device-validation-report.md` 실행 이력에 당일 결과 추가
 3. `docs/11-progress-tracker.md` 당일 완료 작업에 실행 명령/산출물 기록
+
+## 8. 장기화 판정
+- 연속 `BLOCKED` 주차가 2주 이상이면 `71-blocked-state-longtail-risk-criteria.md` 기준으로 레벨(`L2+`)을 판정한다.
