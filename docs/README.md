@@ -121,6 +121,7 @@
 - `77-firebase-distribution-after-physical-pass-runbook.md`: 실기기 PASS 이후 Firebase Distribution 실행/판정 연계 런북(선행조건/명령 순서/성공·실패 기준/기록 포맷)
 - `78-firebase-physical-pass-chain-report-template-guide.md`: `firebase_physical_pass_chain_<date>.md` 템플릿/필드 해석/운영 판정 가이드
 - `79-physical-pass-firebase-chain-manual-checklist.md`: BO-001 수동 실행 체크리스트(실행 전/후, 실패 시 즉시 조치, 기록 항목)
+- `80-bo005-physical-ready-runner-guide.md`: BO-005 재시도 대기 러너(`run-bo005-when-physical-ready.sh`) 실행/판정 가이드
 - `30-font-onboarding-gate.md`: AB-005/006 착수 게이트(체크리스트/승인 기준)
 - `31-font-assets-and-license-register.md`: 폰트 자산 반입/라이선스/적용 매핑 레지스터
 - `32-visual-proof-matrix-report.md`: AB-009/010 시각 증적 매트릭스/QA 판정 리포트

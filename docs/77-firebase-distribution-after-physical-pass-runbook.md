@@ -21,6 +21,8 @@
   --groups <tester-group-alias> \
   --service-account <service-account-json-path>
 ```
+- 다중 실기기 환경에서는 `--serial <adb-serial>`을 추가해 대상 단말을 지정한다.
+- 실기기 연결 대기 실행이 필요하면 `run-bo005-when-physical-ready.sh`(가이드: `80-bo005-physical-ready-runner-guide.md`)를 사용한다.
 
 1. 실기기 강제 최종 점검
 ```bash

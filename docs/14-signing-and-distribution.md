@@ -209,10 +209,14 @@
 - 권장 순서: `release-final-check --require-physical-device` -> `firebase-distribute --dry-run` -> `firebase-distribute`(실배포)
 - 판정/기록: `11-progress-tracker.md`, `18-device-validation-report.md`에 같은 날짜 태그로 결과를 기록한다.
 - 실행 래퍼: `./scripts/run-physical-pass-firebase-chain.sh` (checkpoint PASS 가드 + 체인 실행 + 리포트 출력)
+- 체인 래퍼 단말 지정: `./scripts/run-physical-pass-firebase-chain.sh --serial <adb-serial>`
 - 체인 리포트 템플릿/해석 기준: `78-firebase-physical-pass-chain-report-template-guide.md`
 - 수동 실행 전/후 체크리스트: `79-physical-pass-firebase-chain-manual-checklist.md`
 - dry-run-only 리허설 증적 예시: `docs/assets/distribution/bo004_dry_run_only_rehearsal_local_2026-03-03.md`
 - 실배포 경로 blocked 시도 증적 예시: `docs/assets/distribution/bo005_actual_distribute_attempt_blocked_2026-03-03.md`
+- BO-005 재시도 대기 러너: `./scripts/run-bo005-when-physical-ready.sh` (`timeout`/`blocked` 리포트 + 준비 충족 시 체인 실행)
+- BO-005 재시도 대기 러너 timeout 증적 예시: `docs/assets/distribution/bo005_when_physical_ready_timeout_2026-03-03.md`
+- BO-005 재시도 러너 가이드: `80-bo005-physical-ready-runner-guide.md`
 
 ### 6-5. GitHub Secrets (필수)
 - 릴리즈 서명:
