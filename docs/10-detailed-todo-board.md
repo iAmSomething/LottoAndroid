@@ -584,6 +584,6 @@
 ## BO. 실기기 PASS-배포 체인 자동화(2026-03-03 Cycle-64)
 - [x] BO-001 실기기 PASS -> Firebase Distribution 실행 래퍼 스크립트 추가(`scripts/run-physical-pass-firebase-chain.sh`)
 - [x] BO-002 BO-001 실행 결과 리포트 템플릿 고정(`78-firebase-physical-pass-chain-report-template-guide.md`)
-- [ ] BO-003 BO-001 수동 실행 체크리스트(`실행 전/후`) 문서화
+- [x] BO-003 BO-001 수동 실행 체크리스트(`실행 전/후`) 문서화(`79-physical-pass-firebase-chain-manual-checklist.md`)
 - [ ] BO-004 BO-001 dry-run-only 리허설 증적 1회 수집(로컬/CI 중 택1)
 - [ ] BO-005 실기기 PASS 시 BO-001 실배포 경로 실행 이력 1회 확보

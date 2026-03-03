@@ -59,6 +59,7 @@
 - 주기 점검 필요 시 `firebase-distribution-routine-check.sh`로 dry-run 증적을 추가한다.
 
 ## 6. 실행 후 기록 (필수)
+- [ ] BO-001 수동 실행 전/후 체크는 `79-physical-pass-firebase-chain-manual-checklist.md`를 기준으로 완료
 - [ ] `11-progress-tracker.md`에 실행 명령/결과(run id 또는 로컬 결과) 기록
 - [ ] `18-device-validation-report.md`에 당일 실기기 PASS + 배포 실행 결과 기록
 - [ ] 필요 시 `docs/assets/distribution/`에 배포 증적 리포트 파일 추가

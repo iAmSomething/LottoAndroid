@@ -29,6 +29,7 @@
 - 실기기 PASS 이후 Firebase Distribution 실행/판정 연계는 `77-firebase-distribution-after-physical-pass-runbook.md`를 기준으로 적용한다.
 - 실기기 PASS-배포 체인 실행은 `run-physical-pass-firebase-chain.sh`로 일괄 수행 가능하다.
 - 체인 리포트(`firebase_physical_pass_chain_<date>.md`) 해석은 `78-firebase-physical-pass-chain-report-template-guide.md`를 기준으로 적용한다.
+- BO-001 수동 실행 전/후 점검은 `79-physical-pass-firebase-chain-manual-checklist.md`를 기준으로 적용한다.
 - `run-physical-gates-routine-check.sh`는 오케스트레이터 결과를 `PASS/BLOCKED/FAIL` 루틴 리포트로 저장한다.
 - `blocked` 장기화 리스크 판정은 `71-blocked-state-longtail-risk-criteria.md` 기준을 따른다.
 

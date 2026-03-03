@@ -210,6 +210,7 @@
 - 판정/기록: `11-progress-tracker.md`, `18-device-validation-report.md`에 같은 날짜 태그로 결과를 기록한다.
 - 실행 래퍼: `./scripts/run-physical-pass-firebase-chain.sh` (checkpoint PASS 가드 + 체인 실행 + 리포트 출력)
 - 체인 리포트 템플릿/해석 기준: `78-firebase-physical-pass-chain-report-template-guide.md`
+- 수동 실행 전/후 체크리스트: `79-physical-pass-firebase-chain-manual-checklist.md`
 
 ### 6-5. GitHub Secrets (필수)
 - 릴리즈 서명:
