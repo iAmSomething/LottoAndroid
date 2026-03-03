@@ -27,6 +27,8 @@
   - `BO-001` 완료: 실기기 PASS -> Firebase Distribution 체인 실행 래퍼 스크립트 추가(`scripts/run-physical-pass-firebase-chain.sh`, checkpoint PASS 가드 + final-check + dry-run + 실배포 순서 + 체인 리포트 출력)
   - `BO-002` 완료: 체인 리포트 템플릿/해석 가이드 문서화(`78-firebase-physical-pass-chain-report-template-guide.md`, Step Results/Overall 필드 해석 규칙 고정)
   - `BO-003` 완료: BO-001 수동 실행 체크리스트(실행 전/후) 문서화(`79-physical-pass-firebase-chain-manual-checklist.md`, pre-run/post-run 항목 + 실패 시 즉시 조치 규칙 고정)
+  - `BO-004` 완료: dry-run-only 리허설 증적 1회 수집(`bo004_dry_run_only_rehearsal_local_2026-03-03.md`, `firebase_physical_pass_chain_dry_run_only_rehearsal_2026-03-03.md`, 시뮬레이션 PASS checkpoint 기반)
+  - BO-001 스크립트 안정화: `run-physical-pass-firebase-chain.sh`에서 bash 예약 변수 충돌(`GROUPS`)을 `TESTER_GROUPS`로 교체해 `--groups` 파라미터 파싱 실패 이슈 수정
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
