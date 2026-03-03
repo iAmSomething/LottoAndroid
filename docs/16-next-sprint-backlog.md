@@ -15,7 +15,7 @@
 - 핵심 상호작용 모션 2차 코드 적용(`G03`, `INT-01`~`INT-05`) - 2차 확대 완료(2026-02-26, `motionClickable` + Home/Result CTA/시트 + Manage/Home 리스트 `animateItem`)
 - Reduce Motion 실제 설정/동작 반영(`G06`, `M-012`) - 완료(2026-02-26, Settings 토글 + DataStore + Splash/컴포넌트 반영)
 - EXP-05/06 계측 이벤트 훅 + 샘플 검증 자동화 완료(`M-016`~`M-018`) - 완료(2026-02-26, `AnalyticsActionValue` + `scripts/verify-analytics-events.sh`)
-- 기획/구현 상태 분리 리포팅 루틴 고정(`P-001`)
+- 기획/구현 상태 분리 리포팅 루틴 고정(`P-001`) - 완료(2026-02-26, `10` P-001, `25` Cycle-02)
 
 ## 3. 우선순위 Medium
 - 통계 인사이트 확장(출처별 성과/ROI 트렌드/중복도 경고) (`C03`, `C04`, `C02`, `C01`) - `C01` v2 완료(2026-03-01, 중복률/최다반복 조합/추천 액션 + CTA 계측) + `C03/C04` v2 완료(2026-02-27) + `C02` v1 완료(2026-02-27, 번호 구간 분포 히트맵), CTA 연계+계측/로그 샘플 루틴 유지
@@ -42,9 +42,9 @@
 - 배포 주기 점검 루틴 자동화(`I-023`) - 완료(2026-02-26, `firebase-distribution-routine.yml` 주간 스케줄 + `firebase-distribution-routine-check.sh` dry-run 체인 + 첫 CI 실행 run `22436650122` 증적 확보)
 - AB-005 착수 승인 패키지 정리(`AJ-005`, 체크리스트/배포 증적/타이포 시안 2종) - 완료(2026-02-26)
 - AB-009/AB-010 시각 증적 매트릭스 확정(`AK-005`, 화면 4종×폰트스케일×저조도) - 완료(2026-02-26, `32-visual-proof-matrix-report.md`)
-- AB-009/AB-010 증적 운영안 확정(`AL-005`, 파일명 규칙/담당/판정 템플릿)
-- AJ-005 산출물 인벤토리 확정(`AM-005`, 실제 파일 경로 매핑/누락 식별)
-- AJ-005 누락 3종 해소 계획 확정(`AN-005`, 인벤토리 `missing` → `ready` 전환 계획)
+- AB-009/AB-010 증적 운영안 확정(`AL-005`, 파일명 규칙/담당/판정 템플릿) - 완료(2026-02-26, `27-ui-visual-polish-pack.md`)
+- AJ-005 산출물 인벤토리 확정(`AM-005`, 실제 파일 경로 매핑/누락 식별) - 완료(2026-02-26, `28-approval-package-inventory.md`)
+- AJ-005 누락 3종 해소 계획 확정(`AN-005`, 인벤토리 `missing` → `ready` 전환 계획) - 완료(2026-02-26, `29-missing-artifacts-recovery-plan.md`)
 - 누락 항목 1차 증적 확보(`AO-005`, `missing` 3종 중 최소 1개 `ready` 전환) - 완료(2026-02-26, 현재 3종 모두 `ready`)
 
 ## 4. 우선순위 Low

@@ -4,6 +4,20 @@
 - 날짜 형식: `YYYY-MM-DD`
 - 필수 항목: 완료 작업, 미완료 작업, 블로커, 다음 액션
 
+## 2026-03-03
+- 완료 작업
+  - `Release Preflight` 실패 원인(Detekt 10건 + Ktlint 포맷 위반) 수정 및 `main` 반영(PR #37, merge commit `4941468`)
+  - 로컬/CI 검증 통과: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleRelease`
+  - `Release Preflight` main push 런 성공 확인(run `22606534394`)
+  - `Firebase Distribution` 자동 배포 성공 확인(run `22606614291`)
+  - 백로그 정합성 보정: `16-next-sprint-backlog.md`의 완료 누락 항목(`P-001`, `AL-005`, `AM-005`, `AN-005`) 완료 표기 반영
+- 미완료 작업
+  - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
+- 블로커
+  - 실기기 미보유로 물리 디바이스 성능/워치 증적은 수집 불가
+- 다음 액션
+  - 남은 블로커 트랙은 `blocked` 증적 자동 갱신 루틴으로 유지하고, 실기기 연결 즉시 `P-004/BK` 실측 사이클 실행
+
 ## 2026-03-01
 - 완료 작업
   - `B03` v1 보강: 주간 리포트 카드에 당첨률/결과확인 상태 지표 추가
