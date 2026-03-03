@@ -29,6 +29,8 @@
   - `BO-003` 완료: BO-001 수동 실행 체크리스트(실행 전/후) 문서화(`79-physical-pass-firebase-chain-manual-checklist.md`, pre-run/post-run 항목 + 실패 시 즉시 조치 규칙 고정)
   - `BO-004` 완료: dry-run-only 리허설 증적 1회 수집(`bo004_dry_run_only_rehearsal_local_2026-03-03.md`, `firebase_physical_pass_chain_dry_run_only_rehearsal_2026-03-03.md`, 시뮬레이션 PASS checkpoint 기반)
   - `BO-005` 실행 시도: 실배포 경로 실행을 시도했으나 `release-final-check --require-physical-device`에서 `No adb device connected`로 차단(`bo005_actual_distribute_attempt_blocked_2026-03-03.md`, `firebase_physical_pass_chain_bo005_actual_attempt_2026-03-03.md`)
+  - `BP-001` 완료: BO-005 재시도 대기 러너 추가(`scripts/run-bo005-when-physical-ready.sh`, checkpoint+실기기 준비 충족 시 체인 실행/timeout 시 blocked 리포트 출력, 검증 리포트 `bo005_when_physical_ready_timeout_2026-03-03.md`)
+  - 체인 스크립트 확장: `run-physical-pass-firebase-chain.sh`에 `--serial` 옵션을 추가해 다중 실기기 환경에서 대상 단말 지정 가능하도록 보강
   - BO-001 스크립트 안정화: `run-physical-pass-firebase-chain.sh`에서 bash 예약 변수 충돌(`GROUPS`)을 `TESTER_GROUPS`로 교체해 `--groups` 파라미터 파싱 실패 이슈 수정
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기

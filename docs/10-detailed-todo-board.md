@@ -587,3 +587,7 @@
 - [x] BO-003 BO-001 수동 실행 체크리스트(`실행 전/후`) 문서화(`79-physical-pass-firebase-chain-manual-checklist.md`)
 - [x] BO-004 BO-001 dry-run-only 리허설 증적 1회 수집(로컬, `docs/assets/distribution/bo004_dry_run_only_rehearsal_local_2026-03-03.md`)
 - [ ] BO-005 실기기 PASS 시 BO-001 실배포 경로 실행 이력 1회 확보 (blocked 시도 증적: `docs/assets/distribution/bo005_actual_distribute_attempt_blocked_2026-03-03.md`)
+
+## BP. BO-005 blocked 해소 준비(2026-03-03 Cycle-65)
+- [x] BP-001 BO-005 실기기 준비 대기 러너 스크립트 추가(`scripts/run-bo005-when-physical-ready.sh`, timeout blocked 리포트 + 준비 충족 시 체인 실행, 검증: `bo005_when_physical_ready_timeout_2026-03-03.md`)
+- [ ] BP-002 실기기 연결 후 BP-001 성공 리포트 1회 확보(`bo005_when_physical_ready_<date>.md`, `firebase_physical_pass_chain_bo005_<date>.md`)

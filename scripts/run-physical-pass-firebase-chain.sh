@@ -12,6 +12,7 @@ TESTER_GROUPS="${FIREBASE_TESTER_GROUP_ALIAS:-}"
 SERVICE_ACCOUNT="${GOOGLE_APPLICATION_CREDENTIALS:-}"
 RELEASE_NOTES=""
 REPORT_FILE=""
+DEVICE_SERIAL=""
 SKIP_FINAL_CHECK=0
 DRY_RUN_ONLY=0
 
@@ -27,6 +28,7 @@ Options:
   --app-id <id>                    Firebase app id (or FIREBASE_APP_ID).
   --groups <aliases>               tester group aliases (or FIREBASE_TESTER_GROUP_ALIAS).
   --service-account <path>         service account json path (or GOOGLE_APPLICATION_CREDENTIALS).
+  --serial <adb-serial>            target physical serial for release-final-check.
   --release-notes <text>           release note text.
   --report-file <path>             output markdown report path.
   --skip-final-check               skip release-final-check (not recommended).
@@ -59,6 +61,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --service-account)
       SERVICE_ACCOUNT="${2:-}"
+      shift 2
+      ;;
+    --serial)
+      DEVICE_SERIAL="${2:-}"
       shift 2
       ;;
     --release-notes)
@@ -140,8 +146,11 @@ run_step() {
 }
 
 if [[ "$SKIP_FINAL_CHECK" -eq 0 ]]; then
-  if run_step "run release-final-check (physical required)" \
-      ./scripts/release-final-check.sh --require-physical-device; then
+  final_check_cmd=(./scripts/release-final-check.sh --require-physical-device)
+  if [[ -n "$DEVICE_SERIAL" ]]; then
+    final_check_cmd+=(--serial "$DEVICE_SERIAL")
+  fi
+  if run_step "run release-final-check (physical required)" "${final_check_cmd[@]}"; then
     FINAL_CHECK_STATUS="PASS"
   else
     FINAL_CHECK_STATUS="FAIL"
