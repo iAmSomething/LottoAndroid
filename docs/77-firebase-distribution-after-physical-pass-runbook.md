@@ -62,6 +62,7 @@
 - [ ] `11-progress-tracker.md`에 실행 명령/결과(run id 또는 로컬 결과) 기록
 - [ ] `18-device-validation-report.md`에 당일 실기기 PASS + 배포 실행 결과 기록
 - [ ] 필요 시 `docs/assets/distribution/`에 배포 증적 리포트 파일 추가
+- [ ] `firebase_physical_pass_chain_<date>.md`는 `78-firebase-physical-pass-chain-report-template-guide.md` 기준으로 해석/판정
 
 ## 7. 표준 기록 포맷 (예시)
 ```md
