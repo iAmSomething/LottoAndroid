@@ -16,6 +16,7 @@
   - 실기기 부재 상황 전용 다음 실행 트랙 생성(`BM-001`~`BM-005`, `10`/`16` 동기화)
   - `BM-001` 완료: 실기기 부재 `blocked` 증적 주간 갱신 루틴/캘린더 문서화(`69-physical-blocked-evidence-weekly-routine.md`, 월요일 11:00 KST 고정)
   - `BM-002` 완료: 물리 게이트 주간 비교 요약 템플릿 추가(`70-physical-gates-weekly-summary-template.md`, 출력 파일 규칙/비교 테이블/체크리스트 고정)
+  - `BM-003` 완료: `blocked` 장기화 리스크 기준 문서화(`71-blocked-state-longtail-risk-criteria.md`, 임계 주차/L1~L3/에스컬레이션 조건/담당자/SLA)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커

@@ -112,6 +112,7 @@
 - `62-multidevice-state-sync-and-conflict-recovery-gate-spec.md`: 멀티디바이스 상태 동기화/충돌 복구 게이트(S33) + M1~M5 scorecard/multidevice sync 증적 팩/릴리즈 연동 기준
 - `69-physical-blocked-evidence-weekly-routine.md`: 실기기 부재 상태에서 `P-004`/`BK` blocked 증적 주간 갱신 루틴/캘린더 기준
 - `70-physical-gates-weekly-summary-template.md`: 물리 게이트 결과 주간 비교 요약 템플릿(출력 규칙/전주 대비 표/운영 체크리스트)
+- `71-blocked-state-longtail-risk-criteria.md`: `blocked` 장기화 리스크 기준(임계 주차/L1~L3/에스컬레이션/담당/SLA)
 - `30-font-onboarding-gate.md`: AB-005/006 착수 게이트(체크리스트/승인 기준)
 - `31-font-assets-and-license-register.md`: 폰트 자산 반입/라이선스/적용 매핑 레지스터
 - `32-visual-proof-matrix-report.md`: AB-009/010 시각 증적 매트릭스/QA 판정 리포트
@@ -121,18 +122,19 @@
 2. 기능 머지 전 `06` 테스트 항목을 최소 1회 이상 수행한다.
 3. 주차 종료 시 `11`에 완료/미완료/리스크를 반드시 기록한다.
 4. 물리 게이트 루틴은 `.github/workflows/physical-gates-routine.yml`(매주 월요일 11:00 KST, `0 2 * * 1`) 또는 `run-physical-gates-routine-check.sh`로 주 1회 이상 점검한다.
-5. UI 미감/타이포 관련 변경은 `51`의 `S22 A1~A5` scorecard와 전/후 증적 팩을 반드시 첨부한다.
-6. 상태 화면(loading/empty/error/offline/redirect) 변경은 `52`의 `S23 N1~N5` scorecard와 상태 매트릭스 증적을 반드시 첨부한다.
-7. 상태 전환/피드백 관련 변경은 `53`의 `S24 C1~C5` scorecard와 enter/steady/exit 전환 증적을 반드시 첨부한다.
-8. 레이아웃/정보 배치 변경은 `54`의 `S25 L1~L5` scorecard와 소형/표준/대형 증적을 반드시 첨부한다.
-9. 시각 자산(아이콘/이미지/배지) 변경은 `55`의 `S26 V1~V5` scorecard와 로딩/실패 fallback 증적을 반드시 첨부한다.
-10. 우선순위/집중 모드 변경은 `56`의 `S27 F1~F5` scorecard와 기본/집중 모드 비교 증적을 반드시 첨부한다.
-11. 상호작용 피드백/확정 상태 변경은 `57`의 `S28 R1~R5` scorecard와 confirmed state 증적을 반드시 첨부한다.
-12. 요약/세부 공개 흐름 변경은 `58`의 `S29 D1~D5` scorecard와 progressive disclosure 증적을 반드시 첨부한다.
-13. 외부 이동/복귀 흐름 변경은 `59`의 `S30 X1~X5` scorecard와 redirect-return continuity 증적을 반드시 첨부한다.
-14. 로딩/대기/복구 흐름 변경은 `60`의 `S31 P1~P5` scorecard와 loading continuity 증적을 반드시 첨부한다.
-15. 앱 복귀/중단 복원 흐름 변경은 `61`의 `S32 R1~R5` scorecard와 session recovery 증적을 반드시 첨부한다.
-16. 폰-워치-위젯 상태 동기화 흐름 변경은 `62`의 `S33 M1~M5` scorecard와 multidevice sync 증적을 반드시 첨부한다.
+5. `blocked`가 2주 이상 연속되면 `71` 기준으로 레벨(L2+)을 판정하고 에스컬레이션 액션을 등록한다.
+6. UI 미감/타이포 관련 변경은 `51`의 `S22 A1~A5` scorecard와 전/후 증적 팩을 반드시 첨부한다.
+7. 상태 화면(loading/empty/error/offline/redirect) 변경은 `52`의 `S23 N1~N5` scorecard와 상태 매트릭스 증적을 반드시 첨부한다.
+8. 상태 전환/피드백 관련 변경은 `53`의 `S24 C1~C5` scorecard와 enter/steady/exit 전환 증적을 반드시 첨부한다.
+9. 레이아웃/정보 배치 변경은 `54`의 `S25 L1~L5` scorecard와 소형/표준/대형 증적을 반드시 첨부한다.
+10. 시각 자산(아이콘/이미지/배지) 변경은 `55`의 `S26 V1~V5` scorecard와 로딩/실패 fallback 증적을 반드시 첨부한다.
+11. 우선순위/집중 모드 변경은 `56`의 `S27 F1~F5` scorecard와 기본/집중 모드 비교 증적을 반드시 첨부한다.
+12. 상호작용 피드백/확정 상태 변경은 `57`의 `S28 R1~R5` scorecard와 confirmed state 증적을 반드시 첨부한다.
+13. 요약/세부 공개 흐름 변경은 `58`의 `S29 D1~D5` scorecard와 progressive disclosure 증적을 반드시 첨부한다.
+14. 외부 이동/복귀 흐름 변경은 `59`의 `S30 X1~X5` scorecard와 redirect-return continuity 증적을 반드시 첨부한다.
+15. 로딩/대기/복구 흐름 변경은 `60`의 `S31 P1~P5` scorecard와 loading continuity 증적을 반드시 첨부한다.
+16. 앱 복귀/중단 복원 흐름 변경은 `61`의 `S32 R1~R5` scorecard와 session recovery 증적을 반드시 첨부한다.
+17. 폰-워치-위젯 상태 동기화 흐름 변경은 `62`의 `S33 M1~M5` scorecard와 multidevice sync 증적을 반드시 첨부한다.
 
 ## Cycle-92 Addendum (2026-02-27)
 - 일정 맵 확장
