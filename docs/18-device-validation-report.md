@@ -45,6 +45,7 @@
 - 2026-03-03: 물리 게이트 오케스트레이터 blocked 최신화(`physical_gates_orchestrator_2026-03-03.md`, `physical_gates_checkpoint_2026-03-03.md`)
 - 2026-03-03: BK/P-004 체크포인트 blocked 증적 생성(`performance_release_decision_checkpoint_2026-03-03.md`, `wear_p4_device_evidence_checkpoint_2026-03-03.md`)
 - 2026-03-03: BO-004 dry-run-only 체인 리허설 PASS(`bo004_dry_run_only_rehearsal_local_2026-03-03.md`, 시뮬레이션 PASS checkpoint + `--skip-final-check --dry-run-only`)
+- 2026-03-03: BO-005 실배포 경로 실행 시도 blocked(`bo005_actual_distribute_attempt_blocked_2026-03-03.md`, `release-final-check --require-physical-device`에서 `No adb device connected`)
 
 ## 2026-02-26 10:43:48 +0900
 - 결과: FAIL(1)

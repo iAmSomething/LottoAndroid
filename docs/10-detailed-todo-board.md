@@ -586,4 +586,4 @@
 - [x] BO-002 BO-001 실행 결과 리포트 템플릿 고정(`78-firebase-physical-pass-chain-report-template-guide.md`)
 - [x] BO-003 BO-001 수동 실행 체크리스트(`실행 전/후`) 문서화(`79-physical-pass-firebase-chain-manual-checklist.md`)
 - [x] BO-004 BO-001 dry-run-only 리허설 증적 1회 수집(로컬, `docs/assets/distribution/bo004_dry_run_only_rehearsal_local_2026-03-03.md`)
-- [ ] BO-005 실기기 PASS 시 BO-001 실배포 경로 실행 이력 1회 확보
+- [ ] BO-005 실기기 PASS 시 BO-001 실배포 경로 실행 이력 1회 확보 (blocked 시도 증적: `docs/assets/distribution/bo005_actual_distribute_attempt_blocked_2026-03-03.md`)
