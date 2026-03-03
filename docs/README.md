@@ -110,6 +110,7 @@
 - `60-perceived-latency-and-loading-continuity-gate-spec.md`: 지각 지연/로딩 연속성 게이트(S31) + P1~P5 scorecard/loading continuity 증적 팩/릴리즈 연동 기준
 - `61-session-resume-and-interruption-recovery-gate-spec.md`: 세션 복귀/중단 복원 게이트(S32) + R1~R5 scorecard/session recovery 증적 팩/릴리즈 연동 기준
 - `62-multidevice-state-sync-and-conflict-recovery-gate-spec.md`: 멀티디바이스 상태 동기화/충돌 복구 게이트(S33) + M1~M5 scorecard/multidevice sync 증적 팩/릴리즈 연동 기준
+- `69-physical-blocked-evidence-weekly-routine.md`: 실기기 부재 상태에서 `P-004`/`BK` blocked 증적 주간 갱신 루틴/캘린더 기준
 - `30-font-onboarding-gate.md`: AB-005/006 착수 게이트(체크리스트/승인 기준)
 - `31-font-assets-and-license-register.md`: 폰트 자산 반입/라이선스/적용 매핑 레지스터
 - `32-visual-proof-matrix-report.md`: AB-009/010 시각 증적 매트릭스/QA 판정 리포트
@@ -118,7 +119,7 @@
 1. 작업 시작 전 `09`, `10`, `11`을 먼저 확인한다.
 2. 기능 머지 전 `06` 테스트 항목을 최소 1회 이상 수행한다.
 3. 주차 종료 시 `11`에 완료/미완료/리스크를 반드시 기록한다.
-4. 물리 게이트 루틴은 `.github/workflows/physical-gates-routine.yml` 또는 `run-physical-gates-routine-check.sh`로 주 1회 이상 점검한다.
+4. 물리 게이트 루틴은 `.github/workflows/physical-gates-routine.yml`(매주 월요일 11:00 KST, `0 2 * * 1`) 또는 `run-physical-gates-routine-check.sh`로 주 1회 이상 점검한다.
 5. UI 미감/타이포 관련 변경은 `51`의 `S22 A1~A5` scorecard와 전/후 증적 팩을 반드시 첨부한다.
 6. 상태 화면(loading/empty/error/offline/redirect) 변경은 `52`의 `S23 N1~N5` scorecard와 상태 매트릭스 증적을 반드시 첨부한다.
 7. 상태 전환/피드백 관련 변경은 `53`의 `S24 C1~C5` scorecard와 enter/steady/exit 전환 증적을 반드시 첨부한다.
