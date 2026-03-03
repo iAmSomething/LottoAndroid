@@ -591,3 +591,7 @@
 ## BP. BO-005 blocked 해소 준비(2026-03-03 Cycle-65)
 - [x] BP-001 BO-005 실기기 준비 대기 러너 스크립트 추가(`scripts/run-bo005-when-physical-ready.sh`, timeout blocked 리포트 + 준비 충족 시 체인 실행, 검증: `bo005_when_physical_ready_timeout_2026-03-03.md`)
 - [ ] BP-002 실기기 연결 후 BP-001 성공 리포트 1회 확보(`bo005_when_physical_ready_<date>.md`, `firebase_physical_pass_chain_bo005_<date>.md`)
+
+## BQ. BO-005 준비도 주기 점검(2026-03-03 Cycle-66)
+- [x] BQ-001 BO-005 준비도 루틴 점검 스크립트/워크플로우 추가(`run-bo005-readiness-routine-check.sh`, `.github/workflows/bo005-readiness-routine.yml`, 로컬 증적: `bo005_readiness_routine_local_2026-03-03.md`)
+- [ ] BQ-002 CI 루틴 실행 증적 1회 확보(`bo005_readiness_routine_ci_<run_id>.md`)
