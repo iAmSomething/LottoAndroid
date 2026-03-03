@@ -5,8 +5,8 @@ import com.weeklylotto.app.domain.model.ReminderConfig
 import com.weeklylotto.app.domain.service.MotionPreferenceStore
 import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
-import com.weeklylotto.app.domain.service.TicketBackupService
 import com.weeklylotto.app.domain.service.TicketBackupIntegritySummary
+import com.weeklylotto.app.domain.service.TicketBackupService
 import com.weeklylotto.app.domain.service.TicketBackupSummary
 import com.weeklylotto.app.feature.settings.SettingsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -242,8 +242,14 @@ private class FakeMotionPreferenceStore(
 }
 
 private class FakeTicketBackupService(
-    private val backupResult: Result<TicketBackupSummary> = Result.success(TicketBackupSummary(0, 0, "tickets_backup_latest.json")),
-    private val restoreResult: Result<TicketBackupSummary> = Result.success(TicketBackupSummary(0, 0, "tickets_backup_latest.json")),
+    private val backupResult: Result<TicketBackupSummary> =
+        Result.success(
+            TicketBackupSummary(0, 0, "tickets_backup_latest.json"),
+        ),
+    private val restoreResult: Result<TicketBackupSummary> =
+        Result.success(
+            TicketBackupSummary(0, 0, "tickets_backup_latest.json"),
+        ),
     private val integrityResult: Result<TicketBackupIntegritySummary> =
         Result.success(
             TicketBackupIntegritySummary(

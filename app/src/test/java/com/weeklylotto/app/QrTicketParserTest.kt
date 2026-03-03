@@ -2,8 +2,8 @@ package com.weeklylotto.app
 
 import com.google.common.truth.Truth.assertThat
 import com.weeklylotto.app.data.qr.QrTicketParser
-import com.weeklylotto.app.domain.error.AppResult
 import com.weeklylotto.app.domain.error.AppError
+import com.weeklylotto.app.domain.error.AppResult
 import org.junit.Test
 
 class QrTicketParserTest {

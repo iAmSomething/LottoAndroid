@@ -10,8 +10,8 @@ import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.feature.manualadd.ManualAddViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -242,7 +242,7 @@ private class ManualAddFakeTicketRepository(
     override suspend fun save(bundle: TicketBundle) {
         saveInvocationCount += 1
         if (failOnSave) {
-            throw IllegalStateException("save failed")
+            error("save failed")
         }
         if (saveDelayMillis > 0L) {
             delay(saveDelayMillis)

@@ -94,13 +94,13 @@ class QrScanViewModel(
                     val ticket = parsed.value
                     if (ticket.games.isEmpty()) {
                         _uiState.update {
-                                it.copy(
-                                    latestMessage = "QR에 게임 정보가 없습니다.",
-                                    consecutiveFailureCount = it.consecutiveFailureCount + 1,
-                                    failureGuideTitle = "게임 정보 누락",
-                                    failureGuideMessage = "티켓 QR이 완전히 보이도록 촬영해 다시 시도하세요.",
-                                    pendingScan = null,
-                                )
+                            it.copy(
+                                latestMessage = "QR에 게임 정보가 없습니다.",
+                                consecutiveFailureCount = it.consecutiveFailureCount + 1,
+                                failureGuideTitle = "게임 정보 누락",
+                                failureGuideMessage = "티켓 QR이 완전히 보이도록 촬영해 다시 시도하세요.",
+                                pendingScan = null,
+                            )
                         }
                         return@launch
                     }

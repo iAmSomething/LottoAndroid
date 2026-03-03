@@ -279,7 +279,7 @@ class StatsViewModel(
                                     0
                                 } else {
                                     (count * 100) / totalPickedNumbers
-                            },
+                                },
                         )
                     }
 
@@ -361,9 +361,17 @@ class StatsViewModel(
                 bundles.filter { it.createdAt >= cutoff }
             }
             StatsPeriod.CUSTOM -> {
-                val startRound = _uiState.value.customStartRound.toIntOrNull() ?: return emptyList()
-                val endRound = _uiState.value.customEndRound.toIntOrNull() ?: return emptyList()
-                bundles.filter { it.round.number in startRound..endRound }
+                val startRound = _uiState.value.customStartRound.toIntOrNull()
+                val endRound = _uiState.value.customEndRound.toIntOrNull()
+                val targetRange =
+                    if (startRound != null && endRound != null) {
+                        startRound..endRound
+                    } else {
+                        null
+                    }
+                targetRange?.let { range ->
+                    bundles.filter { it.round.number in range }
+                } ?: emptyList()
             }
         }
     }

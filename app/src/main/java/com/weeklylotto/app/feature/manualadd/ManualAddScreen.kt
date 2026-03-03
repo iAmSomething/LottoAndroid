@@ -33,6 +33,7 @@ import com.weeklylotto.app.ui.component.motionClickable
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
 
+@Suppress("CyclomaticComplexMethod")
 @Composable
 fun ManualAddScreen(onBack: () -> Unit) {
     val context = LocalContext.current

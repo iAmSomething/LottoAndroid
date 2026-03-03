@@ -65,6 +65,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
+@Suppress("CyclomaticComplexMethod")
 @Composable
 fun HomeScreen(
     onClickGenerator: () -> Unit,

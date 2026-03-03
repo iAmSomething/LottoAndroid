@@ -6,11 +6,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationManagerCompat
-import com.weeklylotto.app.R
 import com.weeklylotto.app.MainActivity
+import com.weeklylotto.app.R
 import com.weeklylotto.app.ui.navigation.routeToDeepLink
 
 object ReminderNotificationHelper {

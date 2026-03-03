@@ -153,9 +153,7 @@ class NumberGeneratorViewModel(
         }
     }
 
-    fun saveCurrentAsWeeklyTicket(
-        successMessage: String = "이번 주 번호를 저장했습니다. 동일 회차 자동번호는 최신 저장본으로 갱신됩니다.",
-    ) {
+    fun saveCurrentAsWeeklyTicket(successMessage: String = "이번 주 번호를 저장했습니다. 동일 회차 자동번호는 최신 저장본으로 갱신됩니다.") {
         viewModelScope.launch {
             val today = LocalDate.now()
             val drawDate = RoundEstimator.nextDrawDate(today)
