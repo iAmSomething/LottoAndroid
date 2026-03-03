@@ -20,7 +20,6 @@ enum class ReminderNotificationTarget(
     ;
 
     companion object {
-        fun fromKey(key: String?): ReminderNotificationTarget? =
-            entries.firstOrNull { it.key == key }
+        fun fromKey(key: String?): ReminderNotificationTarget? = entries.firstOrNull { it.key == key }
     }
 }

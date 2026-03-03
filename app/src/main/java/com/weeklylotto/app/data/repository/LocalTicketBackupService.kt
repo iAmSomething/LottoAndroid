@@ -8,13 +8,13 @@ import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
+import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsLogger
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.domain.service.NoOpAnalyticsLogger
-import com.weeklylotto.app.domain.repository.TicketRepository
-import com.weeklylotto.app.domain.service.TicketBackupService
 import com.weeklylotto.app.domain.service.TicketBackupIntegritySummary
+import com.weeklylotto.app.domain.service.TicketBackupService
 import com.weeklylotto.app.domain.service.TicketBackupSummary
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
@@ -22,7 +22,6 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
@@ -196,7 +195,11 @@ class LocalTicketBackupService(
             requiredArray("games").mapIndexed { index, gameElement ->
                 val gameObject = gameElement.jsonObject
                 val slotName = gameObject.optionalString("slot") ?: GameSlot.entries[index].name
-                val numbers = gameObject.requiredArray("numbers").map { element -> LottoNumber(element.requiredIntValue()) }
+                val numbers =
+                    gameObject.requiredArray("numbers").map {
+                            element ->
+                        LottoNumber(element.requiredIntValue())
+                    }
                 val lockedNumbers =
                     gameObject
                         .requiredArray("lockedNumbers")
@@ -233,11 +236,9 @@ private fun JsonObject.optionalString(key: String): String? = this[key]?.jsonPri
 private fun JsonObject.requiredInt(key: String): Int =
     this[key]?.jsonPrimitive?.intOrNull ?: error("백업 데이터에 `$key` 값이 없습니다.")
 
-private fun JsonObject.requiredArray(key: String): JsonArray =
-    this[key]?.jsonArray ?: error("백업 데이터에 `$key` 배열이 없습니다.")
+private fun JsonObject.requiredArray(key: String): JsonArray = this[key]?.jsonArray ?: error("백업 데이터에 `$key` 배열이 없습니다.")
 
-private fun JsonElement.requiredIntValue(): Int =
-    this.jsonPrimitive.intOrNull ?: error("백업 데이터 숫자 값이 올바르지 않습니다.")
+private fun JsonElement.requiredIntValue(): Int = this.jsonPrimitive.intOrNull ?: error("백업 데이터 숫자 값이 올바르지 않습니다.")
 
 private data class IntegrityTicket(
     val signature: String,
@@ -246,16 +247,27 @@ private data class IntegrityTicket(
 )
 
 private fun JsonObject.toIntegrityTicketOrNull(): IntegrityTicket? {
-    val roundNumber = this["roundNumber"]?.jsonPrimitive?.intOrNull ?: return null
-    val drawDate = this["drawDate"]?.jsonPrimitive?.contentOrNull ?: return null
-    val source = this["source"]?.jsonPrimitive?.contentOrNull ?: return null
-    val status = this["status"]?.jsonPrimitive?.contentOrNull ?: return null
-    val createdAt = this["createdAt"]?.jsonPrimitive?.contentOrNull ?: return null
-    val games = this["games"]?.jsonArray ?: return null
+    val roundNumber = this["roundNumber"]?.jsonPrimitive?.intOrNull
+    val drawDate = this["drawDate"]?.jsonPrimitive?.contentOrNull
+    val source = this["source"]?.jsonPrimitive?.contentOrNull
+    val status = this["status"]?.jsonPrimitive?.contentOrNull
+    val createdAt = this["createdAt"]?.jsonPrimitive?.contentOrNull
+    val games = this["games"]?.jsonArray
+
+    val requiredValues = listOf(roundNumber, drawDate, source, status, createdAt, games)
+    if (requiredValues.any { value -> value == null }) {
+        return null
+    }
+    val safeRoundNumber = roundNumber!!
+    val safeDrawDate = drawDate!!
+    val safeSource = source!!
+    val safeStatus = status!!
+    val safeCreatedAt = createdAt!!
+    val safeGames = games!!
 
     var invalidGameCount = 0
     val gameSignatures = mutableListOf<String>()
-    games.forEach { gameElement ->
+    safeGames.forEach { gameElement ->
         val gameObject = gameElement as? JsonObject
         val numbers =
             gameObject
@@ -277,15 +289,15 @@ private fun JsonObject.toIntegrityTicketOrNull(): IntegrityTicket? {
 
     val ticketSignature =
         buildString {
-            append(roundNumber)
+            append(safeRoundNumber)
             append('|')
-            append(drawDate)
+            append(safeDrawDate)
             append('|')
-            append(source)
+            append(safeSource)
             append('|')
-            append(status)
+            append(safeStatus)
             append('|')
-            append(createdAt)
+            append(safeCreatedAt)
             append('|')
             append(gameSignatures.sorted().joinToString(separator = ","))
         }

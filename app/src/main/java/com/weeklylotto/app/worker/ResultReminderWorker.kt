@@ -13,10 +13,11 @@ class ResultReminderWorker(
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         AppGraph.init(applicationContext)
-        val latestRound = when (val result = AppGraph.drawRepository.fetchLatest()) {
-            is AppResult.Success -> result.value.round
-            is AppResult.Failure -> null
-        }
+        val latestRound =
+            when (val result = AppGraph.drawRepository.fetchLatest()) {
+                is AppResult.Success -> result.value.round
+                is AppResult.Failure -> null
+            }
         val hasTicketsForLatestRound =
             latestRound?.let { round ->
                 AppGraph.ticketRepository.observeTicketsByRound(round).first().isNotEmpty()

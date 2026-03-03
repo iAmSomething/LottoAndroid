@@ -24,17 +24,21 @@ internal fun routeToDeepLinkString(route: String): String {
 fun deepLinkToRoute(uri: Uri?): String? = deepLinkToRouteString(uri?.toString())
 
 internal fun deepLinkToRouteString(rawUri: String?): String? {
-    if (rawUri.isNullOrBlank()) return null
-    val parsed = runCatching { URI(rawUri) }.getOrNull() ?: return null
-    if (parsed.scheme != APP_SCHEME) return null
-
-    val queryMap = parseQuery(parsed.rawQuery)
+    val parsed =
+        rawUri
+            ?.takeUnless { candidate -> candidate.isBlank() }
+            ?.let { candidate -> runCatching { URI(candidate) }.getOrNull() }
     val candidate =
-        if (parsed.host.equals(APP_DEEP_LINK_HOST, ignoreCase = true)) {
-            queryMap["route"]
-        } else {
-            parsed.host ?: parsed.rawAuthority ?: parsed.path?.trim('/')
-        }
+        parsed
+            ?.takeIf { uri -> uri.scheme == APP_SCHEME }
+            ?.let { uri ->
+                val queryMap = parseQuery(uri.rawQuery)
+                if (uri.host.equals(APP_DEEP_LINK_HOST, ignoreCase = true)) {
+                    queryMap["route"]
+                } else {
+                    uri.host ?: uri.rawAuthority ?: uri.path?.trim('/')
+                }
+            }
     return normalizeSupportedRoute(candidate)
 }
 

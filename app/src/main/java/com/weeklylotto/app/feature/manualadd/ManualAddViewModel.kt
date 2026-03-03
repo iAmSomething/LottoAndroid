@@ -37,6 +37,7 @@ data class DuplicatePromptUi(
     val duplicateGameCount: Int,
 )
 
+@Suppress("TooManyFunctions")
 class ManualAddViewModel(
     private val ticketRepository: TicketRepository,
 ) : ViewModel() {

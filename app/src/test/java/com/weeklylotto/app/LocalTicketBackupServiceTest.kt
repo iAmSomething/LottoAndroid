@@ -2,9 +2,6 @@ package com.weeklylotto.app
 
 import com.google.common.truth.Truth.assertThat
 import com.weeklylotto.app.data.repository.LocalTicketBackupService
-import com.weeklylotto.app.domain.service.AnalyticsEvent
-import com.weeklylotto.app.domain.service.AnalyticsLogger
-import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.domain.model.GameMode
 import com.weeklylotto.app.domain.model.GameSlot
 import com.weeklylotto.app.domain.model.LottoGame
@@ -14,6 +11,9 @@ import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.repository.TicketRepository
+import com.weeklylotto.app.domain.service.AnalyticsEvent
+import com.weeklylotto.app.domain.service.AnalyticsLogger
+import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,7 +36,10 @@ class LocalTicketBackupServiceTest {
                         backupTicket(id = 2L, round = 1200, numbers = listOf(7, 8, 9, 10, 11, 12)),
                     ),
                 )
-            val backupFile = Files.createTempDirectory("ticket-backup-test").resolve("tickets_backup_latest.json").toFile()
+            val backupFile =
+                Files.createTempDirectory(
+                    "ticket-backup-test",
+                ).resolve("tickets_backup_latest.json").toFile()
             val service = LocalTicketBackupService(ticketRepository = repository, backupFile = backupFile)
 
             val summary = service.backupCurrentTickets().getOrThrow()
@@ -50,7 +53,10 @@ class LocalTicketBackupServiceTest {
     @Test
     fun 복원시_기존티켓을_교체하고_백업데이터를_저장한다() =
         runTest {
-            val backupFile = Files.createTempDirectory("ticket-backup-restore").resolve("tickets_backup_latest.json").toFile()
+            val backupFile =
+                Files.createTempDirectory(
+                    "ticket-backup-restore",
+                ).resolve("tickets_backup_latest.json").toFile()
             val sourceRepository =
                 BackupFakeTicketRepository(
                     listOf(
@@ -62,14 +68,22 @@ class LocalTicketBackupServiceTest {
                 .backupCurrentTickets()
                 .getOrThrow()
 
-            val targetRepository = BackupFakeTicketRepository(listOf(backupTicket(id = 11L, round = 1202, numbers = listOf(40, 41, 42, 43, 44, 45))))
+            val targetRepository =
+                BackupFakeTicketRepository(
+                    listOf(backupTicket(id = 11L, round = 1202, numbers = listOf(40, 41, 42, 43, 44, 45))),
+                )
             val service = LocalTicketBackupService(ticketRepository = targetRepository, backupFile = backupFile)
 
             val summary = service.restoreLatestBackup().getOrThrow()
 
             assertThat(summary.ticketCount).isEqualTo(2)
             assertThat(targetRepository.observeSnapshot().map { it.round.number }).containsExactly(1201, 1201)
-            assertThat(targetRepository.observeSnapshot().flatMap { bundle -> bundle.games }.map { game -> game.numbers.map { it.value } })
+            assertThat(
+                targetRepository.observeSnapshot().flatMap {
+                        bundle ->
+                    bundle.games
+                }.map { game -> game.numbers.map { it.value } },
+            )
                 .containsExactly(listOf(1, 2, 3, 4, 5, 6), listOf(13, 14, 15, 16, 17, 18))
         }
 
@@ -77,7 +91,10 @@ class LocalTicketBackupServiceTest {
     fun 백업파일이_없으면_복원은_실패한다() =
         runTest {
             val repository = BackupFakeTicketRepository(emptyList())
-            val backupFile = Files.createTempDirectory("ticket-backup-missing").resolve("tickets_backup_latest.json").toFile()
+            val backupFile =
+                Files.createTempDirectory(
+                    "ticket-backup-missing",
+                ).resolve("tickets_backup_latest.json").toFile()
             val service = LocalTicketBackupService(ticketRepository = repository, backupFile = backupFile)
 
             val result = service.restoreLatestBackup()
@@ -95,7 +112,10 @@ class LocalTicketBackupServiceTest {
                         backupTicket(id = 2L, round = 1200, numbers = listOf(7, 8, 9, 10, 11, 12)),
                     ),
                 )
-            val backupFile = Files.createTempDirectory("ticket-backup-integrity-pass").resolve("tickets_backup_latest.json").toFile()
+            val backupFile =
+                Files.createTempDirectory(
+                    "ticket-backup-integrity-pass",
+                ).resolve("tickets_backup_latest.json").toFile()
             val analytics = RecordingAnalyticsLogger()
             val service =
                 LocalTicketBackupService(
@@ -122,7 +142,10 @@ class LocalTicketBackupServiceTest {
     @Test
     fun 무결성점검시_중복게임오류깨진레코드를_집계한다() =
         runTest {
-            val backupFile = Files.createTempDirectory("ticket-backup-integrity-warn").resolve("tickets_backup_latest.json").toFile()
+            val backupFile =
+                Files.createTempDirectory(
+                    "ticket-backup-integrity-warn",
+                ).resolve("tickets_backup_latest.json").toFile()
             val analytics = RecordingAnalyticsLogger()
             val service =
                 LocalTicketBackupService(
