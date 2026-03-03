@@ -566,3 +566,10 @@
 - [x] BL-001 `WeeklyReportSummary` 지표 확장(`winningRatePercent`, `resultViewed`)
 - [x] BL-002 Home 주간 리포트 카드에 당첨률/결과확인 상태 노출 추가
 - [x] BL-003 회귀 테스트/증적 반영(`HomeViewModelTest`, `docs/assets/distribution/weekly_report_card_b03_local_2026-03-01.md`) 및 문서 동기화(`11`, `16`, `21`, `22`)
+
+## BM. 실기기 부재 대응 운영 트랙(2026-03-03 Cycle-62)
+- [ ] BM-001 실기기 부재 `blocked` 증적 주간 갱신 루틴 정의(`P-004`, `BK`) 및 실행 캘린더 고정
+- [ ] BM-002 `run-all-physical-gates-when-ready.sh` 출력 요약 리포트 템플릿 추가(주간 비교용)
+- [ ] BM-003 `blocked` 상태 장기화 리스크 기준 수립(임계 주차/에스컬레이션 조건/담당자)
+- [ ] BM-004 실기기 연결 즉시 실행 번들 명령 문서화(`BK-001`→`BK-002`→`P-004` 순서/완료 판정)
+- [ ] BM-005 `10`/`11`/`18` 문서 간 블로커 상태 동기화 체크리스트 추가(누락 방지)
