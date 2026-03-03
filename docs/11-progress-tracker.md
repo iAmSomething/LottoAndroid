@@ -21,6 +21,7 @@
   - `BM-005` 완료: `10`/`11`/`18` 블로커 상태 동기화 체크리스트 문서화(`73-physical-blocker-state-sync-checklist.md`, 상태/날짜/증적 경로 일치 규칙 고정)
   - `BN-001` 완료: 실기기 확보 당일 Day-0 전환 런북 문서화(`74-physical-device-day0-transition-runbook.md`, 오케스트레이터→sync→문서동기화 순서/성공 판정/실패 분기 고정)
   - `BN-002` 완료: 실기기 전환 당일 운영 체크리스트(RACI + 타임박스) 문서화(`75-physical-transition-ops-raci-timebox-checklist.md`, 역할 책임/단계별 제한 시간/종료 체크 고정)
+  - `BN-003` 완료: `PASS` 전환 주차 요약 샘플 작성(`docs/assets/distribution/physical_gates_weekly_summary_2026-w10.md`, 가상 전환 시나리오 형식/템플릿 검증용)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
