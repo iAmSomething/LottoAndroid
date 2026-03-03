@@ -11,6 +11,7 @@
   - `Release Preflight` main push 런 성공 확인(run `22606534394`)
   - `Firebase Distribution` 자동 배포 성공 확인(run `22606614291`)
   - Wear `P-004` blocked 증적 갱신: `./scripts/run-p4-wear-proof-gate.sh --date-tag 2026-03-03 --save-blocked-report` 실행(`docs/assets/distribution/wear_p4_device_evidence_2026-03-03.md`)
+  - 물리 게이트 오케스트레이터 blocked 증적 갱신: `./scripts/run-all-physical-gates-when-ready.sh --date-tag 2026-03-03 --timeout-seconds 1 --poll-interval 1 --save-blocked-report` 실행(`physical_gates_orchestrator_2026-03-03.md`, `physical_gates_checkpoint_2026-03-03.md`, `performance_release_decision_checkpoint_2026-03-03.md`, `wear_p4_device_evidence_checkpoint_2026-03-03.md`)
   - 백로그 정합성 보정: `16-next-sprint-backlog.md`의 완료 누락 항목(`P-001`, `AL-005`, `AM-005`, `AN-005`) 완료 표기 반영
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
