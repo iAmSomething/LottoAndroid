@@ -23,6 +23,20 @@ object LottoColors {
     val DangerText = Color(0xFF991B1B)
 
     val Dim = Color(0x59111827)
+    val SurfaceWarm = Color(0xFFFFFDF8)
+    val SurfaceCool = Color(0xFFF2FAFA)
+    val SurfaceWarmGradient =
+        Brush.linearGradient(
+            colors = listOf(SurfaceWarm, Color(0xFFF6EFE1)),
+        )
+    val SurfaceCoolGradient =
+        Brush.linearGradient(
+            colors = listOf(SurfaceCool, Color(0xFFEAF4F5)),
+        )
+    val SurfaceAccentGradient =
+        Brush.linearGradient(
+            colors = listOf(Color(0xFFFFF8EC), Color(0xFFFBE7C3)),
+        )
     val TopBarGradient =
         Brush.horizontalGradient(
             colors = listOf(Primary, PrimaryDark),

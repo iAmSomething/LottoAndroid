@@ -7,6 +7,7 @@ cd "$ROOT_DIR"
 SERIAL=""
 SKIP_DOC=0
 REQUIRE_PHYSICAL=0
+CHECK_WEAR_P4=1
 
 usage() {
   cat <<EOF
@@ -16,6 +17,7 @@ Options:
   --serial <adb-serial>       Use a specific adb serial.
   --require-physical-device   Fail if the selected device is not a physical device.
   --skip-doc                  Do not append run result to docs/18-device-validation-report.md.
+  --skip-wear-p4              Skip Wear P-004 probe/report step.
 EOF
 }
 
@@ -40,6 +42,9 @@ while [[ $# -gt 0 ]]; do
     --skip-doc)
       SKIP_DOC=1
       ;;
+    --skip-wear-p4)
+      CHECK_WEAR_P4=0
+      ;;
     -h|--help)
       usage
       exit 0
@@ -57,6 +62,54 @@ if ! command -v adb >/dev/null 2>&1; then
   echo "[FAIL] adb command not found."
   exit 1
 fi
+
+WEAR_P4_STATUS="SKIPPED"
+WEAR_P4_REPORT="N/A"
+WEAR_P4_NOTE="Not executed."
+
+run_wear_p4_probe() {
+  if [[ "$CHECK_WEAR_P4" -eq 0 ]]; then
+    WEAR_P4_STATUS="SKIPPED"
+    WEAR_P4_NOTE="`--skip-wear-p4` 옵션으로 생략됨"
+    return 0
+  fi
+
+  if [[ ! -x "./scripts/run-p4-wear-proof-gate.sh" ]]; then
+    WEAR_P4_STATUS="SKIPPED"
+    WEAR_P4_NOTE="run-p4-wear-proof-gate.sh 미존재/실행권한 없음"
+    return 0
+  fi
+
+  local date_tag
+  date_tag="$(date +%F)"
+  WEAR_P4_REPORT="docs/assets/distribution/wear_p4_device_evidence_release_probe_${date_tag}.md"
+  echo "[INFO] Running Wear P-004 probe"
+  echo "       command=./scripts/run-p4-wear-proof-gate.sh --skip-install --save-blocked-report --date-tag ${date_tag} --report-path ${WEAR_P4_REPORT}"
+
+  set +e
+  ./scripts/run-p4-wear-proof-gate.sh \
+    --skip-install \
+    --save-blocked-report \
+    --date-tag "$date_tag" \
+    --report-path "$WEAR_P4_REPORT"
+  local p4_code=$?
+  set -e
+
+  case "$p4_code" in
+    0)
+      WEAR_P4_STATUS="PASS"
+      WEAR_P4_NOTE="소형/대형 Wear 실기기 증적 확보"
+      ;;
+    2)
+      WEAR_P4_STATUS="BLOCKED"
+      WEAR_P4_NOTE="Wear 실기기 2종 미연결로 blocked 리포트 생성"
+      ;;
+    *)
+      WEAR_P4_STATUS="FAIL"
+      WEAR_P4_NOTE="Wear P-004 프로브 실행 실패(code=${p4_code})"
+      ;;
+  esac
+}
 
 CONNECTED_SERIALS=()
 PHYSICAL_SERIALS=()
@@ -93,6 +146,8 @@ if [[ -z "$SERIAL" ]]; then
     RESULT_CODE=$?
     set -e
 
+    run_wear_p4_probe
+
     if [[ "$RESULT_CODE" -eq 0 ]]; then
       RESULT_TEXT="PASS"
       VALIDATION_MODE="CI_ONLY_NO_DEVICE"
@@ -114,6 +169,8 @@ if [[ -z "$SERIAL" ]]; then
         echo "- Android: N/A"
         echo "- ADB Serial: \`N/A\`"
         echo "- 실행 명령: \`./scripts/release-preflight.sh --with-build-ci --skip-adb --require-signing\`"
+        echo "- Wear P-004 probe: ${WEAR_P4_STATUS} (\`${WEAR_P4_REPORT}\`)"
+        echo "- Wear 메모: ${WEAR_P4_NOTE}"
       } >> "$REPORT_FILE"
       echo "[INFO] Report updated: $REPORT_FILE"
     fi
@@ -166,6 +223,8 @@ set +e
 RESULT_CODE=$?
 set -e
 
+run_wear_p4_probe
+
 FALLBACK_NOTE=""
 if [[ "$RESULT_CODE" -ne 0 && "$SELECTED_IS_EMULATOR" -eq 1 && "$REQUIRE_PHYSICAL" -eq 0 ]]; then
   echo "[WARN] Emulator preflight failed. Retrying with CI-only fallback gate."
@@ -206,6 +265,8 @@ if [[ "$SKIP_DOC" -eq 0 ]]; then
     echo "- Android: ${ANDROID_RELEASE} (SDK ${SDK_INT})"
     echo "- ADB Serial: \`${SERIAL}\`"
     echo "- 실행 명령: \`${PREFLIGHT_CMD[*]}\`"
+    echo "- Wear P-004 probe: ${WEAR_P4_STATUS} (\`${WEAR_P4_REPORT}\`)"
+    echo "- Wear 메모: ${WEAR_P4_NOTE}"
     if [[ -n "$FALLBACK_NOTE" ]]; then
       echo "- 보완 메모: ${FALLBACK_NOTE}"
     fi

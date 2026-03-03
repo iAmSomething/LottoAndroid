@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -425,48 +426,72 @@ fun ResultScreen() {
                 Card(
                     shape = RoundedCornerShape(LottoDimens.CardRadius),
                     border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
-                    colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                 ) {
-                    Column(
-                        modifier = Modifier.padding(LottoDimens.ScreenPadding),
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    brush = LottoColors.SurfaceCoolGradient,
+                                    shape = RoundedCornerShape(LottoDimens.CardRadius),
+                                ),
                     ) {
-                        Text(
-                            text = "제 ${draw?.round?.number}회 당첨 결과",
-                            style = LottoTypeTokens.NumericTitle,
-                            fontWeight = FontWeight.Black,
-                        )
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        Column(
+                            modifier = Modifier.padding(LottoDimens.ScreenPadding),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
-                            Text("당첨 번호", color = LottoColors.TextMuted, style = MaterialTheme.typography.bodySmall)
-                            draw?.mainNumbers?.forEach {
-                                BallChip(
-                                    number = it.value,
-                                    state = BallState.Selected,
-                                    size = LottoDimens.BallSizeLarge,
-                                )
+                            Text(
+                                text = "제 ${draw?.round?.number}회 당첨 결과",
+                                style = LottoTypeTokens.NumericTitle,
+                                fontWeight = FontWeight.Black,
+                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Text("당첨 번호", color = LottoColors.TextMuted, style = MaterialTheme.typography.bodySmall)
+                                draw?.mainNumbers?.forEach {
+                                    BallChip(
+                                        number = it.value,
+                                        state = BallState.Selected,
+                                        size = LottoDimens.BallSizeLarge,
+                                    )
+                                }
                             }
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            Text("보너스", color = LottoColors.TextMuted, style = MaterialTheme.typography.bodySmall)
-                            draw?.bonus?.let {
-                                BallChip(
-                                    number = it.value,
-                                    state = BallState.Bonus,
-                                    size = LottoDimens.BallSizeLarge,
-                                )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Text("보너스", color = LottoColors.TextMuted, style = MaterialTheme.typography.bodySmall)
+                                draw?.bonus?.let {
+                                    BallChip(
+                                        number = it.value,
+                                        state = BallState.Bonus,
+                                        size = LottoDimens.BallSizeLarge,
+                                    )
+                                }
                             }
+                            Text(
+                                text = "${draw?.drawDate} 추첨",
+                                color = LottoColors.TextMuted,
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .height(1.dp)
+                                        .background(LottoColors.Primary.copy(alpha = 0.12f)),
+                            )
+                            Text(
+                                text = "예상 당첨금 합계 ${uiState.totalWinningAmount.toWonLabel()}",
+                                style = LottoTypeTokens.NumericBody,
+                                color = LottoColors.PrimaryDark,
+                                fontWeight = FontWeight.SemiBold,
+                            )
                         }
-                        Text(
-                            text = "${draw?.drawDate} 추첨",
-                            color = LottoColors.TextMuted,
-                            style = MaterialTheme.typography.bodySmall,
-                        )
                     }
                 }
             }
@@ -556,23 +581,34 @@ fun ResultScreen() {
                 Card(
                     shape = RoundedCornerShape(LottoDimens.CardRadius),
                     border = androidx.compose.foundation.BorderStroke(1.dp, LottoColors.Border),
-                    colors = CardDefaults.cardColors(containerColor = LottoColors.Surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth().padding(LottoDimens.ScreenPadding),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    brush = LottoColors.SurfaceWarmGradient,
+                                    shape = RoundedCornerShape(LottoDimens.CardRadius),
+                                ),
                     ) {
-                        Text(
-                            text = "당첨 ${uiState.winningCount}게임",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = LottoColors.TextSecondary,
-                        )
-                        Text(
-                            text = "예상 당첨금 합계 ${uiState.totalWinningAmount.toWonLabel()}",
-                            style = LottoTypeTokens.NumericTitle,
-                            fontWeight = FontWeight.Black,
-                            color = LottoColors.TextPrimary,
-                        )
+                        Column(
+                            modifier = Modifier.fillMaxWidth().padding(LottoDimens.ScreenPadding),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Text(
+                                text = "당첨 ${uiState.winningCount}게임",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = LottoColors.TextSecondary,
+                            )
+                            Text(
+                                text = "예상 당첨금 합계 ${uiState.totalWinningAmount.toWonLabel()}",
+                                style = LottoTypeTokens.NumericTitle,
+                                fontWeight = FontWeight.Black,
+                                color = LottoColors.TextPrimary,
+                            )
+                        }
                     }
                 }
             }

@@ -207,3 +207,40 @@
 ### 15.3 EXP-05/06 검증 자동화 연계
 - `scripts/verify-analytics-events.sh` 추가
 - 필수 이벤트 5종 및 `interaction_*` 스키마(`screen/component/action`)를 로그 기반으로 자동 검증
+
+## 16. Cycle-53 UI 품질 게이트 연동
+- `S11-U3/U4` 기준에 따라 모션 규격은 "의미 전달 유지 + 과한 전환 억제"를 기본값으로 운영한다.
+- 필수 확인:
+  - press feedback P95 100ms 이내
+  - 시트 open->stable P95 180ms 이내
+  - Reduce Motion ON에서도 동일 액션 의미가 유지되는지 확인
+
+## 17. Cycle-54 통합 결론 연동
+- 모션/상호작용 판정 결과(`S11-U3/U4`)는 `41-unified-quality-verdict-package-spec.md`의 `S12` 입력(`V2`)으로 제출한다.
+
+## 18. Cycle-55 드라이런/에스컬레이션 연동
+- 모션/상호작용 회귀로 인한 조건부/보류 케이스는 `42-unified-verdict-dryrun-and-escalation-spec.md`의 E13 규칙으로 처리한다.
+
+## 19. Cycle-56 이력/추세 연동
+- 모션/상호작용 관련 보류 패턴 추세는 `43-unified-verdict-history-and-trend-spec.md`의 H2/H3 규칙으로 주간 점검한다.
+
+## 20. Cycle-57 위험예산/프리즈 연동
+- 모션/상호작용 보류 패턴이 위험예산 한도를 초과하면 `44-unified-verdict-risk-budget-and-freeze-policy-spec.md`의 부분 프리즈 규칙을 적용한다.
+
+## 21. Cycle-58 프리즈 지휘/커뮤니케이션 연동
+- 모션/상호작용 관련 프리즈 이슈는 `45-freeze-command-and-communication-playbook.md`의 공지/해제 회의 규칙으로 관리한다.
+
+## 22. Cycle-59 프리즈 드릴/준비도 연동
+- 모션/상호작용 프리즈 이슈 대응력은 `46-freeze-drill-readiness-score-spec.md` 점수카드로 검증한다.
+
+## 23. Cycle-60 드릴 보정 액션 폐쇄 루프 연동
+- 모션/상호작용 프리즈 이슈의 후속 액션 등록/폐쇄/재개방 관리는 `47-freeze-drill-corrective-action-loop-spec.md`를 따른다.
+
+## 24. Cycle-63 보정 액션 부채/릴리즈 차단 연동
+- 모션/상호작용 프리즈 이슈의 부채 점수와 차단 판정은 `48-corrective-action-debt-and-release-block-spec.md`를 따른다.
+
+## Cycle-64 보정 액션 부채 이상징후/자동 에스컬레이션 연동
+- 보정 액션 부채 이상징후 탐지/경보/응답 SLA 운영은 `49-corrective-action-debt-anomaly-and-escalation-spec.md`를 따른다.
+
+## Cycle-65 에스컬레이션 대응 용량/커버리지 연동
+- 에스컬레이션 대응 용량/커버리지 운영은 `50-escalation-capacity-and-coverage-spec.md`를 따른다.

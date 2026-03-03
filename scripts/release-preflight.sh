@@ -4,6 +4,9 @@ set -u
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
+# Keep Gradle caches inside the workspace to avoid home-partition disk pressure.
+export GRADLE_USER_HOME="${GRADLE_USER_HOME:-$ROOT_DIR/.gradle-user-home}"
+
 RUN_BUILD_LOCAL=0
 RUN_BUILD_CI=0
 SKIP_ADB=0
@@ -11,6 +14,11 @@ REQUIRE_SIGNING=0
 REQUIRE_PHYSICAL_DEVICE=0
 TARGET_ANDROID_SERIAL="${ANDROID_SERIAL:-}"
 SKIP_BUILD_DUE_TO_ENV_FAIL=0
+SKIP_PERFORMANCE_GATE=0
+PERFORMANCE_PROFILE="auto"
+PERFORMANCE_REPEAT=5
+PERFORMANCE_WARMUP=1
+PERFORMANCE_BASELINE_REPORT=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -32,15 +40,50 @@ while [[ $# -gt 0 ]]; do
     --android-serial)
       if [[ $# -lt 2 ]]; then
         echo "Missing value for --android-serial"
-        echo "Usage: $0 [--with-build|--with-build-ci] [--skip-adb] [--require-signing] [--require-physical-device] [--android-serial <serial>]"
+        echo "Usage: $0 [--with-build|--with-build-ci] [--skip-adb] [--require-signing] [--require-physical-device] [--android-serial <serial>] [--skip-performance-gate] [--performance-profile <auto|emulator|device>] [--performance-repeat <N>] [--performance-warmup <N>] [--performance-baseline-report <path>]"
         exit 2
       fi
       TARGET_ANDROID_SERIAL="$2"
       shift
       ;;
+    --skip-performance-gate)
+      SKIP_PERFORMANCE_GATE=1
+      ;;
+    --performance-profile)
+      if [[ $# -lt 2 ]]; then
+        echo "Missing value for --performance-profile"
+        exit 2
+      fi
+      PERFORMANCE_PROFILE="$2"
+      shift
+      ;;
+    --performance-repeat)
+      if [[ $# -lt 2 ]]; then
+        echo "Missing value for --performance-repeat"
+        exit 2
+      fi
+      PERFORMANCE_REPEAT="$2"
+      shift
+      ;;
+    --performance-warmup)
+      if [[ $# -lt 2 ]]; then
+        echo "Missing value for --performance-warmup"
+        exit 2
+      fi
+      PERFORMANCE_WARMUP="$2"
+      shift
+      ;;
+    --performance-baseline-report)
+      if [[ $# -lt 2 ]]; then
+        echo "Missing value for --performance-baseline-report"
+        exit 2
+      fi
+      PERFORMANCE_BASELINE_REPORT="$2"
+      shift
+      ;;
     *)
       echo "Unknown option: $1"
-      echo "Usage: $0 [--with-build|--with-build-ci] [--skip-adb] [--require-signing] [--require-physical-device] [--android-serial <serial>]"
+      echo "Usage: $0 [--with-build|--with-build-ci] [--skip-adb] [--require-signing] [--require-physical-device] [--android-serial <serial>] [--skip-performance-gate] [--performance-profile <auto|emulator|device>] [--performance-repeat <N>] [--performance-warmup <N>] [--performance-baseline-report <path>]"
       exit 2
       ;;
   esac
@@ -69,6 +112,21 @@ fi
 
 if [[ -n "$TARGET_ANDROID_SERIAL" && "$SKIP_ADB" -eq 1 ]]; then
   echo "--android-serial cannot be used with --skip-adb."
+  exit 2
+fi
+
+if [[ "$PERFORMANCE_PROFILE" != "auto" && "$PERFORMANCE_PROFILE" != "emulator" && "$PERFORMANCE_PROFILE" != "device" ]]; then
+  echo "--performance-profile must be one of: auto, emulator, device."
+  exit 2
+fi
+
+if ! [[ "$PERFORMANCE_REPEAT" =~ ^[0-9]+$ ]] || [[ "$PERFORMANCE_REPEAT" -lt 1 ]]; then
+  echo "--performance-repeat must be a positive integer."
+  exit 2
+fi
+
+if ! [[ "$PERFORMANCE_WARMUP" =~ ^[0-9]+$ ]]; then
+  echo "--performance-warmup must be zero or a positive integer."
   exit 2
 fi
 
@@ -115,14 +173,63 @@ extract_prop_from_file() {
   awk -F '=' -v k="$key" '$1==k {print substr($0, index($0, "=")+1)}' "$file" | tail -n 1
 }
 
+is_emulator_serial() {
+  [[ "$1" =~ ^emulator- ]]
+}
+
+resolve_connected_serial_for_perf() {
+  if [[ -n "$TARGET_ANDROID_SERIAL" ]]; then
+    echo "$TARGET_ANDROID_SERIAL"
+    return
+  fi
+  adb devices | awk 'NR>1 && $2=="device" {print $1; exit}'
+}
+
+resolve_performance_profile() {
+  local serial="$1"
+  if [[ "$PERFORMANCE_PROFILE" == "auto" ]]; then
+    if is_emulator_serial "$serial"; then
+      echo "emulator"
+    else
+      echo "device"
+    fi
+    return
+  fi
+  echo "$PERFORMANCE_PROFILE"
+}
+
+latest_performance_report_for_date() {
+  local profile="$1"
+  local date_key="$2"
+  ls -1t "docs/assets/distribution/performance_gate_${profile}_${date_key}"*.md 2>/dev/null | head -n 1
+}
+
 run_connected_test_with_retry() {
   local serial="$1"
   local attempt=1
+
+  prepare_device_for_instrumentation() {
+    local target_serial="$1"
+    if [[ -z "$target_serial" ]]; then
+      return 0
+    fi
+
+    # Make instrumentation deterministic by clearing persisted app state and waking the emulator.
+    adb -s "$target_serial" shell pm clear com.weeklylotto.app.debug >/dev/null 2>&1 || true
+    adb -s "$target_serial" shell pm clear com.weeklylotto.app.debug.test >/dev/null 2>&1 || true
+    adb -s "$target_serial" shell input keyevent KEYCODE_WAKEUP >/dev/null 2>&1 || true
+    adb -s "$target_serial" shell input keyevent 82 >/dev/null 2>&1 || true
+    adb -s "$target_serial" shell wm dismiss-keyguard >/dev/null 2>&1 || true
+  }
 
   while [[ "$attempt" -le 3 ]]; do
     local log_file
     local status
     log_file="$(mktemp)"
+
+    if [[ -n "$serial" ]]; then
+      prepare_device_for_instrumentation "$serial"
+    fi
 
     if [[ -n "$serial" ]]; then
       ANDROID_SERIAL="$serial" ./gradlew :app:connectedDebugAndroidTest 2>&1 | tee "$log_file"
@@ -377,6 +484,86 @@ elif [[ "$RUN_BUILD_CI" -eq 1 ]]; then
   fi
 else
   warn "품질 게이트 실행 생략(--with-build 또는 --with-build-ci 옵션으로 실행 가능)"
+fi
+
+section "성능 게이트"
+if [[ "$SKIP_PERFORMANCE_GATE" -eq 1 ]]; then
+  warn "성능 게이트 생략(--skip-performance-gate)"
+elif [[ "$SKIP_BUILD_DUE_TO_ENV_FAIL" -eq 1 ]]; then
+  warn "환경 조건 미충족으로 성능 게이트 실행 생략"
+elif [[ "$RUN_BUILD_LOCAL" -ne 1 ]]; then
+  warn "성능 게이트는 --with-build 로컬 실행에서만 동작"
+elif [[ "$SKIP_ADB" -eq 1 ]]; then
+  warn "성능 게이트 실행 생략(--skip-adb)"
+elif ! command -v adb >/dev/null 2>&1; then
+  warn "adb 명령 미설치로 성능 게이트 실행 불가"
+else
+  PERF_SERIAL="$(resolve_connected_serial_for_perf)"
+  if [[ -z "$PERF_SERIAL" ]]; then
+    warn "연결된 디바이스가 없어 성능 게이트 실행 불가"
+  else
+    PERF_PROFILE="$(resolve_performance_profile "$PERF_SERIAL")"
+    PERF_DATE="$(date '+%Y-%m-%d')"
+    PERF_REPORT_PATH="docs/assets/distribution/performance_gate_${PERF_PROFILE}_${PERF_DATE}.md"
+
+    PERF_CMD=(
+      ./scripts/run-performance-sample-check.sh
+      --serial "$PERF_SERIAL"
+      --profile "$PERF_PROFILE"
+      --repeat "$PERFORMANCE_REPEAT"
+      --warmup "$PERFORMANCE_WARMUP"
+      --save-report "$PERF_REPORT_PATH"
+    )
+
+    if [[ -n "$PERFORMANCE_BASELINE_REPORT" ]]; then
+      PERF_CMD+=(--baseline-report "$PERFORMANCE_BASELINE_REPORT")
+    fi
+
+    "${PERF_CMD[@]}"
+    PERF_STATUS=$?
+
+    if [[ "$PERF_STATUS" -ne 0 ]]; then
+      if [[ "$PERF_PROFILE" == "emulator" ]]; then
+        warn "성능 게이트 FAIL(emulator). 릴리즈 차단 없이 최적화 백로그로 이관"
+      else
+        fail "성능 게이트 FAIL(device). 릴리즈 보류 규칙(S07-5) 적용 필요"
+      fi
+    else
+      if [[ "$PERF_PROFILE" == "device" ]]; then
+        pass "성능 게이트 PASS(device): ${PERF_REPORT_PATH}"
+      else
+        pass "성능 게이트 실행 완료(${PERF_PROFILE}): ${PERF_REPORT_PATH}"
+      fi
+    fi
+
+    DECISION_REPORT_PATH="docs/assets/distribution/performance_release_decision_${PERF_DATE}.md"
+    EMULATOR_REPORT_TODAY="$(latest_performance_report_for_date emulator "$PERF_DATE")"
+    DEVICE_REPORT_TODAY="$(latest_performance_report_for_date device "$PERF_DATE")"
+
+    DECISION_CMD=(
+      ./scripts/evaluate-performance-gate.sh
+      --save-report "$DECISION_REPORT_PATH"
+    )
+    if [[ -n "$EMULATOR_REPORT_TODAY" ]]; then
+      DECISION_CMD+=(--emulator-report "$EMULATOR_REPORT_TODAY")
+    fi
+    if [[ -n "$DEVICE_REPORT_TODAY" ]]; then
+      DECISION_CMD+=(--device-report "$DEVICE_REPORT_TODAY")
+    fi
+
+    "${DECISION_CMD[@]}"
+    DECISION_STATUS=$?
+
+    if [[ "$DECISION_STATUS" -eq 0 ]]; then
+      if grep -q "Decision: PENDING_DEVICE_VALIDATION" "$DECISION_REPORT_PATH"; then
+        warn "성능 릴리즈 판정 pending(실기기 리포트 필요): ${DECISION_REPORT_PATH}"
+      else
+        pass "성능 릴리즈 판정 리포트 생성: ${DECISION_REPORT_PATH}"
+      fi
+    else
+      fail "성능 릴리즈 판정 HOLD: ${DECISION_REPORT_PATH}"
+    fi
+  fi
 fi
 
 section "요약"

@@ -188,6 +188,21 @@ class ManageViewModel(
         }
     }
 
+    fun requestDeleteSingle(ticketId: Long) {
+        val exists = uiState.value.tickets.any { it.id == ticketId }
+        if (!exists) {
+            _uiState.update { it.copy(feedbackMessage = "티켓을 찾을 수 없습니다.") }
+            return
+        }
+        _uiState.update {
+            it.copy(
+                selectedIds = setOf(ticketId),
+                isDeleteDialogOpen = true,
+                isMoveSheetOpen = false,
+            )
+        }
+    }
+
     fun dismissDeleteDialog() {
         _uiState.update { it.copy(isDeleteDialogOpen = false) }
     }
@@ -232,6 +247,22 @@ class ManageViewModel(
                     feedbackMessage = "보관함으로 이동했습니다.",
                 )
             }
+        }
+    }
+
+    fun moveTicketToVault(ticketId: Long) {
+        val ticket = uiState.value.tickets.firstOrNull { it.id == ticketId }
+        if (ticket == null) {
+            _uiState.update { it.copy(feedbackMessage = "티켓을 찾을 수 없습니다.") }
+            return
+        }
+        if (ticket.status == TicketStatus.SAVED) {
+            _uiState.update { it.copy(feedbackMessage = "이미 보관함 상태입니다.") }
+            return
+        }
+        viewModelScope.launch {
+            ticketRepository.updateStatusByIds(ids = setOf(ticketId), status = TicketStatus.SAVED)
+            _uiState.update { it.copy(feedbackMessage = "보관함으로 이동했습니다.") }
         }
     }
 

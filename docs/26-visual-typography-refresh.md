@@ -5,9 +5,9 @@
 - 특히 타이포를 기본 시스템 느낌에서 브랜드 톤이 있는 스타일로 전환한다.
 
 ## 2. 현재 진단
-- `Type.kt`는 `fontFamily` 지정이 없어 시스템 기본 폰트 렌더링에 의존한다.
-- 제목/본문/숫자의 역할 분리가 약해 정보 위계가 평평하게 보인다.
-- 보라 중심 컬러가 강해 화면 인상이 단조롭고, 카드/CTA 대비가 약하다.
+- `Type.kt`는 현재 브랜드 폰트 리소스(`brand_noto_sans_kr_variable`, `brand_roboto_condensed_variable`, `brand_roboto_mono_variable`)를 직접 사용한다.
+- 제목/본문/숫자 위계는 1차 개선됐으나, 폰트 자체 개성이 약해 "기본 앱 느낌"이 남는다.
+- 컬러 팔레트는 1차 전환됐지만 배경 질감/카드 레이어/아이콘 톤이 아직 기능 중심이라 감성 밀도가 낮다.
 
 ## 3. 리프레시 방향: "Lucky Editorial"
 - 키워드: 선명함, 신뢰감, 숫자 중심 가독성, 과하지 않은 축제감
@@ -96,3 +96,69 @@
 - 가독성 규칙:
   - 배경과 텍스트 대비 4.5:1 이상
   - 1.2x 폰트 스케일에서 줄바꿈 허용, 1.3x 이상은 메타 우선 생략
+
+## 12. Cycle-14 폴리시 확장안 (2026-02-26)
+- 목표:
+  - "타이포는 적용됐는데 아직 안 예쁨" 문제를 해결하기 위한 2차 시각 완성도 개선
+- 핵심 과제:
+  1. 실제 브랜드 폰트 리소스 연동(`res/font`) 및 fallback 체계 확정
+  2. 숫자 강조 토큰의 문맥 규칙 분리(회차/당첨금/카운트)
+  3. 카드 레이어 체계(배경/표면/강조면)와 그림자 규칙 정규화
+  4. 상단 영역/핵심 카드에 미세 질감(그라디언트/노이즈) 적용 가이드 작성
+  5. 아이콘 스트로크/라운드 규칙 통일(혼합 스타일 제거)
+
+## 13. Cycle-15 과거 상태 점검 (2026-02-26)
+- 당시 코드 확인 결과:
+  - `LottoDisplayFontFamily = SansSerif`
+  - `LottoBodyFontFamily = SansSerif`
+  - `LottoNumericFontFamily = Monospace`
+- 당시 해석:
+  - 타입 스케일은 정리됐지만, 실제 브랜드 폰트 미적용으로 비주얼 임팩트가 제한됨
+- 당시 즉시 우선순위:
+  1. `AB-005`: `res/font` 자산 도입
+  2. `AB-006`: `Type.kt`를 실폰트 매핑으로 전환
+
+## 14. Cycle-42 최신 상태 (2026-02-26)
+- 현재 코드 확인 결과:
+  - `LottoDisplayFontFamily`: `brand_roboto_condensed_variable`
+  - `LottoBodyFontFamily`: `brand_noto_sans_kr_variable`
+  - `LottoNumericFontFamily`: `brand_roboto_mono_variable`
+- 해석:
+  - fallback 단계는 종료되었고, 실폰트 적용 이후 미세 타이포/가독성 최적화 단계로 전환됨
+
+## 15. Cycle-53 UI 품질 게이트 연동
+- `S11-U1/U2` 기준에 따라 타이포/비주얼 판정은 캡처 단건이 아니라 1.0x/1.3x 세트로 수행한다.
+- 필수 확인:
+  - 숫자+단위 줄바꿈 분리 금지
+  - 화면당 핵심 CTA 1개 강조 원칙 유지
+  - Home/Result/Manage의 타이포 위계(헤드라인/본문/메타) 유지
+
+## 16. Cycle-54 통합 결론 연동
+- 타이포/비주얼 결과(`S11-U1/U2`)는 `41-unified-quality-verdict-package-spec.md`의 통합 결론 입력으로 사용한다.
+
+## 17. Cycle-55 드라이런/에스컬레이션 연동
+- 타이포/비주얼 보류 케이스는 `42-unified-verdict-dryrun-and-escalation-spec.md`의 E13-2 규칙으로 즉시 이관한다.
+
+## 18. Cycle-56 이력/추세 연동
+- 타이포/비주얼 회귀 이력은 `43-unified-verdict-history-and-trend-spec.md`에 따라 주간 추세로 관리한다.
+
+## 19. Cycle-57 위험예산/프리즈 연동
+- 타이포/비주얼 관련 반복 보류는 `44-unified-verdict-risk-budget-and-freeze-policy-spec.md`의 코드별 한도 규칙으로 관리한다.
+
+## 20. Cycle-58 프리즈 지휘/커뮤니케이션 연동
+- 타이포/비주얼 프리즈 이슈의 상태 공유/해제 판단은 `45-freeze-command-and-communication-playbook.md`를 따른다.
+
+## 21. Cycle-59 프리즈 드릴/준비도 연동
+- 타이포/비주얼 프리즈 대응은 `46-freeze-drill-readiness-score-spec.md` 드릴 시나리오로 검증한다.
+
+## 22. Cycle-60 드릴 보정 액션 폐쇄 루프 연동
+- 타이포/비주얼 프리즈 이슈 후속 액션의 폐쇄 게이트/재개방 기준은 `47-freeze-drill-corrective-action-loop-spec.md`를 따른다.
+
+## 23. Cycle-63 보정 액션 부채/릴리즈 차단 연동
+- 타이포/비주얼 프리즈 이슈의 debt 점수 및 차단/해제 정책은 `48-corrective-action-debt-and-release-block-spec.md`를 따른다.
+
+## Cycle-64 보정 액션 부채 이상징후/자동 에스컬레이션 연동
+- 보정 액션 부채 이상징후 탐지/경보/응답 SLA 운영은 `49-corrective-action-debt-anomaly-and-escalation-spec.md`를 따른다.
+
+## Cycle-65 에스컬레이션 대응 용량/커버리지 연동
+- 에스컬레이션 대응 용량/커버리지 운영은 `50-escalation-capacity-and-coverage-spec.md`를 따른다.

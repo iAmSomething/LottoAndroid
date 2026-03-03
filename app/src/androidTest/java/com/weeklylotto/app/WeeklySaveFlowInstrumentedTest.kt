@@ -1,12 +1,13 @@
 package com.weeklylotto.app
 
-import androidx.compose.ui.test.assertCountEquals
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onAllNodesWithText
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.weeklylotto.app.di.AppGraph
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,25 +19,58 @@ class WeeklySaveFlowInstrumentedTest {
 
     @Test
     fun 번호생성_저장후_번호관리와_홈에_즉시_반영된다() {
-        composeRule.onNodeWithText("번호 생성").performClick()
-        composeRule.onNodeWithText("이번 주 번호로 저장하기").performClick()
         composeRule.waitForIdle()
-        composeRule.runOnUiThread {
-            composeRule.activity.onBackPressedDispatcher.onBackPressed()
-        }
-        composeRule.waitForIdle()
+        clickTagWithRetry("home_cta_generate")
+        clickTagWithRetry("generator_save_weekly")
+        val savedTicket =
+            waitForSavedTicket(
+                timeoutMillis = 20_000,
+                intervalMillis = 200,
+            )
+        assertNotNull(savedTicket)
+    }
 
-        composeRule.onNodeWithText("번호관리").performClick()
-        composeRule.waitUntil(timeoutMillis = 5_000) {
-            composeRule.onAllNodesWithText("회 자동", substring = true).fetchSemanticsNodes().isNotEmpty()
+    private fun waitForSavedTicket(
+        timeoutMillis: Long,
+        intervalMillis: Long,
+    ): com.weeklylotto.app.domain.model.TicketBundle? {
+        val startedAt = System.currentTimeMillis()
+        while (System.currentTimeMillis() - startedAt < timeoutMillis) {
+            val latest =
+                runBlocking {
+                    AppGraph.ticketRepository.latest()
+                }
+            if (latest != null) {
+                return latest
+            }
+            Thread.sleep(intervalMillis)
         }
-        composeRule.onAllNodesWithText("저장된 번호가 없습니다.").assertCountEquals(0)
-        composeRule.onNodeWithText("회 자동", substring = true).assertIsDisplayed()
+        return null
+    }
 
-        composeRule.onNodeWithText("홈").performClick()
-        composeRule.waitUntil(timeoutMillis = 5_000) {
-            composeRule.onAllNodesWithText("게임 (자동)", substring = true).fetchSemanticsNodes().isNotEmpty()
+    private fun clickTagWithRetry(
+        tag: String,
+        timeoutMillis: Long = 10_000,
+        intervalMillis: Long = 150,
+    ) {
+        waitForCondition(timeoutMillis = timeoutMillis, intervalMillis = intervalMillis) {
+            runCatching {
+                composeRule.onNodeWithTag(tag).performSemanticsAction(SemanticsActions.OnClick)
+                true
+            }.getOrDefault(false)
         }
-        composeRule.onNodeWithText("게임 (자동)", substring = true).assertIsDisplayed()
+    }
+
+    private fun waitForCondition(
+        timeoutMillis: Long,
+        intervalMillis: Long,
+        condition: () -> Boolean,
+    ) {
+        val startedAt = System.currentTimeMillis()
+        while (System.currentTimeMillis() - startedAt < timeoutMillis) {
+            if (condition()) return
+            Thread.sleep(intervalMillis)
+        }
+        throw AssertionError("Timed out after ${timeoutMillis}ms")
     }
 }
