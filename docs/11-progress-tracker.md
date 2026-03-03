@@ -15,6 +15,7 @@
   - 백로그 정합성 보정: `16-next-sprint-backlog.md`의 완료 누락 항목(`P-001`, `AL-005`, `AM-005`, `AN-005`) 완료 표기 반영
   - 실기기 부재 상황 전용 다음 실행 트랙 생성(`BM-001`~`BM-005`, `10`/`16` 동기화)
   - `BM-001` 완료: 실기기 부재 `blocked` 증적 주간 갱신 루틴/캘린더 문서화(`69-physical-blocked-evidence-weekly-routine.md`, 월요일 11:00 KST 고정)
+  - `BM-002` 완료: 물리 게이트 주간 비교 요약 템플릿 추가(`70-physical-gates-weekly-summary-template.md`, 출력 파일 규칙/비교 테이블/체크리스트 고정)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
