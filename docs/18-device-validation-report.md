@@ -30,6 +30,7 @@
 - 2026-02-26: Wear `P-004` release probe blocked 리포트 생성(`wear_p4_device_evidence_release_probe_2026-02-26.md`)
 - 2026-02-26: 물리 게이트 오케스트레이터 timeout 리허설 blocked(`physical_gates_orchestrator_2026-02-26.md`)
 - 2026-02-26: 물리 게이트 루틴 리포트 생성(`physical_gates_routine_2026-02-26.md`, `BLOCKED`)
+- 2026-03-03: Wear `P-004` blocked 증적 최신화(`wear_p4_device_evidence_2026-03-03.md`, 실기기 2대 미연결)
 
 ## 2026-02-26 10:43:48 +0900
 - 결과: FAIL(1)

@@ -10,6 +10,7 @@
   - 로컬/CI 검증 통과: `./gradlew :app:ktlintCheck :app:detekt :app:testDebugUnitTest :app:assembleRelease`
   - `Release Preflight` main push 런 성공 확인(run `22606534394`)
   - `Firebase Distribution` 자동 배포 성공 확인(run `22606614291`)
+  - Wear `P-004` blocked 증적 갱신: `./scripts/run-p4-wear-proof-gate.sh --date-tag 2026-03-03 --save-blocked-report` 실행(`docs/assets/distribution/wear_p4_device_evidence_2026-03-03.md`)
   - 백로그 정합성 보정: `16-next-sprint-backlog.md`의 완료 누락 항목(`P-001`, `AL-005`, `AM-005`, `AN-005`) 완료 표기 반영
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
