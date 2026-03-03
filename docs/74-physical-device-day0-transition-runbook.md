@@ -36,6 +36,7 @@ echo "$DATE_TAG"
 # docs/73-physical-blocker-state-sync-checklist.md
 # docs/75-physical-transition-ops-raci-timebox-checklist.md
 # docs/76-p4-evidence-screenshot-log-review-checklist.md
+# docs/77-firebase-distribution-after-physical-pass-runbook.md
 ```
 
 ## 4. 성공 판정

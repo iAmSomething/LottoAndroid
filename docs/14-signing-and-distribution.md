@@ -204,6 +204,11 @@
   - 증적: workflow artifact(`firebase-distribution-routine-<run_id>`)
   - 첫 실행 증적: run `22436650122` 성공, `docs/assets/distribution/firebase_routine_ci_22436650122.md`
 
+### 6-7. 실기기 PASS 이후 배포 연계
+- 물리 게이트(`BK-001/BK-002/P-004`) PASS 전환 직후 Firebase Distribution 연계 절차는 `77-firebase-distribution-after-physical-pass-runbook.md`를 따른다.
+- 권장 순서: `release-final-check --require-physical-device` -> `firebase-distribute --dry-run` -> `firebase-distribute`(실배포)
+- 판정/기록: `11-progress-tracker.md`, `18-device-validation-report.md`에 같은 날짜 태그로 결과를 기록한다.
+
 ### 6-5. GitHub Secrets (필수)
 - 릴리즈 서명:
   - `LOTTO_RELEASE_STORE_FILE_BASE64`

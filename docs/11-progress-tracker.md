@@ -23,6 +23,7 @@
   - `BN-002` 완료: 실기기 전환 당일 운영 체크리스트(RACI + 타임박스) 문서화(`75-physical-transition-ops-raci-timebox-checklist.md`, 역할 책임/단계별 제한 시간/종료 체크 고정)
   - `BN-003` 완료: `PASS` 전환 주차 요약 샘플 작성(`docs/assets/distribution/physical_gates_weekly_summary_2026-w10.md`, 가상 전환 시나리오 형식/템플릿 검증용)
   - `BN-004` 완료: `P-004` 스크린샷/로그 증적 검수 체크리스트 문서화(`76-p4-evidence-screenshot-log-review-checklist.md`, 파일 패턴/무결성/로그 품질/판정 규칙 고정)
+  - `BN-005` 완료: 실기기 PASS 이후 Firebase Distribution 실행/판정 연계 런북 문서화(`77-firebase-distribution-after-physical-pass-runbook.md`, 선행조건/실행순서/성공·실패 판정/기록 포맷 고정)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
