@@ -594,4 +594,4 @@
 
 ## BQ. BO-005 준비도 주기 점검(2026-03-03 Cycle-66)
 - [x] BQ-001 BO-005 준비도 루틴 점검 스크립트/워크플로우 추가(`run-bo005-readiness-routine-check.sh`, `.github/workflows/bo005-readiness-routine.yml`, 로컬 증적: `bo005_readiness_routine_local_2026-03-03.md`)
-- [ ] BQ-002 CI 루틴 실행 증적 1회 확보(`bo005_readiness_routine_ci_<run_id>.md`)
+- [x] BQ-002 CI 루틴 실행 증적 1회 확보(`bo005_readiness_routine_ci_22610174888.md`, run `22610174888`)

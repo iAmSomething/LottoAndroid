@@ -51,6 +51,7 @@
 - 2026-03-03: BO-005 실배포 경로 실행 시도 blocked(`bo005_actual_distribute_attempt_blocked_2026-03-03.md`, `release-final-check --require-physical-device`에서 `No adb device connected`)
 - 2026-03-03: BP-001 재시도 대기 러너 timeout blocked 검증(`bo005_when_physical_ready_timeout_2026-03-03.md`, checkpoint PASS 상태에서 실기기 0대로 timeout)
 - 2026-03-03: BQ-001 준비도 루틴 점검 blocked 검증(`bo005_readiness_routine_local_2026-03-03.md`, `routine_status=BLOCKED`)
+- 2026-03-03: BQ-002 준비도 CI 루틴 첫 실행 성공(run `22610174888`, `bo005_readiness_routine_ci_22610174888.md`, `bo005_when_physical_ready_ci_22610174888.md`)
 
 ## 2026-02-26 10:43:48 +0900
 - 결과: FAIL(1)

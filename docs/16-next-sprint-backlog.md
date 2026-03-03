@@ -50,7 +50,7 @@
 - 실기기 전환 실행 트랙(`BN-001`~`BN-005`) - `BN-001` 완료(2026-03-03, `74` Day-0 전환 런북), `BN-002` 완료(2026-03-03, `75` 운영 체크리스트 RACI/타임박스), `BN-003` 완료(2026-03-03, `physical_gates_weekly_summary_2026-w10.md` 샘플), `BN-004` 완료(2026-03-03, `76` P-004 증적 검수 체크리스트), `BN-005` 완료(2026-03-03, `77` Firebase Distribution 연계 런북)
 - 실기기 PASS-배포 체인 자동화 트랙(`BO-001`~`BO-005`) - `BO-001` 완료(2026-03-03, `run-physical-pass-firebase-chain.sh`), `BO-002` 완료(2026-03-03, `78` 체인 리포트 템플릿/해석 가이드), `BO-003` 완료(2026-03-03, `79` 수동 실행 체크리스트), `BO-004` 완료(2026-03-03, `bo004_dry_run_only_rehearsal_local_2026-03-03.md`), `BO-005` blocked(2026-03-03 시도, `bo005_actual_distribute_attempt_blocked_2026-03-03.md`)
 - BO-005 blocked 해소 준비 트랙(`BP-001`~`BP-002`) - `BP-001` 완료(2026-03-03, `run-bo005-when-physical-ready.sh` + `80` 가이드 + timeout 검증 `bo005_when_physical_ready_timeout_2026-03-03.md`), `BP-002` 예정(실기기 연결 후 성공 리포트 1회)
-- BO-005 준비도 주기 점검 트랙(`BQ-001`~`BQ-002`) - `BQ-001` 완료(2026-03-03, `run-bo005-readiness-routine-check.sh` + `bo005-readiness-routine.yml` + 로컬 리포트 `bo005_readiness_routine_local_2026-03-03.md`), `BQ-002` 예정(CI run id 증적 1회)
+- BO-005 준비도 주기 점검 트랙(`BQ-001`~`BQ-002`) - `BQ-001` 완료(2026-03-03, `run-bo005-readiness-routine-check.sh` + `bo005-readiness-routine.yml` + 로컬 리포트 `bo005_readiness_routine_local_2026-03-03.md`), `BQ-002` 완료(2026-03-03, CI run `22610174888`, `bo005_readiness_routine_ci_22610174888.md`)
 
 ## 4. 우선순위 Low
 - Wear 컴플리케이션/고급 알림 액션(`D03`, `D04`) - v1 완료(2026-02-27, 컴플리케이션 data source + 알림 액션 `앱에서 열기/30분 뒤 다시 알림`)

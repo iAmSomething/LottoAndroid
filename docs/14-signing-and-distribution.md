@@ -219,6 +219,7 @@
 - BO-005 재시도 대기 러너 timeout 증적 예시: `docs/assets/distribution/bo005_when_physical_ready_timeout_2026-03-03.md`
 - BO-005 준비도 루틴 점검: `./scripts/run-bo005-readiness-routine-check.sh` (`READY_PASS/BLOCKED/FAIL` 분류 리포트)
 - BO-005 준비도 루틴 blocked 증적 예시: `docs/assets/distribution/bo005_readiness_routine_local_2026-03-03.md`
+- BO-005 준비도 루틴 CI 첫 실행 증적: run `22610174888` (`bo005_readiness_routine_ci_22610174888.md`, `bo005_when_physical_ready_ci_22610174888.md`)
 - BO-005 재시도 러너 가이드: `80-bo005-physical-ready-runner-guide.md`
 
 ### 6-5. GitHub Secrets (필수)
