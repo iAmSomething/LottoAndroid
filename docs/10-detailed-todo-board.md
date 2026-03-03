@@ -572,4 +572,4 @@
 - [x] BM-002 `run-all-physical-gates-when-ready.sh` 출력 요약 리포트 템플릿 추가(주간 비교용, `70-physical-gates-weekly-summary-template.md`)
 - [x] BM-003 `blocked` 상태 장기화 리스크 기준 수립(임계 주차/에스컬레이션 조건/담당자, `71-blocked-state-longtail-risk-criteria.md`)
 - [x] BM-004 실기기 연결 즉시 실행 번들 명령 문서화(`BK-001`→`BK-002`→`P-004` 순서/완료 판정, `72-physical-gates-immediate-execution-bundle.md`)
-- [ ] BM-005 `10`/`11`/`18` 문서 간 블로커 상태 동기화 체크리스트 추가(누락 방지)
+- [x] BM-005 `10`/`11`/`18` 문서 간 블로커 상태 동기화 체크리스트 추가(누락 방지, `73-physical-blocker-state-sync-checklist.md`)
