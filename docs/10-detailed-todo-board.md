@@ -573,3 +573,10 @@
 - [x] BM-003 `blocked` 상태 장기화 리스크 기준 수립(임계 주차/에스컬레이션 조건/담당자, `71-blocked-state-longtail-risk-criteria.md`)
 - [x] BM-004 실기기 연결 즉시 실행 번들 명령 문서화(`BK-001`→`BK-002`→`P-004` 순서/완료 판정, `72-physical-gates-immediate-execution-bundle.md`)
 - [x] BM-005 `10`/`11`/`18` 문서 간 블로커 상태 동기화 체크리스트 추가(누락 방지, `73-physical-blocker-state-sync-checklist.md`)
+
+## BN. 실기기 전환 실행 트랙(2026-03-03 Cycle-63)
+- [x] BN-001 실기기 확보 당일 Day-0 전환 런북 문서화(명령 순서/성공 판정/실패 분기, `74-physical-device-day0-transition-runbook.md`)
+- [ ] BN-002 실기기 전환 당일 운영 담당자별 체크리스트(RACI + 타임박스) 추가
+- [ ] BN-003 `PASS` 전환 주차 요약 리포트 샘플 1회 작성(`physical_gates_weekly_summary_<yyyy-w##>.md`)
+- [ ] BN-004 `P-004` 실기기 증적 수집 스크린샷/로그 파일 검수 체크리스트 추가
+- [ ] BN-005 실기기 전환 완료 후 Firebase Distribution 실행/판정 연계 절차 문서화
