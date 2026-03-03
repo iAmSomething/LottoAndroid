@@ -25,7 +25,7 @@
 |---|---:|---|---|
 | T0 사전 점검 | 10분 | `adb devices`, 배터리/디버깅, 날짜 태그 고정 | 폰 1대 + Wear 2대 확인 |
 | T1 1차 실행 | 20분 | `run-all-physical-gates-when-ready.sh` 실행 | orchestrator + checkpoint 산출물 생성 |
-| T2 동기화 | 10분 | `sync-physical-blockers-from-checkpoint.sh --apply` + `73` 체크리스트 점검 | `10`/`11`/`18` 정합성 일치 |
+| T2 동기화 | 10분 | `sync-physical-blockers-from-checkpoint.sh --apply` + `73`/`76` 체크리스트 점검 | `10`/`11`/`18` 정합성 일치 + `P-004` 증적 검수 완료 |
 | T3 재시도 판단 | 10분 | `PASS/BLOCKED/FAIL` 판정 + 재실행 여부 결정 | 재실행 또는 당일 보류 결정 |
 | T4 에스컬레이션 | 15분 | `L3` 조건 충족 시 승인/액션 등록 | owner/기한/SLA 명시 |
 

@@ -117,6 +117,7 @@
 - `73-physical-blocker-state-sync-checklist.md`: `10`/`11`/`18` 문서 간 블로커 상태 동기화 체크리스트(상태/날짜/증적 경로 일치 규칙)
 - `74-physical-device-day0-transition-runbook.md`: 실기기 확보 당일 전환 런북(오케스트레이터 실행/sync/apply/문서 반영 순서와 성공·실패 분기)
 - `75-physical-transition-ops-raci-timebox-checklist.md`: 실기기 전환 당일 운영 체크리스트(RACI + 타임박스, 단계별 제한시간/종료 체크)
+- `76-p4-evidence-screenshot-log-review-checklist.md`: `P-004` 스크린샷/로그 증적 검수 체크리스트(파일 무결성/capture_fail/로그 품질/판정 규칙)
 - `30-font-onboarding-gate.md`: AB-005/006 착수 게이트(체크리스트/승인 기준)
 - `31-font-assets-and-license-register.md`: 폰트 자산 반입/라이선스/적용 매핑 레지스터
 - `32-visual-proof-matrix-report.md`: AB-009/010 시각 증적 매트릭스/QA 판정 리포트
