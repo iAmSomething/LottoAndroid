@@ -113,6 +113,7 @@
 - `69-physical-blocked-evidence-weekly-routine.md`: 실기기 부재 상태에서 `P-004`/`BK` blocked 증적 주간 갱신 루틴/캘린더 기준
 - `70-physical-gates-weekly-summary-template.md`: 물리 게이트 결과 주간 비교 요약 템플릿(출력 규칙/전주 대비 표/운영 체크리스트)
 - `71-blocked-state-longtail-risk-criteria.md`: `blocked` 장기화 리스크 기준(임계 주차/L1~L3/에스컬레이션/담당/SLA)
+- `72-physical-gates-immediate-execution-bundle.md`: 실기기 연결 즉시 실행 번들 명령(`BK-001`→`BK-002`→`P-004`)과 checkpoint 기반 완료 판정 기준
 - `30-font-onboarding-gate.md`: AB-005/006 착수 게이트(체크리스트/승인 기준)
 - `31-font-assets-and-license-register.md`: 폰트 자산 반입/라이선스/적용 매핑 레지스터
 - `32-visual-proof-matrix-report.md`: AB-009/010 시각 증적 매트릭스/QA 판정 리포트
