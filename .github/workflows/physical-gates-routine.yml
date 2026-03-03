@@ -2,6 +2,7 @@ name: Physical Gates Routine
 
 on:
   schedule:
+    # Monday 11:00 KST
     - cron: "0 2 * * 1"
   workflow_dispatch:
 
