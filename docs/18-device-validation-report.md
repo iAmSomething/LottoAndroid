@@ -20,6 +20,7 @@
 - ADB 디바이스가 전혀 없으면 `release-final-check.sh`가 CI-only fallback으로 자동 전환된다.
 - `release-final-check.sh`는 Wear `P-004` probe를 함께 실행해 `wear_p4_device_evidence_release_probe_<date>.md`를 갱신한다.
 - `run-all-physical-gates-when-ready.sh`는 폰+Wear 실기기 조건 충족 시 `BK/P-004/checkpoint`를 순차 실행한다.
+- 실기기 연결 즉시 실행 표준 커맨드/완료 판정은 `72-physical-gates-immediate-execution-bundle.md`를 기준으로 사용한다.
 - `run-physical-gates-routine-check.sh`는 오케스트레이터 결과를 `PASS/BLOCKED/FAIL` 루틴 리포트로 저장한다.
 - `blocked` 장기화 리스크 판정은 `71-blocked-state-longtail-risk-criteria.md` 기준을 따른다.
 
