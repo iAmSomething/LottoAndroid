@@ -111,6 +111,7 @@
 - `61-session-resume-and-interruption-recovery-gate-spec.md`: 세션 복귀/중단 복원 게이트(S32) + R1~R5 scorecard/session recovery 증적 팩/릴리즈 연동 기준
 - `62-multidevice-state-sync-and-conflict-recovery-gate-spec.md`: 멀티디바이스 상태 동기화/충돌 복구 게이트(S33) + M1~M5 scorecard/multidevice sync 증적 팩/릴리즈 연동 기준
 - `69-physical-blocked-evidence-weekly-routine.md`: 실기기 부재 상태에서 `P-004`/`BK` blocked 증적 주간 갱신 루틴/캘린더 기준
+- `70-physical-gates-weekly-summary-template.md`: 물리 게이트 결과 주간 비교 요약 템플릿(출력 규칙/전주 대비 표/운영 체크리스트)
 - `30-font-onboarding-gate.md`: AB-005/006 착수 게이트(체크리스트/승인 기준)
 - `31-font-assets-and-license-register.md`: 폰트 자산 반입/라이선스/적용 매핑 레지스터
 - `32-visual-proof-matrix-report.md`: AB-009/010 시각 증적 매트릭스/QA 판정 리포트
