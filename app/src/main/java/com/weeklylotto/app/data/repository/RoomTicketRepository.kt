@@ -2,6 +2,8 @@ package com.weeklylotto.app.data.repository
 
 import com.weeklylotto.app.data.RoundEstimator
 import com.weeklylotto.app.data.local.TicketDao
+import com.weeklylotto.app.domain.error.AppError
+import com.weeklylotto.app.domain.error.toErrorCategory
 import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
@@ -114,7 +116,7 @@ class RoomTicketRepository(
                     operation = operation,
                     status = "failure",
                     startedAtNanos = startedAtNanos,
-                    errorType = throwable::class.simpleName ?: "unknown",
+                    errorType = throwable.toStorageErrorType(),
                 )
                 throw throwable
             },
@@ -143,3 +145,6 @@ class RoomTicketRepository(
         analyticsLogger.log(AnalyticsEvent.OPS_STORAGE_MUTATION, params)
     }
 }
+
+private fun Throwable.toStorageErrorType(): String =
+    AppError.StorageError(message = message.orEmpty(), cause = this).toErrorCategory().analyticsValue

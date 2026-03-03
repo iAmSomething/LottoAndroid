@@ -1,5 +1,6 @@
 package com.weeklylotto.app.feature.manage
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -38,6 +39,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -53,6 +56,9 @@ import com.weeklylotto.app.domain.model.TicketStatus
 import com.weeklylotto.app.domain.service.AnalyticsActionValue
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
+import com.weeklylotto.app.ui.component.LottoGlyphIcon
+import com.weeklylotto.app.ui.component.LottoGlyphTone
+import com.weeklylotto.app.ui.component.LottoSectionLabel
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.StatusBadge
 import com.weeklylotto.app.ui.component.TicketCard
@@ -75,6 +81,7 @@ fun ManageScreen(
     onOpenTicketDetail: (Long) -> Unit,
 ) {
     val analyticsLogger = AppGraph.analyticsLogger
+    val context = LocalContext.current
     val viewModel =
         viewModel<ManageViewModel>(
             factory =
@@ -106,6 +113,12 @@ fun ManageScreen(
     }
     var customRangeError by remember(uiState.isFilterSheetOpen) { mutableStateOf<String?>(null) }
 
+    LaunchedEffect(uiState.feedbackMessage) {
+        val message = uiState.feedbackMessage ?: return@LaunchedEffect
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        viewModel.clearFeedbackMessage()
+    }
+
     if (uiState.isFabSheetOpen) {
         ModalBottomSheet(
             onDismissRequest = viewModel::closeFabSheet,
@@ -122,7 +135,13 @@ fun ManageScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text("번호 직접 추가")
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        LottoGlyphIcon(tone = LottoGlyphTone.Primary)
+                        Text("번호 직접 추가")
+                    }
                 }
                 TextButton(
                     onClick = {
@@ -131,7 +150,13 @@ fun ManageScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text("QR 스캔")
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        LottoGlyphIcon(tone = LottoGlyphTone.Accent)
+                        Text("QR 스캔")
+                    }
                 }
                 TextButton(
                     onClick = {
@@ -140,7 +165,13 @@ fun ManageScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text("가져오기")
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        LottoGlyphIcon(tone = LottoGlyphTone.Neutral)
+                        Text("가져오기")
+                    }
                 }
                 Spacer(Modifier.height(12.dp))
             }
@@ -504,7 +535,10 @@ fun ManageScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("저장된 번호", style = MaterialTheme.typography.titleMedium)
+                LottoSectionLabel(
+                    text = "저장된 번호",
+                    tone = LottoGlyphTone.Primary,
+                )
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     TextButton(onClick = viewModel::openSortSheet) {
                         Text(uiState.sort.toSortShortLabel())
@@ -632,6 +666,68 @@ fun ManageScreen(
                                     }
                                 },
                             )
+                            if (!uiState.editMode) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth().padding(top = 2.dp, start = 4.dp, end = 4.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    TextButton(onClick = { onOpenTicketDetail(bundle.id) }) {
+                                        Text("상세")
+                                    }
+                                    TextButton(
+                                        onClick = {
+                                            analyticsLogger.log(
+                                                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                                params =
+                                                    mapOf(
+                                                        AnalyticsParamKey.SCREEN to "manage",
+                                                        AnalyticsParamKey.COMPONENT to "quick_copy_current_round",
+                                                        AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
+                                                        "ticket_id" to bundle.id.toString(),
+                                                    ),
+                                            )
+                                            viewModel.copyTicketToCurrentRound(bundle.id)
+                                        },
+                                    ) {
+                                        Text("이번주 복사")
+                                    }
+                                    TextButton(
+                                        onClick = {
+                                            analyticsLogger.log(
+                                                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                                params =
+                                                    mapOf(
+                                                        AnalyticsParamKey.SCREEN to "manage",
+                                                        AnalyticsParamKey.COMPONENT to "quick_move_vault",
+                                                        AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
+                                                        "ticket_id" to bundle.id.toString(),
+                                                    ),
+                                            )
+                                            viewModel.moveTicketToVault(bundle.id)
+                                        },
+                                    ) {
+                                        Text("보관")
+                                    }
+                                    TextButton(
+                                        onClick = {
+                                            analyticsLogger.log(
+                                                event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                                                params =
+                                                    mapOf(
+                                                        AnalyticsParamKey.SCREEN to "manage",
+                                                        AnalyticsParamKey.COMPONENT to "quick_delete",
+                                                        AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
+                                                        "ticket_id" to bundle.id.toString(),
+                                                    ),
+                                            )
+                                            viewModel.requestDeleteSingle(bundle.id)
+                                        },
+                                    ) {
+                                        Text("삭제", color = LottoColors.DangerText)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -657,7 +753,7 @@ private fun VaultSummaryCard(
             modifier = Modifier.padding(LottoDimens.ScreenPadding),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Text("보관함 요약", style = MaterialTheme.typography.titleSmall)
+            LottoSectionLabel(text = "보관함 요약", tone = LottoGlyphTone.Primary)
             Text("총 ${totalCount}건", color = LottoColors.TextSecondary, style = MaterialTheme.typography.bodySmall)
             Text("보관 상태 ${savedCount}건", color = LottoColors.TextSecondary, style = MaterialTheme.typography.bodySmall)
             Text(
@@ -686,7 +782,7 @@ private fun ScanSummaryCard(
             modifier = Modifier.padding(LottoDimens.ScreenPadding),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Text("스캔내역 요약", style = MaterialTheme.typography.titleSmall)
+            LottoSectionLabel(text = "스캔내역 요약", tone = LottoGlyphTone.Accent)
             latestRound?.let { round ->
                 Text(
                     "최신 스캔 회차 ${round}회",

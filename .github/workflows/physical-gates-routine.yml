@@ -1,0 +1,47 @@
+name: Physical Gates Routine
+
+on:
+  schedule:
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: physical-gates-routine-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  routine-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install adb
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y adb
+
+      - name: Run physical gates routine
+        run: |
+          set -euo pipefail
+          REPORT_PATH="docs/assets/distribution/physical_gates_routine_ci_${GITHUB_RUN_ID}.md"
+          ./scripts/run-physical-gates-routine-check.sh \
+            --date-tag "$(date +%F)" \
+            --report-file "$REPORT_PATH" \
+            --timeout-seconds 1 \
+            --poll-interval 1
+
+      - name: Upload routine artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: physical-gates-routine-${{ github.run_id }}
+          path: |
+            docs/assets/distribution/physical_gates_routine_ci_${{ github.run_id }}.md
+            docs/assets/distribution/physical_gates_orchestrator_*.md
+            docs/assets/distribution/physical_gates_checkpoint_*.md
+            docs/assets/distribution/performance_release_decision_checkpoint_*.md
+            docs/assets/distribution/wear_p4_device_evidence_checkpoint_*.md

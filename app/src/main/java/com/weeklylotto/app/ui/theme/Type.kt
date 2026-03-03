@@ -2,13 +2,34 @@ package com.weeklylotto.app.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.weeklylotto.app.R
 
-val LottoDisplayFontFamily = FontFamily.SansSerif
-val LottoBodyFontFamily = FontFamily.SansSerif
-val LottoNumericFontFamily = FontFamily.Monospace
+val LottoDisplayFontFamily =
+    FontFamily(
+        Font(R.font.brand_roboto_condensed_variable, weight = FontWeight.Medium),
+        Font(R.font.brand_roboto_condensed_variable, weight = FontWeight.SemiBold),
+        Font(R.font.brand_roboto_condensed_variable, weight = FontWeight.Bold),
+        Font(R.font.brand_roboto_condensed_variable, weight = FontWeight.Black),
+    )
+
+val LottoBodyFontFamily =
+    FontFamily(
+        Font(R.font.brand_noto_sans_kr_variable, weight = FontWeight.Normal),
+        Font(R.font.brand_noto_sans_kr_variable, weight = FontWeight.Medium),
+        Font(R.font.brand_noto_sans_kr_variable, weight = FontWeight.SemiBold),
+        Font(R.font.brand_noto_sans_kr_variable, weight = FontWeight.Bold),
+    )
+
+val LottoNumericFontFamily =
+    FontFamily(
+        Font(R.font.brand_roboto_mono_variable, weight = FontWeight.Medium),
+        Font(R.font.brand_roboto_mono_variable, weight = FontWeight.Bold),
+        Font(R.font.brand_roboto_mono_variable, weight = FontWeight.Black),
+    )
 
 val Typography =
     Typography(

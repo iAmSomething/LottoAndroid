@@ -2,6 +2,7 @@ package com.weeklylotto.app.data.network
 
 import com.weeklylotto.app.domain.error.AppError
 import com.weeklylotto.app.domain.error.AppResult
+import com.weeklylotto.app.domain.error.toErrorCategory
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsLogger
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
@@ -16,6 +17,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.io.IOException
 import java.net.HttpURLConnection
+import java.net.SocketTimeoutException
 import java.net.URL
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -92,7 +94,10 @@ class DrawApiClient(
                     is AppResult.Success -> put(AnalyticsParamKey.STATUS, "success")
                     is AppResult.Failure -> {
                         put(AnalyticsParamKey.STATUS, "failure")
-                        put(AnalyticsParamKey.ERROR_TYPE, result.error.toErrorType())
+                        put(AnalyticsParamKey.ERROR_TYPE, result.error.toErrorCategory().analyticsValue)
+                        if (result.error is AppError.NetworkError && result.error.code != null) {
+                            put("status_code", result.error.code.toString())
+                        }
                     }
                 }
             }
@@ -122,17 +127,31 @@ class DrawApiClient(
             val body = stream.bufferedReader().use { it.readText() }
             connection.disconnect()
 
-            if (status !in 200..299) {
-                throw IOException("HTTP $status: ${body.take(120)}")
+            if (status in 200..299) {
+                AppResult.Success(body)
+            } else {
+                AppResult.Failure(
+                    AppError.NetworkError(
+                        message = "당첨 API 통신에 실패했습니다 (HTTP $status).",
+                        code = status,
+                    ),
+                )
             }
-            body
         }.fold(
-            onSuccess = { AppResult.Success(it) },
+            onSuccess = { it },
             onFailure = { throwable ->
                 when (throwable) {
+                    is SocketTimeoutException ->
+                        AppResult.Failure(
+                            AppError.NetworkError(
+                                message = "timeout",
+                                code = null,
+                            ),
+                        )
+
                     is IOException ->
                         AppResult.Failure(
-                            AppError.NetworkError("당첨 API 통신에 실패했습니다: ${throwable.message}"),
+                            AppError.NetworkError("당첨 API 통신에 실패했습니다: ${throwable.message}", code = null),
                         )
 
                     else ->
@@ -229,11 +248,3 @@ private fun Map<String, JsonElement>.getIntList(key: String): List<Int> =
     this[key]?.jsonArray?.mapIndexed { index, element ->
         element.jsonPrimitive.intOrNull ?: error("$key[$index] is invalid")
     } ?: error("$key is missing")
-
-private fun AppError.toErrorType(): String =
-    when (this) {
-        is AppError.NetworkError -> "network"
-        is AppError.ParseError -> "parse"
-        is AppError.ValidationError -> "validation"
-        is AppError.StorageError -> "storage"
-    }

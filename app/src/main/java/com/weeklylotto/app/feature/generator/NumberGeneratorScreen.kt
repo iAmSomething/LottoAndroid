@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -47,6 +48,8 @@ import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.ui.component.BallChip
 import com.weeklylotto.app.ui.component.BallState
+import com.weeklylotto.app.ui.component.LottoGlyphTone
+import com.weeklylotto.app.ui.component.LottoSectionLabel
 import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.format.toModeLabel
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
@@ -218,11 +221,7 @@ fun NumberGeneratorScreen() {
                     style = MaterialTheme.typography.bodySmall,
                 )
                 selectedGame?.let { game ->
-                    Text(
-                        "현재 번호",
-                        color = LottoColors.TextMuted,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
+                    LottoSectionLabel(text = "현재 번호", tone = LottoGlyphTone.Primary)
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -263,11 +262,7 @@ fun NumberGeneratorScreen() {
                     )
                 }
 
-                Text(
-                    "빠른 후보",
-                    color = LottoColors.TextMuted,
-                    style = MaterialTheme.typography.bodySmall,
-                )
+                LottoSectionLabel(text = "빠른 후보", tone = LottoGlyphTone.Accent)
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -285,11 +280,7 @@ fun NumberGeneratorScreen() {
                     }
                 }
 
-                Text(
-                    "번호 팔레트",
-                    color = LottoColors.TextMuted,
-                    style = MaterialTheme.typography.bodySmall,
-                )
+                LottoSectionLabel(text = "번호 팔레트", tone = LottoGlyphTone.Neutral)
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -427,7 +418,7 @@ fun NumberGeneratorScreen() {
                     Text("잠금 제외 랜덤 재생성")
                 }
                 Button(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag("generator_save_weekly"),
                     onClick = {
                         analyticsLogger.log(
                             event = AnalyticsEvent.INTERACTION_CTA_PRESS,

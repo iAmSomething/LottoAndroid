@@ -5,6 +5,7 @@
 - 대상 노드: `6:2`
 - 현재 상태: Figma MCP 호출 한도 이슈로 노드 메타데이터/스크린샷 직접 수집은 보류
 - 최근 확인: 2026-02-26 재시도 시 동일 한도 응답(플랜 업그레이드 안내)
+- 점검 로그: `docs/assets/figma/mcp_limit_check_2026-02-26.md`
 - 대응: 저장소 `design/*.svg`를 기준 구현 완료 후, Figma 접근 가능 시 간격/타이포/밀도 차이를 최종 보정
 - 오프라인 대응: `docs/19-offline-design-qa-checklist.md` 기준으로 스크린샷 대조 QA 수행
 
@@ -109,7 +110,81 @@
   - CTA는 화면당 1개만 강한 대비를 유지
 - 구현 우선 컴포넌트:
   - `LottoTopAppBar`, `TicketCard`, `LottoBottomBar`, `BallChip`
+
+## 9. UI 비주얼 폴리시 2차 매핑
+- 기준 문서: `27-ui-visual-polish-pack.md`
+- 핵심 적용 포인트:
+  - Home/Result/Generator/Manage의 카드 레이어와 강조 규칙 통일
+  - 아이콘/버튼/배지 스타일 편차 축소
+  - 배경 질감/그라디언트는 핵심 영역만 제한적으로 적용
 - Cycle-04 증적:
   - Home 전/후: `docs/assets/typography-refresh/home_before.png`, `home_after.png`
   - Result 전/후: `docs/assets/typography-refresh/result_before.png`, `result_after.png`
   - 접근성 1.3x: `home_font_1_3x.png`, `result_font_1_3x.png`
+
+## 10. 구매 리다이렉트 UX 매핑
+- 목적:
+  - 앱 내에서 동행복권 공식 구매 페이지로 진입 단계를 단축한다.
+- 1차 노출 확정(2026-02-26):
+  - Home 화면 `공식 홈페이지에서 구매하기` CTA를 1차 진입점으로 고정
+  - Result/Settings는 2차 확장 후보로 유지
+- 확장 반영(2026-02-26):
+  - Settings 화면에도 동일 CTA를 추가해 Home 외 경로에서 fallback 공통 컴포넌트 회귀를 검증
+- 상호작용 규칙:
+  - 1회 안내 모달 노출(성인 인증/구매 가능 시간/외부 이동 고지)
+  - 확인 시 외부 브라우저 또는 Custom Tab으로 `https://dhlottery.co.kr` 이동
+  - 실패 시 `링크 복사`와 `기본 브라우저로 열기` 대체 액션 제공
+- 이벤트 계측 키(확정):
+  - `interaction_cta_press` + `screen=home`, `component=purchase_redirect_cta`, `action=purchase_redirect_tap`
+  - `interaction_cta_press` + `screen=home`, `component=purchase_redirect_cta`, `action=purchase_redirect_confirm`
+  - `interaction_cta_press` + `screen=home`, `component=purchase_redirect_cta`, `action=purchase_redirect_fail`, `error_type=external_open_failed`
+  - `interaction_cta_press` + `screen=home`, `component=purchase_redirect_cta`, `action=purchase_redirect_open_browser`
+  - `interaction_cta_press` + `screen=home`, `component=purchase_redirect_cta`, `action=purchase_redirect_copy_link`
+- 문구 가이드:
+  - "구매는 공식 홈페이지에서만 가능" 문구를 CTA 상단에 고정
+  - 연령/시간 제한 문구를 모달에 포함
+- 상세 스펙:
+  - 오류 매핑/계측/fallback 상세는 `34-exception-mapping-and-redirect-spec.md` 기준으로 적용
+  - 사용자 여정 리허설/핫패스 성능 운영은 `35-usecase-reliability-and-performance-playbook.md` 기준으로 적용
+  - 구현 슬라이스/게이트/롤백 규칙은 `36-hardening-implementation-slices.md` 기준으로 적용
+  - 성능 게이트 캘리브레이션(emulator/device 분리, 반복측정)은 `37-performance-gate-calibration-spec.md` 기준으로 적용
+  - 성능 게이트 실행 템플릿/판정 트리는 `38-performance-gate-execution-template.md` 기준으로 적용
+  - 성능 게이트 증적 패키지(E1~E5, 최종 결론 템플릿)는 `39-performance-gate-evidence-package-spec.md` 기준으로 적용
+
+## 11. Cycle-53 UI 품질 게이트 연동
+- UI 품질 게이트/상호작용 안정성 기준은 `40-ui-quality-gate-and-interaction-resilience-spec.md`를 따른다.
+- 핵심 연동:
+  - U1: Home/Result/Manage 타이포 위계 및 숫자+단위 규칙
+  - U2: 카드/CTA/아이콘 일관성 점검
+  - U3/U4: 외부 이동 fallback, Reduce Motion, 1.3x 폰트 스케일 검증
+
+## 12. Cycle-54 통합 결론 연동
+- `S10`(성능) + `S11`(UI) 단일 결론 규칙은 `41-unified-quality-verdict-package-spec.md`를 따른다.
+- 디자인 매핑 검증 결과는 `S11` 입력물로 제출하고, 최종 릴리즈 결론은 `S12`에서 확정한다.
+
+## 13. Cycle-55 드라이런/에스컬레이션 연동
+- `S12` 통합 결론의 드라이런/SLA/에스컬레이션 규칙은 `42-unified-verdict-dryrun-and-escalation-spec.md`를 따른다.
+
+## 14. Cycle-56 이력/추세 연동
+- 통합 결론 이력/주간 추세 관리는 `43-unified-verdict-history-and-trend-spec.md`를 따른다.
+
+## 15. Cycle-57 위험예산/프리즈 연동
+- 통합 결론 위험예산/프리즈 정책은 `44-unified-verdict-risk-budget-and-freeze-policy-spec.md`를 따른다.
+
+## 16. Cycle-58 프리즈 지휘/커뮤니케이션 연동
+- 통합 결론 프리즈 지휘/커뮤니케이션 운영은 `45-freeze-command-and-communication-playbook.md`를 따른다.
+
+## 17. Cycle-59 프리즈 드릴/준비도 연동
+- 프리즈 드릴/준비도 운영은 `46-freeze-drill-readiness-score-spec.md`를 따른다.
+
+## 18. Cycle-60 드릴 보정 액션 폐쇄 루프 연동
+- 프리즈 드릴 후속 보정 액션의 등록/폐쇄/재개방 운영은 `47-freeze-drill-corrective-action-loop-spec.md`를 따른다.
+
+## 19. Cycle-63 보정 액션 부채/릴리즈 차단 연동
+- 보정 액션 부채 점수 및 릴리즈 차단/해제 정책은 `48-corrective-action-debt-and-release-block-spec.md`를 따른다.
+
+## Cycle-64 보정 액션 부채 이상징후/자동 에스컬레이션 연동
+- 보정 액션 부채 이상징후 탐지/경보/응답 SLA 운영은 `49-corrective-action-debt-anomaly-and-escalation-spec.md`를 따른다.
+
+## Cycle-65 에스컬레이션 대응 용량/커버리지 연동
+- 에스컬레이션 대응 용량/커버리지 운영은 `50-escalation-capacity-and-coverage-spec.md`를 따른다.

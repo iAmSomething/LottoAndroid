@@ -1,12 +1,15 @@
 package com.weeklylotto.app.feature.result
 
 import com.weeklylotto.app.domain.error.AppError
+import com.weeklylotto.app.domain.error.AppErrorCategory
+import com.weeklylotto.app.domain.error.toErrorCategory
 
 data class ResultErrorUi(
     val title: String,
     val message: String,
 )
 
+@Suppress("CyclomaticComplexMethod")
 fun AppError.toResultErrorUi(): ResultErrorUi =
     when (this) {
         is AppError.NetworkError -> {
@@ -16,10 +19,37 @@ fun AppError.toResultErrorUi(): ResultErrorUi =
                     message = "추첨 직후에는 반영까지 시간이 걸릴 수 있습니다. 잠시 후 다시 시도하세요.",
                 )
             } else {
-                ResultErrorUi(
-                    title = "네트워크 연결을 확인해 주세요",
-                    message = "인터넷 상태가 불안정하거나 서버 응답이 지연되고 있습니다. 다시 시도해 주세요.",
-                )
+                when (toErrorCategory()) {
+                    AppErrorCategory.TIMEOUT ->
+                        ResultErrorUi(
+                            title = "응답이 지연되고 있습니다",
+                            message = "잠시 후 다시 시도해 주세요.",
+                        )
+
+                    AppErrorCategory.HTTP_4XX ->
+                        ResultErrorUi(
+                            title = "요청을 처리할 수 없습니다",
+                            message = "요청 형식 또는 접근 권한을 확인해 주세요.",
+                        )
+
+                    AppErrorCategory.HTTP_5XX ->
+                        ResultErrorUi(
+                            title = "서버가 일시적으로 불안정합니다",
+                            message = "잠시 후 다시 시도해 주세요.",
+                        )
+
+                    AppErrorCategory.UNKNOWN ->
+                        ResultErrorUi(
+                            title = "문제가 발생했습니다",
+                            message = "다시 시도해 주세요.",
+                        )
+
+                    else ->
+                        ResultErrorUi(
+                            title = "네트워크 연결을 확인해 주세요",
+                            message = "인터넷 상태가 불안정하거나 서버 응답이 지연되고 있습니다. 다시 시도해 주세요.",
+                        )
+                }
             }
         }
 
@@ -36,8 +66,29 @@ fun AppError.toResultErrorUi(): ResultErrorUi =
             )
 
         is AppError.StorageError ->
-            ResultErrorUi(
-                title = "로컬 저장소 접근에 실패했습니다",
-                message = "앱을 재시작한 뒤 다시 시도해 주세요. 계속되면 저장공간 상태를 확인해 주세요.",
-            )
+            when (toErrorCategory()) {
+                AppErrorCategory.STORAGE_FULL ->
+                    ResultErrorUi(
+                        title = "저장 공간이 부족합니다",
+                        message = "저장공간을 확보한 뒤 다시 시도해 주세요.",
+                    )
+
+                AppErrorCategory.STORAGE_DISK_IO ->
+                    ResultErrorUi(
+                        title = "저장소 읽기/쓰기 오류가 발생했습니다",
+                        message = "앱을 다시 실행한 뒤 재시도해 주세요.",
+                    )
+
+                AppErrorCategory.STORAGE_MIGRATION ->
+                    ResultErrorUi(
+                        title = "저장 데이터 업데이트가 필요합니다",
+                        message = "앱을 최신 버전으로 업데이트한 뒤 다시 시도해 주세요.",
+                    )
+
+                else ->
+                    ResultErrorUi(
+                        title = "로컬 저장소 접근에 실패했습니다",
+                        message = "앱을 재시작한 뒤 다시 시도해 주세요. 계속되면 저장공간 상태를 확인해 주세요.",
+                    )
+            }
     }

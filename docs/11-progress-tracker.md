@@ -253,6 +253,75 @@
     - 운영 관측성 샘플 루틴 추가: `scripts/run-ops-observability-check.sh` (MainNavigation/WeeklySave 계측 + ops-core 검증)
     - 검증 스크립트 확장: `scripts/verify-analytics-events.sh --profile ops-core`
     - 실검증 이력 확보: `run-ops-observability-check.sh --serial emulator-5554` PASS (`docs/assets/distribution/ops_observability_check_2026-02-26.md`)
+    - 원격 반영 완료: PR #5 merge(`fed73dc4787696cc6def2225b22a9ad660bd10cb`)
+  - Cycle-41 루틴 반영:
+    - 사용자 피드백 기반 "공식 구매 리다이렉트" UX 트랙 생성(`10` AP 섹션)
+    - 디자인 매핑에 외부 이동 흐름 추가(`08` 10장: CTA→1회 모달→외부 이동→fallback)
+    - 우선순위/백로그에 `A04`, `A05` 반영(`22`, `16`)
+  - Cycle-42 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=124`, `app/androidTest=6`, `wear/main=9`, Gradle 3종 성공)
+    - 실폰트 `FontFamily` 적용 상태 확인(`Type.kt`: `brand_*` 리소스 매핑)
+    - 안정성/완성도/성능 하드닝 계획 문서 추가(`33-reliability-and-performance-hardening-plan.md`)
+    - 테스트/KPI/우선순위/백로그에 하드닝 항목 연동(`06`, `23`, `22`, `16`, `10`)
+    - 하드닝 1차 실행 범위 확정(`AQ-005`): `S01` 오류 매핑 표준화 + `A05` 리다이렉트 fallback 공통화
+  - Cycle-43 루틴 반영:
+    - `AP-005` 완료: 구매 리다이렉트 1차 노출을 Home으로 확정하고 코드 반영(`HomeScreen`, `OfficialPurchaseLinkOpener`, `DataStorePurchaseRedirectNoticeStore`)
+    - UX 반영: `공식 홈페이지에서 구매하기` CTA + 1회 안내 모달 + 외부 이동 실패 fallback(`기본 브라우저로 열기`, `링크 복사`)
+    - 계측 키 확정/반영: `cta_official_purchase_home`, `purchase_notice_dialog`, `purchase_redirect_open_custom_tab`, `purchase_redirect_open_browser_fallback`, `purchase_redirect_copy_link`
+    - 문서 동기화: `08`, `10`, `16`, `22`, `25` 갱신
+  - Cycle-44 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=127`, `app/androidTest=6`, `wear/main=9`, Gradle 3종 성공)
+    - `S01`/`A05` 상세 스펙 문서 추가(`34-exception-mapping-and-redirect-spec.md`)
+    - 실행 보드 `AR` 트랙 추가 및 하드닝 상세 항목 완료 처리(`10`)
+    - 하드닝 계획 문서와 상세 스펙 연동(`33` 8장)
+  - Cycle-45 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=124`, `app/androidTest=6`, `wear/main=9`, Gradle 3종 성공)
+    - `S05`/`S06` 운영 플레이북 문서 추가(`35-usecase-reliability-and-performance-playbook.md`)
+    - 실행 보드 `AS` 트랙 추가 및 하드닝 운영 항목 완료 처리(`10`)
+    - 테스트/릴리즈/KPI/우선순위/백로그 문서에 `S05`/`S06` 연동(`06`, `07`, `16`, `22`, `23`)
+  - Cycle-46 루틴 반영:
+    - `S01` 코드 반영: 오류 카테고리 분류 도입(`AppErrorCategory`), `DrawApiClient`의 `ops_api_request.error_type` 세분화(timeout/http_4xx/http_5xx/schema/storage_full)
+    - `S01` UI 반영: `ResultErrorUi` 메시지 분기(timeout/4xx/5xx/storage_full)
+    - `A05` 공통화 반영: `ExternalOpenFallbackDialog` 도입 + Home fallback 경로 재사용
+    - 구매 리다이렉트 계측 정렬: `component=purchase_redirect_cta`, `action=purchase_redirect_*`, 실패 시 `external_open_failed`/`url` 필드 기록
+    - 하드닝 검증 완료: `AppErrorCategoryTest`, `ResultErrorUiTest`, `DrawApiClientTest`, `ResultViewModelTest` 통과 및 증적 문서화(`docs/assets/distribution/hardening_gate_s01_a05_2026-02-26.md`)
+    - 릴리즈 체크리스트 갱신: `07`의 `S01`, `A05` 항목 완료 처리
+  - Cycle-47(Planning) 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=125`, `app/test=23`, `app/androidTest=6`, `wear/main=9`, Gradle 3종 성공)
+    - 하드닝 구현 슬라이스/게이트 문서 추가(`36-hardening-implementation-slices.md`)
+    - 실행 보드 `AT` 트랙 추가 및 `S07-1~S07-5` 기준 확정(`10`)
+    - 테스트/릴리즈/KPI/우선순위/백로그에 `S07` 연동(`06`, `07`, `16`, `22`, `23`)
+  - Cycle-48 루틴 반영:
+    - `S02` 성능 샘플 수집 스크립트 추가(`scripts/run-performance-sample-check.sh`)
+    - 에뮬레이터 측정 리포트 생성(`docs/assets/distribution/performance_sample_2026-02-26.md`)
+    - 측정 결과: Startup/Jank 임계치 초과로 FAIL, ANR PASS
+    - 릴리즈 체크리스트에 `S02` 진행상태/증적 경로 반영(`07`)
+  - Cycle-49 루틴 반영:
+    - `S07-3` Home 외 확장 반영: Settings에 공식 구매 CTA + 1회 안내 모달 + fallback 공통 컴포넌트 적용(`SettingsScreen`)
+    - 구매 리다이렉트 계측 스키마를 Settings에도 동일 적용(`screen=settings`, `component=purchase_redirect_cta`)
+    - 회귀 계측 테스트 추가/통과: `SettingsPurchaseRedirectInstrumentedTest` (`connectedDebugAndroidTest` 1건 성공)
+    - 릴리즈 체크리스트 `S07-3` 완료 처리 및 문서 동기화(`07`, `08`, `10`, `25`)
+  - Cycle-50 루틴 반영:
+    - `S07-1` 반영: 네트워크 오류 분류에 `unknown` 포함(`AppErrorCategory`) + `DrawApiClient` 로그 키 일관화
+    - `S07-2` 반영: 저장소 오류 분류에 `disk_io`, `migration` 추가 + `RoomTicketRepository` `ops_storage_mutation.error_type` 연동
+    - `ResultErrorUi` 메시지 분기 보강(unknown/disk_io/migration)
+    - 단위 테스트 보강/통과(`AppErrorCategoryTest`, `ResultErrorUiTest`) 및 하드닝 증적 문서화(`docs/assets/distribution/hardening_gate_s07_1_s07_2_2026-02-26.md`)
+    - 릴리즈 체크리스트 `S07-1`, `S07-2` 완료 처리
+  - Cycle-50 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=125`, `app/test=23`, `app/androidTest=6`, `wear/main=9`, Gradle 3종 성공)
+    - 성능 게이트 캘리브레이션 문서 추가(`37-performance-gate-calibration-spec.md`)
+    - 실행 보드 `AV` 트랙 추가 및 `S08` 기준 확정(`10`)
+    - 테스트/릴리즈/KPI/우선순위/백로그/하드닝 문서에 `S08` 연동(`06`, `07`, `16`, `22`, `23`, `33`, `35`, `36`)
+  - Cycle-51 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=125`, `app/test=23`, `app/androidTest=7`, `wear/main=9`, Gradle 3종 성공)
+    - 성능 게이트 실행 템플릿 문서 추가(`38-performance-gate-execution-template.md`)
+    - 실행 보드 `AW` 트랙 추가 및 `S09` 기준 확정(`10`)
+    - 테스트/릴리즈/KPI/우선순위/백로그/하드닝 문서에 `S09` 연동(`06`, `07`, `16`, `22`, `23`, `33`, `35`, `36`, `37`)
+  - Cycle-52 루틴 반영:
+    - 코드/품질 스냅샷 재확인(`app/main=125`, `app/test=23`, `app/androidTest=7`, `wear/main=9`, Gradle 3종 성공)
+    - 성능 게이트 증적 패키지 문서 추가(`39-performance-gate-evidence-package-spec.md`)
+    - 실행 보드 `AX` 트랙 추가 및 `S10` 기준 확정(`10`)
+    - 테스트/릴리즈/KPI/우선순위/백로그/하드닝 문서에 `S10` 연동(`06`, `07`, `16`, `22`, `23`, `33`, `35`, `36`, `37`, `38`)
 - 미완료 작업
   - 실기기 기반 Wear QA 증적 확보(P-004)
   - Figma 원본 노드 기준 정밀 픽셀 매핑(호출 가능 시 `node 6:2` 최종 동기화)
@@ -262,6 +331,16 @@
 - 다음 액션
   - 실기기 확보 시 `P-004` 증적(워치 소형/대형) 1회 확보
   - Figma node `6:2` 기준 간격/밀도 최종 보정 후 디자인 정렬 상태 `Green` 전환
+  - `S02` 성능 게이트 임계치/측정 시나리오 튜닝(에뮬레이터 FAIL 기준 보정 + 실기기 기준 분리)
+  - `S07-1` 네트워크 오류 매핑 검증의 `unknown` 케이스 및 로그 키 일관성 증적 보강
+  - `S07-2` 저장소 `disk_io/migration` 분기의 사용자 안내 문구 회귀(수동 시나리오) 1회 추가
+  - `S05` 사용자 여정 리허설(J01~J06) 주간 실행 리포트 템플릿/판정 규칙 운영
+  - `S06` 핫패스 성능 최적화 우선순위(Home/Result/Manage) 기반 1차 프로파일링 실행
+  - `S07-1~S07-3` 구현 반영: 오류 매핑/공통 fallback 컴포넌트 코드 경로 적용
+  - `S07-4~S07-5` 운영 반영: 성능 수집 파이프라인 + 릴리즈 보류/롤백 판정 리포트 템플릿 적용
+  - `S08` 운영 반영: emulator/device 분리 + 반복측정(N=5, warm-up 제외) 규칙으로 성능 게이트 판정 보정
+  - `S09` 운영 반영: 커맨드 매트릭스/리포트 템플릿/판정 트리 기반으로 성능 게이트 운영 편차 축소
+  - `S10` 운영 반영: E1~E5 증적 패키지와 최종 결론 템플릿으로 릴리즈 판정 입력 표준화
   - 배포/계측 주기 점검 루틴 유지(`release-preflight` + `firebase-distribution` + `run-analytics-sample-check` + `run-ops-observability-check`) 및 첫 스케줄 실행(2026-03-02 01:00 UTC) 결과 모니터링
 
 ## 2026-02-25
@@ -502,3 +581,698 @@
 | 통계 | Green | 당첨금 연동 + 기간 필터 완료 |
 | 테스트 품질 | Green | 정적검사/단위/계측(AVD) 통과 |
 | 디자인 정렬 | Yellow | 스펙 기반 픽셀 보정 완료, Figma 노드 직접 대조만 대기 |
+
+## Cycle-53 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=7`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S11` UI 품질 게이트(U1~U5) 문서 신설(`40`)
+  - 타이포/비주얼/상호작용/접근성 판정과 성능 게이트(`S10`) 결론 연동 규칙 확정
+- 문서 연동
+  - 실행 보드 `AY` 트랙 추가(`10`), 릴리즈 체크리스트 `S11-1~S11-4` 추가(`07`)
+  - 디자인/모션/타이포/폴리시/하드닝 체인 문서 연동(`08`, `24`, `26`, `27`, `33`~`39`)
+- 다음 액션
+  - `S11` 기준 실제 캡처/로그 증적 1세트 생성(Home/Result/Manage, 1.0x/1.3x, Reduce Motion)
+  - `S10` + `S11` 결론 통합 제출 템플릿 1회 드라이런
+
+## Cycle-54 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=7`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S12` 통합 품질 결론 패키지 문서 신설(`41`)
+  - `S10`(성능) + `S11`(UI) 충돌 해소 규칙(R1~R4) 및 단일 결론 템플릿 확정
+- 문서 연동
+  - 실행 보드 `AZ` 트랙 추가(`10`), 릴리즈 체크리스트 `S12-1~S12-4` 추가(`07`)
+  - 하드닝/게이트 체인 문서 연동(`33`~`40`) + 운영 인덱스/백로그/우선순위/KPI 동기화(`16`, `22`, `23`, `README`)
+- 다음 액션
+  - `S10`+`S11` 입력물 기준 `S12` 통합 결론 드라이런 1회 수행
+  - 조건부/보류 시 즉시 실행 액션(최대 3개) 등록 규칙 실제 적용
+
+## Cycle-55 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=7`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S13` 통합 결론 드라이런/에스컬레이션 문서 신설(`42`)
+  - 최근 2개 빌드 드라이런(D1), 에스컬레이션 코드(E13-1~E13-4), SLA(15/20/10분) 운영 규칙 확정
+- 문서 연동
+  - 실행 보드 `BA` 트랙 추가(`10`), 릴리즈 체크리스트 `S13-1~S13-4` 추가(`07`)
+  - 통합 결론 체인 문서 연동(`33`~`41`) + 백로그/우선순위/KPI/운영 인덱스 동기화(`16`, `22`, `23`, `README`)
+- 다음 액션
+  - `S13` 드라이런 템플릿으로 최근 2개 빌드 결론 1회 작성
+  - 조건부/보류 케이스의 E13 코드 기록 및 액션 게이트 이관 검증
+
+## Cycle-56 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=7`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S14` 통합 결론 이력/추세 관리 문서 신설(`43`)
+  - 이력 레지스트리(H1), 주간 추세 카드(H2), 반복 이슈 클러스터(H3), 액션 이행률(H4), 주간 리뷰(H5) 규칙 확정
+- 문서 연동
+  - 실행 보드 `BB` 트랙 추가(`10`), 릴리즈 체크리스트 `S14-1~S14-4` 추가(`07`)
+  - 통합 결론 체인 문서 연동(`33`~`42`) + 백로그/우선순위/KPI/운영 인덱스 동기화(`16`, `22`, `23`, `README`)
+- 다음 액션
+  - `S14` 주간 리뷰 템플릿 기준 첫 주간 리포트 1건 생성
+  - 반복 에스컬레이션 코드 클러스터 1건 이상 백로그 승격 검증
+
+## Cycle-57 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=7`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S15` 통합 결론 위험예산/프리즈 정책 문서 신설(`44`)
+  - 주간 예산, 프리즈/해제 조건, 예외 승인(공동 승인) 규칙 확정
+- 문서 연동
+  - 실행 보드 `BC` 트랙 추가(`10`), 릴리즈 체크리스트 `S15-1~S15-4` 추가(`07`)
+  - 통합 결론 체인 문서 연동(`33`~`43`) + 백로그/우선순위/KPI/운영 인덱스 동기화(`16`, `22`, `23`, `README`)
+- 다음 액션
+  - `S15` 템플릿 기준 주간 위험예산 리포트 1건 생성
+  - 프리즈 트리거 발생 가정 시 의사결정 로그 1건 드라이런 기록
+
+## Cycle-58 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=7`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S16` 프리즈 지휘/커뮤니케이션 플레이북 문서 신설(`45`)
+  - RACI, 공지 주기, 해제 회의 타임박스, 사후 회고 규칙 확정
+- 문서 연동
+  - 실행 보드 `BD` 트랙 추가(`10`), 릴리즈 체크리스트 `S16-1~S16-4` 추가(`07`)
+  - 통합 결론 체인 문서 연동(`33`~`44`) + 백로그/우선순위/KPI/운영 인덱스 동기화(`16`, `22`, `23`, `README`)
+- 다음 액션
+  - `S16` 템플릿 기준 프리즈 커뮤니케이션 로그 1건 드라이런 생성
+  - 해제 회의 시나리오(15분 타임박스) 1회 리허설 기록
+
+## Cycle-59 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=7`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S17` 프리즈 드릴/준비도 점수 문서 신설(`46`)
+  - 드릴 시나리오(A/B/C), 100점 스코어카드, 통과/경고/실패 임계치, 주간 운영 리듬 확정
+- 문서 연동
+  - 실행 보드 `BE` 트랙 추가(`10`), 릴리즈 체크리스트 `S17-1~S17-4` 추가(`07`)
+  - 통합 결론/프리즈 체인 문서 연동(`33`~`45`) + 테스트/디자인/모션/타이포 문서 동기화(`06`, `08`, `24`, `26`, `27`, `README`)
+- 다음 액션
+  - `S17` 스코어카드 템플릿 기준 드릴 1회 시뮬레이션 기록
+  - 드릴 결과를 `S14` 이력/추세 문서와 연결해 반복 리스크 클러스터링 검증
+
+## Cycle-60 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=7`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S18` 드릴 보정 액션 폐쇄 루프 문서 신설(`47`)
+  - WARN/FAIL 액션 등록, P0/P1/P2 SLA, 폐쇄 게이트, 재개방 규칙, 점수 패널티 연동 기준 확정
+- 문서 연동
+  - 실행 보드 `BF` 트랙 추가(`10`), 릴리즈 체크리스트 `S18-1~S18-4` 추가(`07`)
+  - 통합 결론/프리즈 체인 문서 연동(`33`~`46`) + 테스트/디자인/모션/타이포 문서 동기화(`06`, `08`, `24`, `26`, `27`, `README`)
+- 다음 액션
+  - `S18` 템플릿 기준 overdue 액션 1건 가정 드릴 후 재개방 흐름 1회 검증
+  - `S14` 이력/추세 카드에 closure_rate/reopen_rate 지표 연동 검증
+
+## Cycle-63 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=7`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S19` 보정 액션 부채/릴리즈 차단 정책 문서 신설(`48`)
+  - debt 점수/차단 임계치/해제 조건/예외 승인(만료 포함) 운영 기준 확정
+- 문서 연동
+  - 실행 보드 `BG` 트랙 추가(`10`), 릴리즈 체크리스트 `S19-1~S19-4` 추가(`07`)
+  - 통합 결론/프리즈 체인 문서 연동(`33`~`47`) + 테스트/디자인/모션/타이포 문서 동기화(`06`, `08`, `24`, `26`, `27`, `README`)
+- 다음 액션
+  - `S19` 기준 debt 초과 가정 드릴 1회로 `blocked→조건부 해제` 흐름 검증
+  - `S14` 주간 추세 카드에 debt_burndown/blocked_minutes 지표 연동 검증
+
+## Cycle-64 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=7`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S20` 보정 액션 부채 이상징후/자동 에스컬레이션 문서 신설(`49`)
+  - debt 급증 탐지, L1~L3 경보 단계, 응답 SLA, 사후 동기화 규칙 확정
+- 문서 연동
+  - 실행 보드 `BI` 트랙 추가(`10`), 릴리즈 체크리스트 `S20-1~S20-4` 추가(`07`)
+  - 통합 결론/프리즈 체인 문서 연동(`33`~`48`) + 테스트/디자인/모션/타이포 문서 동기화(`06`, `08`, `24`, `26`, `27`, `README`)
+- 다음 액션
+  - `S20` 기준 debt 급증 가정 드릴 1회로 L1→L2 에스컬레이션 흐름 검증
+  - `S14` 추세 카드에 alert_count/ack_latency/escalation_lead_time 지표 연동 검증
+
+## Cycle-65 루틴 반영 (2026-02-26)
+- 코드/품질 스냅샷
+  - `app/src/main=129`, `app/src/test=23`, `app/src/androidTest=8`, `wear/src/main=9`
+  - `./gradlew :app:assembleDebug :app:testDebugUnitTest :wear:assembleDebug` 성공
+- 기획 고도화
+  - `S21` 에스컬레이션 대응 용량/커버리지 운영 문서 신설(`50`)
+  - 시간대 커버리지 매트릭스, 경보 포화 전환, 핸드오버 체크리스트, 회복 규칙 확정
+- 문서 연동
+  - 실행 보드 `BJ` 트랙 추가(`10`), 릴리즈 체크리스트 `S21-1~S21-4` 추가(`07`)
+  - 통합 결론/프리즈 체인 문서 연동(`33`~`49`) + 테스트/디자인/모션/타이포 문서 동기화(`06`, `08`, `24`, `26`, `27`, `README`)
+- 다음 액션
+  - `S21` 기준 동시 경보 2건 가정 드릴 1회로 `normal→saturated→recovered` 전환 검증
+  - `S14` 추세 카드에 `queue_depth/handover_loss/recovery_time` 지표 연동 검증
+
+## Cycle-62 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 성능 게이트 실행 코드 실체화: `run-performance-sample-check.sh`를 `--profile/--repeat/--warmup/--baseline-report` 지원 구조로 확장
+  - 성능 판정 스크립트 추가: `evaluate-performance-gate.sh` (`device FAIL -> HOLD`, `device missing -> PENDING_DEVICE_VALIDATION`)
+  - 릴리즈 프리플라이트 연동: `release-preflight.sh`에서 성능 리포트/판정 리포트 자동 생성
+  - 증적 생성: `performance_gate_emulator_2026-02-26.md`, `performance_release_decision_2026-02-26.md`, `performance_gate_execution_2026-02-26.md`
+  - 판정 트리 드라이런: `performance_release_decision_simulated_hold_2026-02-26.md`로 HOLD 경로 검증
+  - 계측 안정화: `WeeklySaveFlowInstrumentedTest` 플래키 단정 제거 후 `connectedDebugAndroidTest` 11/11 통과
+  - 디스크 이슈 대응: Gradle 캐시 경로를 워크스페이스 기준(`.gradle-user-home`)으로 표준화(`release-preflight.sh`, `run-performance-sample-check.sh`, `.gitignore`)
+  - 최종 검증: `./scripts/release-preflight.sh --with-build --android-serial emulator-5554` 결과 `PASS=16 WARN=1 FAIL=0`
+- 미완료 작업
+  - 실기기 `device` 프로파일 성능 리포트 1회 생성 및 최종 판정 `PENDING -> PROCEED/HOLD` 전환
+  - `S05`, `S06` 사용자 여정/핫패스 성능 리허설 증적 확보
+- 블로커
+  - 실기기 미보유(`P-004`)
+- 다음 액션
+  - 실기기 연결 시 `./scripts/run-performance-sample-check.sh --profile device --repeat 5 --warmup 1 --serial <physical-serial>`
+  - `./scripts/evaluate-performance-gate.sh` 재실행 후 릴리즈 판정 상태 확정
+
+## Cycle-63 루틴 반영 (2026-02-26)
+- 완료 작업
+  - `S05` 여정 리허설 자동화 스크립트 추가(`scripts/run-usecase-rehearsal-check.sh`)
+  - `S05` 복구 UX 계측 테스트 보강(`SettingsPurchaseRedirectInstrumentedTest` 1초 노출 검증, `ExternalOpenFallbackDialogInstrumentedTest` 2탭 fallback 검증)
+  - 여정 리허설 증적 생성(`docs/assets/distribution/usecase_rehearsal_s05_2026-02-26.md`, J01~J04)
+  - `S10` 성능 증적 패키지 작성(`docs/assets/distribution/performance_gate_evidence_2026-02-26.md`)
+  - 릴리즈 체크리스트 동기화: `S05` 2개 항목 + `S10-1~S10-4` 완료 처리
+- 미완료 작업
+  - `S06` 핫패스(Home/Result/Manage) 성능 증적 리포트
+  - 실기기 `device` 리포트 생성 후 최종 성능 결론 확정(`BK-001`, `BK-002`)
+- 블로커
+  - 실기기 미보유(`P-004`)
+- 다음 액션
+  - `BK-001~BK-003` 실행: device 성능 리포트 + 판정 재평가 + 핫패스 증적 작성
+
+## Cycle-66 루틴 반영 (2026-02-26)
+- 완료 작업
+  - `S11` UI 품질 게이트 실행 스크립트 추가(`scripts/run-ui-quality-gate.sh`)
+  - 시각 캡처 스크립트 serial 지정 지원 보강(`scripts/capture-visual-matrix.sh`, `ADB_SERIAL`)
+  - 상호작용 응답성 계측 테스트 추가(`ManageFilterSheetInstrumentedTest`, 시트 열림/닫힘 1초 이내 검증)
+  - `S11` 증적 생성(`docs/assets/distribution/ui_quality_gate_evidence_2026-02-26.md`, U1~U4 PASS, 최종 보류)
+  - `S12` 통합 결론 패키지 생성(`docs/assets/distribution/unified_verdict_2026-02-26.md`, R1 적용)
+  - 릴리즈 체크리스트 동기화(`S11-1~S11-4`, `S12-1~S12-4` 완료 처리)
+- 미완료 작업
+  - `S06` 핫패스(Home/Result/Manage) 성능 증적 리포트
+  - 실기기 `device` 리포트 생성 후 최종 성능 결론 확정(`BK-001`, `BK-002`)
+- 블로커
+  - 실기기 미보유(`P-004`)
+- 다음 액션
+  - `BK-001~BK-003` 실행: device 성능 리포트 + 판정 재평가 + 핫패스 증적 작성
+
+## Cycle-67 루틴 반영 (2026-02-26)
+- 완료 작업
+  - `S13` 드라이런/에스컬레이션 증적 생성(`docs/assets/distribution/unified_verdict_dryrun_2026-02-26.md`)
+  - `S14` 이력/추세 주간 리뷰 증적 생성(`docs/assets/distribution/unified_verdict_weekly_2026-w09.md`)
+  - 릴리즈 체크리스트 동기화: `S13-1~S13-4`, `S14-1~S14-4` 완료 처리
+  - TODO 보드 실행 트랙 반영: `BM-001~BM-005`, `BN-001~BN-005`
+- 미완료 작업
+  - `S06` 핫패스(Home/Result/Manage) 성능 증적 리포트
+  - 실기기 `device` 리포트 생성 후 최종 성능 결론 확정(`BK-001`, `BK-002`)
+- 블로커
+  - 실기기 미보유(`P-004`)
+- 다음 액션
+  - `BK-001~BK-003` 실행: device 성능 리포트 + 판정 재평가 + 핫패스 증적 작성
+
+## Cycle-68 루틴 반영 (2026-02-26)
+- 완료 작업
+  - `S15` 위험예산/프리즈 실행 증적 생성(`docs/assets/distribution/unified_verdict_risk_budget_2026-w09.md`)
+  - `S16` 프리즈 지휘/커뮤니케이션 실행 증적 생성(`docs/assets/distribution/freeze_command_log_2026-02-26.md`)
+  - `S17` 프리즈 드릴 점수카드 생성(`docs/assets/distribution/freeze_drill_scorecard_2026-02-26.md`, 82점 WARN)
+  - 릴리즈 체크리스트 동기화: `S15-1~S15-4`, `S16-1~S16-4`, `S17-1~S17-4` 완료 처리
+  - TODO 보드 실행 트랙 반영: `BO`, `BP` 완료 + `BQ-001~BQ-003` 후속 액션 이관
+- 미완료 작업
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가
+  - `BK-003` S06 핫패스 성능 증적
+  - `BQ-001~BQ-003` WARN 후속 조치
+- 블로커
+  - 실기기 미보유(`P-004`)
+- 다음 액션
+  - `BK-001~BK-003` 최우선 실행 후 freeze 해제 조건 재평가
+  - `BQ-001~BQ-003`를 다음 루틴 선두에서 처리
+
+## Cycle-69 루틴 반영 (2026-02-26)
+- 완료 작업
+  - `S18` 보정 액션 폐쇄 루프 실행 증적 생성(`docs/assets/distribution/corrective_action_loop_2026-w09.md`)
+  - `S19` 부채/차단 실행 증적 생성(`docs/assets/distribution/debt_release_block_2026-w09.md`)
+  - `S20` 이상징후/에스컬레이션 실행 증적 생성(`docs/assets/distribution/anomaly_escalation_2026-02-26.md`)
+  - `S21` 용량/커버리지 실행 증적 생성(`docs/assets/distribution/capacity_coverage_2026-02-26.md`)
+  - 릴리즈 체크리스트 동기화: `S18-1~S18-4`, `S19-1~S19-4`, `S20-1~S20-4`, `S21-1~S21-4` 완료 처리
+  - TODO 보드 실행 트랙 반영: `BR`, `BS`, `BT`, `BU` 완료
+- 미완료 작업
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가
+  - `BK-003` S06 핫패스 성능 증적
+  - `BQ-001~BQ-003` WARN 후속 조치
+- 블로커
+  - 실기기 미보유(`P-004`)
+- 다음 액션
+  - `BK-001~BK-003` 완료 후 `S10/S12/S15` 해제 조건 재검증
+  - `BQ-001~BQ-003` 실행으로 드릴 WARN 해소
+
+## Cycle-70 루틴 반영 (2026-02-26)
+- 완료 작업
+  - `BQ-001` 실기기 준비 체크리스트 작성(`physical_device_readiness_checklist_2026-02-27.md`)
+  - `BQ-002` S06 핫패스 프로파일링 템플릿 작성(`hotpath_profiling_template_2026-02-27.md`)
+  - `BQ-003` freeze 공지 템플릿 스크립트 초안 추가(`scripts/freeze-notice-template.sh`)
+  - 실행 보드 동기화: `BQ-001~BQ-003` 완료 처리
+- 미완료 작업
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가
+- 블로커
+  - 실기기 미보유(`P-004`)
+- 다음 액션
+  - 실기기 연결 즉시 `BK-001` 실행
+  - `BK-001` 결과 기반으로 `BK-002`, `BK-003` 순차 실행
+
+## Cycle-71 루틴 반영 (2026-02-26)
+- 완료 작업
+  - `S06` 핫패스 성능 증적 생성(`docs/assets/distribution/hotpath_s06_profile_2026-02-26.md`)
+  - 핫패스 렌더 계측 테스트 추가/통과(`HotpathRenderLatencyInstrumentedTest`, 3/3)
+  - 에뮬레이터 성능 샘플 재수집(`performance_gate_emulator_s06_2026-02-26.md`)
+  - 성능 판정 재평가 사전 실행(`performance_release_decision_s06_2026-02-26.md`, `PENDING_DEVICE_VALIDATION`)
+  - 릴리즈 체크리스트 `S06` 완료 처리, TODO `BK-003` 완료 처리
+- 미완료 작업
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가
+- 블로커
+  - 실기기 미보유(`P-004`)
+- 다음 액션
+  - 실기기 연결 즉시 `BK-001` 실행 후 `BK-002` 최종 결론 확정
+
+## Cycle-72 루틴 반영 (2026-02-26)
+- 완료 작업
+  - `BK-001/BK-002` 통합 실행 스크립트 추가(`scripts/run-bk-device-gate.sh`)
+  - 현재 환경(실기기 없음) 기준 blocked 판정 리포트 생성(`performance_release_decision_bk_blocked_2026-02-26.md`)
+- 미완료 작업
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+- 블로커
+  - 실기기 미보유(`P-004`)
+- 다음 액션
+  - 실기기 연결 후 `./scripts/run-bk-device-gate.sh --serial <physical-serial> --date-tag 2026-02-26` 실행
+
+## Cycle-73 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 물리 디바이스 감지 대기형 BK 실행 스크립트 추가(`scripts/run-bk-when-physical.sh`)
+  - 대기형 스크립트 timeout 리허설(`--timeout-seconds 1`)로 동작 검증
+  - 실기기 준비 체크리스트에 대기형 실행 경로 추가
+- 미완료 작업
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+- 블로커
+  - 실기기 미보유(`P-004`)
+- 다음 액션
+  - 실기기 연결 시 `./scripts/run-bk-when-physical.sh --date-tag 2026-02-26` 실행
+
+## Cycle-74 루틴 반영 (2026-02-26)
+- 완료 작업
+  - Wear `P-004` 전용 실기기 게이트 스크립트 추가(`scripts/run-p4-wear-proof-gate.sh`)
+  - Wear `P-004` 대기형 스크립트 추가(`scripts/run-p4-when-wear-physical.sh`)
+  - 실기기 부재 blocked 리포트 생성(`wear_p4_device_evidence_blocked_2026-02-26.md`)
+  - 대기형 timeout blocked 리포트 생성(`wear_p4_device_evidence_wait_blocked_2026-02-26.md`)
+  - Wear 실기기 준비 체크리스트 추가(`wear_physical_device_readiness_checklist_2026-02-27.md`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트(`wear_p4_device_evidence_*.md`)
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - 실기기 2종 연결 시 `./scripts/run-p4-when-wear-physical.sh --date-tag 2026-02-26`
+  - 실기기 1종(폰) 연결 시 `./scripts/run-bk-when-physical.sh --date-tag 2026-02-26`
+
+## Cycle-75 루틴 반영 (2026-02-26)
+- 완료 작업
+  - `release-final-check.sh`에 Wear `P-004` probe 연동(`--skip-wear-p4` 옵션 추가)
+  - release probe blocked 증적 생성(`wear_p4_device_evidence_release_probe_2026-02-26.md`)
+  - 테스트/릴리즈/디바이스 검증 문서에 release probe 흐름 반영(`06`, `07`, `18`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - Wear 2종 연결 시 `./scripts/run-p4-when-wear-physical.sh --date-tag 2026-02-26`
+  - 폰 실기기 연결 시 `./scripts/run-bk-when-physical.sh --date-tag 2026-02-26`
+
+## Cycle-76 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 물리 게이트 통합 체크포인트 스크립트 추가(`scripts/run-physical-gates-checkpoint.sh`)
+  - 통합 체크포인트 리포트 생성(`physical_gates_checkpoint_2026-02-26.md`)
+  - 체크포인트 산출물 동시 생성:
+    - `performance_release_decision_checkpoint_2026-02-26.md`
+    - `wear_p4_device_evidence_checkpoint_2026-02-26.md`
+  - 릴리즈/테스트/체크리스트 문서에 체크포인트 실행 경로 동기화(`06`, `07`, `physical_device_readiness_checklist_2026-02-27.md`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - 폰 실기기 연결 시 `./scripts/run-bk-when-physical.sh --date-tag 2026-02-26`
+  - Wear 실기기 2종 연결 시 `./scripts/run-p4-when-wear-physical.sh --date-tag 2026-02-26`
+
+## Cycle-77 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 물리 게이트 대기형 오케스트레이터 추가(`scripts/run-all-physical-gates-when-ready.sh`)
+  - timeout 리허설 실행(`--timeout-seconds 1 --poll-interval 1 --save-blocked-report`)로 blocked 경로 검증
+  - 오케스트레이터 증적 생성(`physical_gates_orchestrator_2026-02-26.md`)
+  - 릴리즈/체크리스트 문서에 오케스트레이터 실행 경로 반영(`06`, `07`, `physical_device_readiness_checklist_2026-02-27.md`, `wear_physical_device_readiness_checklist_2026-02-27.md`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - 실기기 연결 시 `./scripts/run-all-physical-gates-when-ready.sh --date-tag 2026-02-26 --save-blocked-report` 실행
+
+## Cycle-78 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 체크포인트 기반 블로커 상태 동기화 스크립트 추가(`scripts/sync-physical-blockers-from-checkpoint.sh`)
+  - 드라이런/적용 리허설 실행(현재 checkpoint=BLOCKED로 변경 없음 확인)
+  - 릴리즈 체크리스트에 상태 동기화 명령 연동(`07` 5번 명령)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - 실기기 연결 후 오케스트레이터 실행
+  - 오케스트레이터 완료 후 `sync-physical-blockers-from-checkpoint.sh --apply`로 보드 자동 완료 처리
+
+## Cycle-79 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 물리 게이트 루틴 래퍼 스크립트 추가(`scripts/run-physical-gates-routine-check.sh`)
+  - GitHub Actions 주기 워크플로 추가(`.github/workflows/physical-gates-routine.yml`)
+  - 루틴 리허설 실행 및 증적 생성(`physical_gates_routine_2026-02-26.md`, status=BLOCKED)
+  - 릴리즈/테스트 문서에 루틴 실행 경로 반영(`06`, `07`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - 실기기 연결 후 오케스트레이터 실행
+  - 체크포인트 PASS 확인 후 동기화 스크립트로 보드 자동 완료 처리
+
+## Cycle-80 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - UI 미감/타이포 완성도 게이트 스펙 추가(`51-visual-aesthetic-and-typography-hardening-spec.md`)
+  - `S22` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S22` 디자인/코드 반영 후 전후 시각 증적 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S22` 스코어카드(A1~A5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-81 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 상태 기반 UI 내러티브/마이크로카피 게이트 스펙 추가(`52-stateful-ui-narrative-and-microcopy-hardening-spec.md`)
+  - `S23` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S23` 상태 매트릭스(loading/empty/error/offline/redirect) 전후 증적 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S23` 스코어카드(N1~N5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-82 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 상태 전환 코레오그래피/피드백 아이덴티티 게이트 스펙 추가(`53-state-transition-choreography-and-feedback-identity-spec.md`)
+  - `S24` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S24` 상태 전환(enter/steady/exit) + 피드백 계층(visual/haptic/copy) 증적 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S24` 스코어카드(C1~C5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-83 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 적응형 레이아웃/시선 흐름 게이트 스펙 추가(`54-adaptive-layout-and-attention-flow-gate-spec.md`)
+  - `S25` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S25` 적응형 레이아웃(소형/표준/대형) + 시선 흐름 증적 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S25` 스코어카드(L1~L5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-84 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 시각 자산 일관성/로딩 fallback 게이트 스펙 추가(`55-visual-asset-consistency-and-fallback-gate-spec.md`)
+  - `S26` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S26` 시각 자산 로딩/실패 fallback 증적(아이콘/이미지/배지/외부 리소스) 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S26` 스코어카드(V1~V5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-85 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 컨텍스트 우선순위/집중 모드 게이트 스펙 추가(`56-context-priority-and-focus-mode-gate-spec.md`)
+  - `S27` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S27` 컨텍스트 우선순위/집중 모드 증적(기본/집중 모드, 알림 억제, CTA 재배치) 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S27` 스코어카드(F1~F5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-86 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 상호작용 신뢰 신호/실행 확인 게이트 스펙 추가(`57-interaction-trust-signal-and-confirmed-state-gate-spec.md`)
+  - `S28` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S28` confirmed state 증적(즉시 반응/완료 확인/실패 복구) 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S28` 스코어카드(R1~R5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-87 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 의사결정 신뢰도/점진적 공개 UX 게이트 스펙 추가(`58-decision-confidence-and-progressive-disclosure-gate-spec.md`)
+  - `S29` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S29` 점진적 공개/확신 신호 증적(핵심 요약->세부 공개, 위험 정보 노출 타이밍) 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S29` 스코어카드(D1~D5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-88 루틴 반영 (2026-02-26)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 외부 리다이렉트 연속성/복귀 컨텍스트 게이트 스펙 추가(`59-external-redirect-continuity-and-return-context-gate-spec.md`)
+  - `S30` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+  - Cycle-87 누락 상태였던 `58` 스펙 파일 실체 복구 완료
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S30` 외부 이동/복귀 연속성 증적(이동 전 안내, fallback, 복귀 컨텍스트 유지) 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S30` 스코어카드(X1~X5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-89 루틴 반영 (2026-02-27)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 지각 지연/로딩 연속성 게이트 스펙 추가(`60-perceived-latency-and-loading-continuity-gate-spec.md`)
+  - `S31` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S31` 로딩 연속성 증적(전/중/후 화면, timeout/retry, stale->fresh 전환) 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S31` 스코어카드(P1~P5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-90 루틴 반영 (2026-02-27)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 세션 복귀/중단 복원 게이트 스펙 추가(`61-session-resume-and-interruption-recovery-gate-spec.md`)
+  - `S32` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S32` 세션 복원 증적(복귀 위치/입력 유지/중단 후 재개/복원 실패 fallback) 4화면 세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S32` 스코어카드(R1~R5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-91 루틴 반영 (2026-02-27)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 멀티디바이스 상태 동기화/충돌 복구 게이트 스펙 추가(`62-multidevice-state-sync-and-conflict-recovery-gate-spec.md`)
+  - `S33` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S33` 멀티디바이스 증적(폰/워치/위젯 상태 일치, 충돌 해결, 오프라인 복원) 4세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S33` 스코어카드(M1~M5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-92 루틴 반영 (2026-02-27)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 알림 피로도/빈도 개인화 게이트 스펙 추가(`63-notification-fatigue-and-cadence-personalization-gate-spec.md`)
+  - `S34` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S34` 알림 개인화 증적(빈도 완화, 조용한 시간 준수, 설정 반영/복구) 4세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S34` 스코어카드(N1~N5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-93 루틴 반영 (2026-02-27)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 권한 프릭션/점진적 동의 게이트 스펙 추가(`64-permission-friction-and-progressive-consent-gate-spec.md`)
+  - `S35` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S35` 권한 흐름 증적(맥락 요청, 거부/재요청, 설정 복구, 대체 경로) 4세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S35` 스코어카드(C1~C5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-94 루틴 반영 (2026-02-27)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 실험 플래그/점진 롤아웃 안전 게이트 스펙 추가(`65-feature-flag-and-staged-rollout-safety-gate-spec.md`)
+  - `S36` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S36` 실험/롤아웃 증적(분기 안정성, rollout/rollback 로그, 분기 KPI) 4세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S36` 스코어카드(F1~F5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-95 루틴 반영 (2026-02-27)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 첫 주 온보딩/활성화 연속성 게이트 스펙 추가(`66-first-week-onboarding-and-activation-continuity-gate-spec.md`)
+  - `S37` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S37` 온보딩/활성화 증적(D0~D7 첫 가치 도달, 재방문 재개, 초기 개인화) 4세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S37` 스코어카드(O1~O5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-96 루틴 반영 (2026-02-27)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=125`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 검색/필터 발견성 및 질의 복원 게이트 스펙 추가(`67-search-filter-discoverability-and-query-recovery-gate-spec.md`)
+  - `S38` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S38` 검색/필터 증적(진입 발견성, 빈 결과 대체 제안, 질의 복원) 4세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S38` 스코어카드(Q1~Q5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행
+
+## Cycle-97 루틴 반영 (2026-02-27)
+- 완료 작업
+  - 코드/품질 스냅샷 재확인(`app/main=129`, `test=23`, `androidTest=10`, `wear/main=9`, Gradle 3-gate PASS)
+  - 번호 기록 입력 정확성/중복 방지 게이트 스펙 추가(`68-ticket-entry-accuracy-and-duplicate-prevention-gate-spec.md`)
+  - `S39` 연동 문서 동기화(`06`, `07`, `10`, `16`, `21`, `22`, `23`, `25`, `README`)
+- 미완료 작업
+  - `P-004` Wear 소형/대형 실기기 2종 실측 증적 리포트
+  - `BK-001` 실기기 `device` 성능 리포트
+  - `BK-002` 성능 판정 재평가(`PROCEED/HOLD` 확정)
+  - `S39` 입력/중복 방지 증적(오입력 차단, 중복 병합, 저장 실패 복원) 4세트 확보
+- 블로커
+  - 실기기 미보유(`P-004`, `BK-001`, `BK-002`)
+- 다음 액션
+  - UI 반영 후 `S39` 스코어카드(T1~T5) 증적 생성
+  - 실기기 연결 후 `run-all-physical-gates-when-ready.sh` 재실행

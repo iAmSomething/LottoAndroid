@@ -456,6 +456,52 @@ class ManageViewModelTest {
 
             assertThat(viewModel.filteredTickets().map { it.id }).containsExactly(102L, 103L, 101L).inOrder()
         }
+
+    @Test
+    fun 단건_보관액션은_상태를_SAVED로_변경한다() =
+        runTest {
+            val today = LocalDate.now()
+            val currentRound =
+                Round(
+                    number = RoundEstimator.currentSalesRound(today),
+                    drawDate = RoundEstimator.nextDrawDate(today),
+                )
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets = listOf(ticket(id = 111L, round = currentRound, status = TicketStatus.PENDING)),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+            viewModel.moveTicketToVault(111L)
+            advanceUntilIdle()
+
+            val updated = viewModel.uiState.value.tickets.first { it.id == 111L }
+            assertThat(updated.status).isEqualTo(TicketStatus.SAVED)
+            assertThat(viewModel.uiState.value.feedbackMessage).isEqualTo("보관함으로 이동했습니다.")
+        }
+
+    @Test
+    fun 단건_삭제요청은_선택아이디와_삭제다이얼로그를_설정한다() =
+        runTest {
+            val today = LocalDate.now()
+            val currentRound =
+                Round(
+                    number = RoundEstimator.currentSalesRound(today),
+                    drawDate = RoundEstimator.nextDrawDate(today),
+                )
+            val repository =
+                ManageFakeTicketRepository(
+                    tickets = listOf(ticket(id = 121L, round = currentRound, status = TicketStatus.PENDING)),
+                )
+            val viewModel = ManageViewModel(ticketRepository = repository)
+
+            advanceUntilIdle()
+            viewModel.requestDeleteSingle(121L)
+
+            assertThat(viewModel.uiState.value.selectedIds).containsExactly(121L)
+            assertThat(viewModel.uiState.value.isDeleteDialogOpen).isTrue()
+        }
 }
 
 private fun ticket(
