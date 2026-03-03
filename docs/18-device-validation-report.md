@@ -24,6 +24,7 @@
 - `10`/`11`/`18` 블로커 상태 동기화는 `73-physical-blocker-state-sync-checklist.md`를 기준으로 점검한다.
 - 실기기 확보 당일 전환 실행은 `74-physical-device-day0-transition-runbook.md` 순서를 따른다.
 - 실기기 전환 당일 역할/타임박스 운영은 `75-physical-transition-ops-raci-timebox-checklist.md`를 기준으로 적용한다.
+- `PASS` 전환 주차 요약 리포트 샘플 형식은 `docs/assets/distribution/physical_gates_weekly_summary_2026-w10.md`를 참고한다.
 - `run-physical-gates-routine-check.sh`는 오케스트레이터 결과를 `PASS/BLOCKED/FAIL` 루틴 리포트로 저장한다.
 - `blocked` 장기화 리스크 판정은 `71-blocked-state-longtail-risk-criteria.md` 기준을 따른다.
 
