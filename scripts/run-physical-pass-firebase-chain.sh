@@ -8,7 +8,7 @@ DATE_TAG="$(date +%F)"
 CHECKPOINT_REPORT=""
 PROJECT_ID="${FIREBASE_PROJECT_ID:-}"
 APP_ID="${FIREBASE_APP_ID:-}"
-GROUPS="${FIREBASE_TESTER_GROUP_ALIAS:-}"
+TESTER_GROUPS="${FIREBASE_TESTER_GROUP_ALIAS:-}"
 SERVICE_ACCOUNT="${GOOGLE_APPLICATION_CREDENTIALS:-}"
 RELEASE_NOTES=""
 REPORT_FILE=""
@@ -54,7 +54,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --groups)
-      GROUPS="${2:-}"
+      TESTER_GROUPS="${2:-}"
       shift 2
       ;;
     --service-account)
@@ -114,7 +114,7 @@ if [[ "$bk_line" != *"PASS"* || "$wear_line" != *"PASS"* ]]; then
   exit 1
 fi
 
-if [[ -z "$PROJECT_ID" || -z "$APP_ID" || -z "$GROUPS" ]]; then
+if [[ -z "$PROJECT_ID" || -z "$APP_ID" || -z "$TESTER_GROUPS" ]]; then
   echo "[FAIL] missing firebase params: --project-id, --app-id, --groups"
   exit 1
 fi
@@ -159,7 +159,7 @@ if [[ "$OVERALL_STATUS" == "PASS" ]]; then
     --project-id "$PROJECT_ID"
     --app-id "$APP_ID"
     --service-account "$SERVICE_ACCOUNT"
-    --groups "$GROUPS"
+    --groups "$TESTER_GROUPS"
     --no-build
     --apk-path app/build/outputs/apk/release/app-release.apk
     --release-notes "$RELEASE_NOTES"
@@ -179,7 +179,7 @@ if [[ "$OVERALL_STATUS" == "PASS" && "$DRY_RUN_ONLY" -eq 0 ]]; then
     --project-id "$PROJECT_ID"
     --app-id "$APP_ID"
     --service-account "$SERVICE_ACCOUNT"
-    --groups "$GROUPS"
+    --groups "$TESTER_GROUPS"
     --no-build
     --apk-path app/build/outputs/apk/release/app-release.apk
     --release-notes "$RELEASE_NOTES"
@@ -203,7 +203,7 @@ cat > "$REPORT_FILE" <<EOF
 - checkpoint_report: ${CHECKPOINT_REPORT}
 - project_id: ${PROJECT_ID}
 - app_id: ${APP_ID}
-- groups: ${GROUPS}
+- groups: ${TESTER_GROUPS}
 
 ## Step Results
 - final_check: ${FINAL_CHECK_STATUS}

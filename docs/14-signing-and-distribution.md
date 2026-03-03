@@ -211,6 +211,7 @@
 - 실행 래퍼: `./scripts/run-physical-pass-firebase-chain.sh` (checkpoint PASS 가드 + 체인 실행 + 리포트 출력)
 - 체인 리포트 템플릿/해석 기준: `78-firebase-physical-pass-chain-report-template-guide.md`
 - 수동 실행 전/후 체크리스트: `79-physical-pass-firebase-chain-manual-checklist.md`
+- dry-run-only 리허설 증적 예시: `docs/assets/distribution/bo004_dry_run_only_rehearsal_local_2026-03-03.md`
 
 ### 6-5. GitHub Secrets (필수)
 - 릴리즈 서명:
