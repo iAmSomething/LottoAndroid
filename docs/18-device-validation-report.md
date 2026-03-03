@@ -29,6 +29,7 @@
 - 실기기 PASS 이후 Firebase Distribution 실행/판정 연계는 `77-firebase-distribution-after-physical-pass-runbook.md`를 기준으로 적용한다.
 - 실기기 PASS-배포 체인 실행은 `run-physical-pass-firebase-chain.sh`로 일괄 수행 가능하다.
 - BO-005 재시도 대기 실행은 `run-bo005-when-physical-ready.sh`로 수행 가능하다.
+- BO-005 준비도 주기 점검은 `run-bo005-readiness-routine-check.sh`로 수행 가능하다.
 - 체인 리포트(`firebase_physical_pass_chain_<date>.md`) 해석은 `78-firebase-physical-pass-chain-report-template-guide.md`를 기준으로 적용한다.
 - BO-001 수동 실행 전/후 점검은 `79-physical-pass-firebase-chain-manual-checklist.md`를 기준으로 적용한다.
 - BO-005 재시도 러너 절차/옵션은 `80-bo005-physical-ready-runner-guide.md`를 기준으로 적용한다.
@@ -49,6 +50,7 @@
 - 2026-03-03: BO-004 dry-run-only 체인 리허설 PASS(`bo004_dry_run_only_rehearsal_local_2026-03-03.md`, 시뮬레이션 PASS checkpoint + `--skip-final-check --dry-run-only`)
 - 2026-03-03: BO-005 실배포 경로 실행 시도 blocked(`bo005_actual_distribute_attempt_blocked_2026-03-03.md`, `release-final-check --require-physical-device`에서 `No adb device connected`)
 - 2026-03-03: BP-001 재시도 대기 러너 timeout blocked 검증(`bo005_when_physical_ready_timeout_2026-03-03.md`, checkpoint PASS 상태에서 실기기 0대로 timeout)
+- 2026-03-03: BQ-001 준비도 루틴 점검 blocked 검증(`bo005_readiness_routine_local_2026-03-03.md`, `routine_status=BLOCKED`)
 
 ## 2026-02-26 10:43:48 +0900
 - 결과: FAIL(1)

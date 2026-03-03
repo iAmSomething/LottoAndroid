@@ -59,6 +59,7 @@
 ## 5. CI 연계 판정 (선택)
 - `main` 머지 후 GitHub Actions의 `Firebase Distribution` 워크플로우 성공 여부를 최종 확인한다.
 - 주기 점검 필요 시 `firebase-distribution-routine-check.sh`로 dry-run 증적을 추가한다.
+- BO-005 준비도 주기 점검은 `run-bo005-readiness-routine-check.sh`와 `bo005-readiness-routine.yml`을 사용한다.
 
 ## 6. 실행 후 기록 (필수)
 - [ ] BO-001 수동 실행 전/후 체크는 `79-physical-pass-firebase-chain-manual-checklist.md`를 기준으로 완료

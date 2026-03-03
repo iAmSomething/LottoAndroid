@@ -181,6 +181,7 @@
   - PR/머지 품질게이트: `.github/workflows/release-preflight.yml`
   - Firebase 자동 배포: `.github/workflows/firebase-distribution.yml`
   - Firebase 주기 점검(dry-run): `.github/workflows/firebase-distribution-routine.yml`
+  - BO-005 준비도 주기 점검: `.github/workflows/bo005-readiness-routine.yml`
 - 트리거 체인:
   1. `push` → PR 생성
   2. PR에서 `Release Preflight` 통과
@@ -216,6 +217,8 @@
 - 실배포 경로 blocked 시도 증적 예시: `docs/assets/distribution/bo005_actual_distribute_attempt_blocked_2026-03-03.md`
 - BO-005 재시도 대기 러너: `./scripts/run-bo005-when-physical-ready.sh` (`timeout`/`blocked` 리포트 + 준비 충족 시 체인 실행)
 - BO-005 재시도 대기 러너 timeout 증적 예시: `docs/assets/distribution/bo005_when_physical_ready_timeout_2026-03-03.md`
+- BO-005 준비도 루틴 점검: `./scripts/run-bo005-readiness-routine-check.sh` (`READY_PASS/BLOCKED/FAIL` 분류 리포트)
+- BO-005 준비도 루틴 blocked 증적 예시: `docs/assets/distribution/bo005_readiness_routine_local_2026-03-03.md`
 - BO-005 재시도 러너 가이드: `80-bo005-physical-ready-runner-guide.md`
 
 ### 6-5. GitHub Secrets (필수)
