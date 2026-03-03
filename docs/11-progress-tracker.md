@@ -20,6 +20,7 @@
   - `BM-004` 완료: 실기기 연결 즉시 실행 번들 명령/완료 판정 문서화(`72-physical-gates-immediate-execution-bundle.md`, `BK-001`→`BK-002`→`P-004` 순서 + checkpoint 기반 완료 조건)
   - `BM-005` 완료: `10`/`11`/`18` 블로커 상태 동기화 체크리스트 문서화(`73-physical-blocker-state-sync-checklist.md`, 상태/날짜/증적 경로 일치 규칙 고정)
   - `BN-001` 완료: 실기기 확보 당일 Day-0 전환 런북 문서화(`74-physical-device-day0-transition-runbook.md`, 오케스트레이터→sync→문서동기화 순서/성공 판정/실패 분기 고정)
+  - `BN-002` 완료: 실기기 전환 당일 운영 체크리스트(RACI + 타임박스) 문서화(`75-physical-transition-ops-raci-timebox-checklist.md`, 역할 책임/단계별 제한 시간/종료 체크 고정)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커

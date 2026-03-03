@@ -34,6 +34,7 @@ echo "$DATE_TAG"
 ```bash
 # 체크리스트 기준 문서
 # docs/73-physical-blocker-state-sync-checklist.md
+# docs/75-physical-transition-ops-raci-timebox-checklist.md
 ```
 
 ## 4. 성공 판정

@@ -576,7 +576,7 @@
 
 ## BN. 실기기 전환 실행 트랙(2026-03-03 Cycle-63)
 - [x] BN-001 실기기 확보 당일 Day-0 전환 런북 문서화(명령 순서/성공 판정/실패 분기, `74-physical-device-day0-transition-runbook.md`)
-- [ ] BN-002 실기기 전환 당일 운영 담당자별 체크리스트(RACI + 타임박스) 추가
+- [x] BN-002 실기기 전환 당일 운영 담당자별 체크리스트(RACI + 타임박스) 추가(`75-physical-transition-ops-raci-timebox-checklist.md`)
 - [ ] BN-003 `PASS` 전환 주차 요약 리포트 샘플 1회 작성(`physical_gates_weekly_summary_<yyyy-w##>.md`)
 - [ ] BN-004 `P-004` 실기기 증적 수집 스크린샷/로그 파일 검수 체크리스트 추가
 - [ ] BN-005 실기기 전환 완료 후 Firebase Distribution 실행/판정 연계 절차 문서화
