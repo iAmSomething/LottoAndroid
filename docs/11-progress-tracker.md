@@ -18,6 +18,7 @@
   - `BM-002` 완료: 물리 게이트 주간 비교 요약 템플릿 추가(`70-physical-gates-weekly-summary-template.md`, 출력 파일 규칙/비교 테이블/체크리스트 고정)
   - `BM-003` 완료: `blocked` 장기화 리스크 기준 문서화(`71-blocked-state-longtail-risk-criteria.md`, 임계 주차/L1~L3/에스컬레이션 조건/담당자/SLA)
   - `BM-004` 완료: 실기기 연결 즉시 실행 번들 명령/완료 판정 문서화(`72-physical-gates-immediate-execution-bundle.md`, `BK-001`→`BK-002`→`P-004` 순서 + checkpoint 기반 완료 조건)
+  - `BM-005` 완료: `10`/`11`/`18` 블로커 상태 동기화 체크리스트 문서화(`73-physical-blocker-state-sync-checklist.md`, 상태/날짜/증적 경로 일치 규칙 고정)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
 - 블로커
