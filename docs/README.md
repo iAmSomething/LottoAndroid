@@ -115,6 +115,7 @@
 - `71-blocked-state-longtail-risk-criteria.md`: `blocked` 장기화 리스크 기준(임계 주차/L1~L3/에스컬레이션/담당/SLA)
 - `72-physical-gates-immediate-execution-bundle.md`: 실기기 연결 즉시 실행 번들 명령(`BK-001`→`BK-002`→`P-004`)과 checkpoint 기반 완료 판정 기준
 - `73-physical-blocker-state-sync-checklist.md`: `10`/`11`/`18` 문서 간 블로커 상태 동기화 체크리스트(상태/날짜/증적 경로 일치 규칙)
+- `74-physical-device-day0-transition-runbook.md`: 실기기 확보 당일 전환 런북(오케스트레이터 실행/sync/apply/문서 반영 순서와 성공·실패 분기)
 - `30-font-onboarding-gate.md`: AB-005/006 착수 게이트(체크리스트/승인 기준)
 - `31-font-assets-and-license-register.md`: 폰트 자산 반입/라이선스/적용 매핑 레지스터
 - `32-visual-proof-matrix-report.md`: AB-009/010 시각 증적 매트릭스/QA 판정 리포트
