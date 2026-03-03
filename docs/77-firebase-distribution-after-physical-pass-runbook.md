@@ -12,6 +12,16 @@
 - 릴리즈 서명/Firebase 시크릿 준비 완료(`14-signing-and-distribution.md` 기준)
 
 ## 3. 실행 순서
+0. (권장) 체인 래퍼로 일괄 실행
+```bash
+./scripts/run-physical-pass-firebase-chain.sh \
+  --date-tag <yyyy-mm-dd> \
+  --project-id <firebase-project-id> \
+  --app-id <firebase-app-id> \
+  --groups <tester-group-alias> \
+  --service-account <service-account-json-path>
+```
+
 1. 실기기 강제 최종 점검
 ```bash
 ./scripts/release-final-check.sh --require-physical-device
