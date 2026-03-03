@@ -208,6 +208,7 @@
 - 물리 게이트(`BK-001/BK-002/P-004`) PASS 전환 직후 Firebase Distribution 연계 절차는 `77-firebase-distribution-after-physical-pass-runbook.md`를 따른다.
 - 권장 순서: `release-final-check --require-physical-device` -> `firebase-distribute --dry-run` -> `firebase-distribute`(실배포)
 - 판정/기록: `11-progress-tracker.md`, `18-device-validation-report.md`에 같은 날짜 태그로 결과를 기록한다.
+- 실행 래퍼: `./scripts/run-physical-pass-firebase-chain.sh` (checkpoint PASS 가드 + 체인 실행 + 리포트 출력)
 
 ### 6-5. GitHub Secrets (필수)
 - 릴리즈 서명:

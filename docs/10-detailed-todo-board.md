@@ -580,3 +580,10 @@
 - [x] BN-003 `PASS` 전환 주차 요약 리포트 샘플 1회 작성(`docs/assets/distribution/physical_gates_weekly_summary_2026-w10.md`)
 - [x] BN-004 `P-004` 실기기 증적 수집 스크린샷/로그 파일 검수 체크리스트 추가(`76-p4-evidence-screenshot-log-review-checklist.md`)
 - [x] BN-005 실기기 전환 완료 후 Firebase Distribution 실행/판정 연계 절차 문서화(`77-firebase-distribution-after-physical-pass-runbook.md`)
+
+## BO. 실기기 PASS-배포 체인 자동화(2026-03-03 Cycle-64)
+- [x] BO-001 실기기 PASS -> Firebase Distribution 실행 래퍼 스크립트 추가(`scripts/run-physical-pass-firebase-chain.sh`)
+- [ ] BO-002 BO-001 실행 결과 리포트 템플릿 고정(`firebase_physical_pass_chain_<date>.md` 해석 가이드)
+- [ ] BO-003 BO-001 수동 실행 체크리스트(`실행 전/후`) 문서화
+- [ ] BO-004 BO-001 dry-run-only 리허설 증적 1회 수집(로컬/CI 중 택1)
+- [ ] BO-005 실기기 PASS 시 BO-001 실배포 경로 실행 이력 1회 확보
