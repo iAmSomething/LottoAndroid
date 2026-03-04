@@ -205,6 +205,9 @@ class SettingsViewModel(
             appendLine("- 회차 범위: ${formatRoundRange(summary)}")
             appendLine("- 티켓 수: ${summary.ticketCount}")
             appendLine("- 게임 수: ${summary.gameCount}")
+            appendLine(
+                "- 출처별 게임 수: 자동 ${summary.generatedGameCount}, 수동 ${summary.manualGameCount}, QR ${summary.qrGameCount}",
+            )
             appendLine("- 당첨번호 매칭 회차: ${summary.matchedDrawCount}")
             appendLine("- 데이터 신뢰도: $coverageRatePercent% (당첨번호 매칭 회차 기준)")
             appendLine("- 당첨 게임 수: ${summary.winningGameCount}")
