@@ -600,3 +600,8 @@
 - [x] BR-001 `TicketBackupService` 확장: 주차별 구매 히스토리 + 당첨번호 포함 CSV 내보내기 API 추가(`exportTicketHistoryCsvForAi`)
 - [x] BR-002 `LocalTicketBackupService` 구현: 모든 티켓 회차를 수집하고 회차별 당첨번호를 매핑해 CSV(`tickets_history_with_draw_latest.csv`) 생성
 - [x] BR-003 Settings 화면 액션 추가: `주차별 구매/당첨 CSV 공유` 버튼 + FileProvider 기반 공유 인텐트 연동(ChatGPT/Gemini 업로드 경로), 회귀 테스트/증적/문서 동기화(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `docs/assets/distribution/ticket_history_csv_ai_share_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## BS. F02 v3 CSV 당첨 평가 컬럼 확장(2026-03-04 Cycle-68)
+- [x] BS-001 `LocalTicketBackupService` CSV 컬럼 확장: `matched_main_count`, `bonus_matched`, `draw_rank`, `expected_prize_amount` 추가
+- [x] BS-002 회차별 당첨번호 존재 시 게임별 평가값 계산 연동(`ResultEvaluator`, `PrizeAmountPolicy`) 및 draw 미존재 시 빈값 처리
+- [x] BS-003 Settings CSV 공유 CTA 계측 이벤트 추가 + 회귀 테스트/증적/문서 동기화(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `docs/assets/distribution/ticket_history_csv_evaluation_columns_local_2026-03-04.md`, `11`, `16`, `21`, `22`)

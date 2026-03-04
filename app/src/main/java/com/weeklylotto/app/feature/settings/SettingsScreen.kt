@@ -341,7 +341,18 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                 }
 
                 MotionButton(
-                    onClick = viewModel::exportTicketHistoryCsvForAi,
+                    onClick = {
+                        analyticsLogger.log(
+                            event = AnalyticsEvent.INTERACTION_CTA_PRESS,
+                            params =
+                                mapOf(
+                                    AnalyticsParamKey.SCREEN to "settings",
+                                    AnalyticsParamKey.COMPONENT to "ticket_history_csv_share",
+                                    AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
+                                ),
+                        )
+                        viewModel.exportTicketHistoryCsvForAi()
+                    },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text("주차별 구매/당첨 CSV 공유")

@@ -6,6 +6,7 @@ import com.weeklylotto.app.domain.model.GameMode
 import com.weeklylotto.app.domain.model.GameSlot
 import com.weeklylotto.app.domain.model.LottoGame
 import com.weeklylotto.app.domain.model.LottoNumber
+import com.weeklylotto.app.domain.model.PrizeAmountPolicy
 import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
@@ -16,6 +17,7 @@ import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsLogger
 import com.weeklylotto.app.domain.service.AnalyticsParamKey
 import com.weeklylotto.app.domain.service.NoOpAnalyticsLogger
+import com.weeklylotto.app.domain.service.ResultEvaluator
 import com.weeklylotto.app.domain.service.TicketBackupIntegritySummary
 import com.weeklylotto.app.domain.service.TicketBackupService
 import com.weeklylotto.app.domain.service.TicketBackupSummary
@@ -38,10 +40,12 @@ import java.nio.charset.StandardCharsets
 import java.time.Instant
 import java.time.LocalDate
 
+@Suppress("LongParameterList")
 class LocalTicketBackupService(
     private val ticketRepository: TicketRepository,
     private val backupFile: File,
     private val drawRepository: DrawRepository? = null,
+    private val resultEvaluator: ResultEvaluator? = null,
     private val aiHistoryCsvFile: File = File(backupFile.parentFile ?: File("."), AI_HISTORY_CSV_FILE_NAME),
     private val json: Json = Json { ignoreUnknownKeys = true },
     private val analyticsLogger: AnalyticsLogger = NoOpAnalyticsLogger,
@@ -277,6 +281,7 @@ class LocalTicketBackupService(
         tickets.flatMap { ticket ->
             val drawResult = drawResultsByRound[ticket.round.number]
             ticket.games.map { game ->
+                val evaluation = drawResult?.let { draw -> resultEvaluator?.evaluate(game, draw) }
                 listOf(
                     ticket.round.number.toString(),
                     ticket.round.drawDate.toString(),
@@ -291,6 +296,10 @@ class LocalTicketBackupService(
                         .orEmpty(),
                     drawResult?.bonus?.value?.toString().orEmpty(),
                     if (drawResult == null) "N" else "Y",
+                    evaluation?.matchedMainCount?.toString().orEmpty(),
+                    evaluation?.bonusMatched?.toString().orEmpty(),
+                    evaluation?.rank?.name.orEmpty(),
+                    evaluation?.let { PrizeAmountPolicy.amountFor(it.rank).toString() }.orEmpty(),
                 )
             }
         }
@@ -321,6 +330,10 @@ private val TICKET_HISTORY_CSV_HEADERS =
         "draw_main_numbers",
         "draw_bonus_number",
         "draw_matched",
+        "matched_main_count",
+        "bonus_matched",
+        "draw_rank",
+        "expected_prize_amount",
     )
 
 private fun JsonObject.requiredString(key: String): String =
