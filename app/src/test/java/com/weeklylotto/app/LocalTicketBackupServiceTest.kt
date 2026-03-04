@@ -219,8 +219,24 @@ class LocalTicketBackupServiceTest {
         runTest {
             val tickets =
                 listOf(
-                    backupTicket(id = 10L, round = 1201, numbers = listOf(1, 2, 3, 4, 5, 6)),
-                    backupTicket(id = 11L, round = 1200, numbers = listOf(7, 8, 9, 10, 11, 12)),
+                    backupTicket(
+                        id = 10L,
+                        round = 1201,
+                        numbers = listOf(1, 2, 3, 4, 5, 6),
+                        source = TicketSource.MANUAL,
+                    ),
+                    backupTicket(
+                        id = 11L,
+                        round = 1200,
+                        numbers = listOf(7, 8, 9, 10, 11, 12),
+                        source = TicketSource.GENERATED,
+                    ),
+                    backupTicket(
+                        id = 12L,
+                        round = 1201,
+                        numbers = listOf(20, 21, 22, 23, 24, 25),
+                        source = TicketSource.QR_SCAN,
+                    ),
                 )
             val repository = BackupFakeTicketRepository(tickets)
             val backupFile =
@@ -250,14 +266,17 @@ class LocalTicketBackupServiceTest {
 
             val summary = service.exportTicketHistoryCsvForAi().getOrThrow()
 
-            assertThat(summary.ticketCount).isEqualTo(2)
-            assertThat(summary.gameCount).isEqualTo(2)
+            assertThat(summary.ticketCount).isEqualTo(3)
+            assertThat(summary.gameCount).isEqualTo(3)
             assertThat(summary.roundCount).isEqualTo(2)
             assertThat(summary.firstRoundNumber).isEqualTo(1200)
             assertThat(summary.lastRoundNumber).isEqualTo(1201)
             assertThat(summary.matchedDrawCount).isEqualTo(1)
             assertThat(summary.missingDrawCount).isEqualTo(1)
             assertThat(summary.missingRoundNumbers).containsExactly(1200)
+            assertThat(summary.generatedGameCount).isEqualTo(1)
+            assertThat(summary.manualGameCount).isEqualTo(1)
+            assertThat(summary.qrGameCount).isEqualTo(1)
             assertThat(summary.winningGameCount).isEqualTo(1)
             assertThat(summary.totalExpectedPrizeAmount).isEqualTo(5000L)
             val csvText = java.io.File(summary.filePath).readText()
@@ -269,8 +288,9 @@ class LocalTicketBackupServiceTest {
             assertThat(csvText).contains("1201,2026-03-07,10,MANUAL,PENDING")
             assertThat(csvText)
                 .contains("1-2-3-4-5-6,1-3-5-7-9-11,13,Y,3,false,FIFTH,5000")
-            assertThat(csvText).contains("1200,2026-03-07,11,MANUAL,PENDING")
+            assertThat(csvText).contains("1200,2026-03-07,11,GENERATED,PENDING")
             assertThat(csvText).contains("7-8-9-10-11-12,,,N,,,,")
+            assertThat(csvText).contains("1201,2026-03-07,12,QR_SCAN,PENDING")
         }
 }
 
@@ -278,11 +298,12 @@ private fun backupTicket(
     id: Long,
     round: Int,
     numbers: List<Int>,
+    source: TicketSource = TicketSource.MANUAL,
 ): TicketBundle =
     TicketBundle(
         id = id,
         round = Round(number = round, drawDate = LocalDate.of(2026, 3, 7)),
-        source = TicketSource.MANUAL,
+        source = source,
         status = TicketStatus.PENDING,
         createdAt = Instant.parse("2026-02-27T00:00:00Z"),
         games =

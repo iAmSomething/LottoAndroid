@@ -635,3 +635,8 @@
 - [x] BY-001 `TicketHistoryCsvSummary`에 누락 회차 번호 목록 필드 추가(`missingRoundNumbers`) 및 `LocalTicketBackupService` 계산 연동
 - [x] BY-002 `SettingsViewModel` AI 프롬프트에 누락 회차 번호 문구 추가(`- 누락 회차 번호: ...`) + 회귀 테스트 보강(`SettingsViewModelTest`)
 - [x] BY-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_missing_round_numbers_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## BZ. F02 v11 AI 프롬프트 출처별 게임 수 요약 강화(2026-03-04 Cycle-75)
+- [x] BZ-001 `TicketHistoryCsvSummary`에 출처별 게임 수 필드 추가(`generatedGameCount`, `manualGameCount`, `qrGameCount`) 및 `LocalTicketBackupService` 계산 연동
+- [x] BZ-002 `SettingsViewModel` AI 프롬프트에 출처별 게임 수 문구 추가(`- 출처별 게임 수: 자동 x, 수동 y, QR z`) + 회귀 테스트 보강(`SettingsViewModelTest`)
+- [x] BZ-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_source_breakdown_prompt_local_2026-03-04.md`, `11`, `16`, `21`, `22`)

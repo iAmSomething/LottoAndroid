@@ -194,6 +194,18 @@ class LocalTicketBackupService(
                     .filterValues { drawResult -> drawResult == null }
                     .keys
                     .sorted()
+            val generatedGameCount =
+                tickets
+                    .filter { ticket -> ticket.source == TicketSource.GENERATED }
+                    .sumOf { ticket -> ticket.games.size }
+            val manualGameCount =
+                tickets
+                    .filter { ticket -> ticket.source == TicketSource.MANUAL }
+                    .sumOf { ticket -> ticket.games.size }
+            val qrGameCount =
+                tickets
+                    .filter { ticket -> ticket.source == TicketSource.QR_SCAN }
+                    .sumOf { ticket -> ticket.games.size }
             TicketHistoryCsvSummary(
                 ticketCount = tickets.size,
                 gameCount = tickets.sumOf { it.games.size },
@@ -203,6 +215,9 @@ class LocalTicketBackupService(
                 matchedDrawCount = matchedDrawCount,
                 missingDrawCount = missingRoundNumbers.size,
                 missingRoundNumbers = missingRoundNumbers,
+                generatedGameCount = generatedGameCount,
+                manualGameCount = manualGameCount,
+                qrGameCount = qrGameCount,
                 winningGameCount = csvBuildResult.winningGameCount,
                 totalExpectedPrizeAmount = csvBuildResult.totalExpectedPrizeAmount,
                 fileName = aiHistoryCsvFile.name,

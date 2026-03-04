@@ -216,6 +216,9 @@ class SettingsViewModelTest {
                                 matchedDrawCount = 2,
                                 missingDrawCount = 0,
                                 missingRoundNumbers = emptyList(),
+                                generatedGameCount = 5,
+                                manualGameCount = 4,
+                                qrGameCount = 3,
                                 winningGameCount = 1,
                                 totalExpectedPrizeAmount = 5000L,
                                 fileName = "tickets_history_with_draw_latest.csv",
@@ -243,6 +246,8 @@ class SettingsViewModelTest {
                 .contains("로또 주차별 구매/당첨 CSV 분석 요청")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 회차 범위: 1200~1201회")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 출처별 게임 수: 자동 5, 수동 4, QR 3")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 데이터 신뢰도: 100% (당첨번호 매칭 회차 기준)")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
@@ -292,6 +297,9 @@ class SettingsViewModelTest {
                                 matchedDrawCount = 2,
                                 missingDrawCount = 1,
                                 missingRoundNumbers = listOf(1202),
+                                generatedGameCount = 2,
+                                manualGameCount = 5,
+                                qrGameCount = 1,
                                 winningGameCount = 0,
                                 totalExpectedPrizeAmount = 0L,
                                 fileName = "tickets_history_with_draw_latest.csv",
@@ -397,6 +405,9 @@ private class FakeTicketBackupService(
                 matchedDrawCount = 0,
                 missingDrawCount = 0,
                 missingRoundNumbers = emptyList(),
+                generatedGameCount = 0,
+                manualGameCount = 0,
+                qrGameCount = 0,
                 winningGameCount = 0,
                 totalExpectedPrizeAmount = 0L,
                 fileName = "tickets_history_with_draw_latest.csv",
