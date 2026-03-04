@@ -650,3 +650,8 @@
 - [x] CB-001 `SettingsViewModel` 보강: CSV 필터 결과 `ticketCount=0`일 때 공유 요청 생성을 차단하고 안내 메시지 노출
 - [x] CB-002 회차 필터 무데이터 회귀 테스트 추가(`SettingsViewModelTest`, `LocalTicketBackupServiceTest`)
 - [x] CB-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_empty_range_guard_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## CC. F02 v14 AI 프롬프트 요청 필터 문구 강화(2026-03-04 Cycle-78)
+- [x] CC-001 `TicketHistoryCsvSummary` 확장: 요청 회차 필터 필드(`requestedStartRound`, `requestedEndRound`) 추가 및 `LocalTicketBackupService` 연동
+- [x] CC-002 `SettingsViewModel` 반영: CSV 완료 메시지/AI 프롬프트에 `요청 필터` 문구 추가(`전체`, `n회 이상`, `n회 이하`, `n~m회`)
+- [x] CC-003 회귀 테스트/증적/문서 동기화(`SettingsViewModelTest`, `LocalTicketBackupServiceTest`, `docs/assets/distribution/ticket_history_csv_requested_filter_context_local_2026-03-04.md`, `11`, `16`, `21`, `22`)

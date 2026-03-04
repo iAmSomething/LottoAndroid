@@ -211,6 +211,8 @@ class SettingsViewModelTest {
                                 ticketCount = 3,
                                 gameCount = 12,
                                 roundCount = 2,
+                                requestedStartRound = null,
+                                requestedEndRound = null,
                                 firstRoundNumber = 1200,
                                 lastRoundNumber = 1201,
                                 matchedDrawCount = 2,
@@ -239,11 +241,13 @@ class SettingsViewModelTest {
             advanceUntilIdle()
 
             assertThat(viewModel.uiState.value.message)
-                .isEqualTo("CSV 생성 완료 (2회차, 회차 범위 1200~1201회, 3건, 12게임, 당첨번호 포함 2회차, 당첨게임 1개, 예상당첨금 5000원)")
+                .isEqualTo("CSV 생성 완료 (2회차, 요청 필터 전체, 회차 범위 1200~1201회, 3건, 12게임, 당첨번호 포함 2회차, 당첨게임 1개, 예상당첨금 5000원)")
             assertThat(viewModel.uiState.value.csvShareRequest?.filePath)
                 .isEqualTo("/tmp/tickets_history_with_draw_latest.csv")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("로또 주차별 구매/당첨 CSV 분석 요청")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 요청 필터: 전체")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 회차 범위: 1200~1201회")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
@@ -311,6 +315,8 @@ class SettingsViewModelTest {
                                 ticketCount = 0,
                                 gameCount = 0,
                                 roundCount = 0,
+                                requestedStartRound = 1300,
+                                requestedEndRound = 1301,
                                 firstRoundNumber = null,
                                 lastRoundNumber = null,
                                 matchedDrawCount = 0,
@@ -377,6 +383,8 @@ class SettingsViewModelTest {
                                 ticketCount = 4,
                                 gameCount = 8,
                                 roundCount = 3,
+                                requestedStartRound = 1201,
+                                requestedEndRound = 1203,
                                 firstRoundNumber = 1201,
                                 lastRoundNumber = 1203,
                                 matchedDrawCount = 2,
@@ -408,6 +416,8 @@ class SettingsViewModelTest {
                 .contains("- 경고: 당첨번호가 없는 회차 1개 포함")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 누락 회차 번호: 1202")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 요청 필터: 1201~1203회")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 회차 범위: 1201~1203회")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
@@ -485,6 +495,8 @@ private class FakeTicketBackupService(
                 ticketCount = 0,
                 gameCount = 0,
                 roundCount = 0,
+                requestedStartRound = null,
+                requestedEndRound = null,
                 firstRoundNumber = null,
                 lastRoundNumber = null,
                 matchedDrawCount = 0,
