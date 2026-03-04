@@ -640,3 +640,8 @@
 - [x] BZ-001 `TicketHistoryCsvSummary`에 출처별 게임 수 필드 추가(`generatedGameCount`, `manualGameCount`, `qrGameCount`) 및 `LocalTicketBackupService` 계산 연동
 - [x] BZ-002 `SettingsViewModel` AI 프롬프트에 출처별 게임 수 문구 추가(`- 출처별 게임 수: 자동 x, 수동 y, QR z`) + 회귀 테스트 보강(`SettingsViewModelTest`)
 - [x] BZ-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_source_breakdown_prompt_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## CA. F02 v12 CSV 회차 범위 필터 공유(2026-03-04 Cycle-76)
+- [x] CA-001 `TicketBackupService`/`LocalTicketBackupService` 확장: CSV 내보내기 API에 `startRound`/`endRound` 필터 파라미터 추가 및 필터 집계 연동
+- [x] CA-002 `SettingsScreen`/`SettingsViewModel` 반영: 시작/끝 회차 입력 UI + 숫자/범위 유효성 검증 + 필터 기반 CSV 공유 호출
+- [x] CA-003 회귀 테스트/증적/문서 동기화(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `docs/assets/distribution/ticket_history_csv_round_range_filter_local_2026-03-04.md`, `11`, `16`, `21`, `22`)

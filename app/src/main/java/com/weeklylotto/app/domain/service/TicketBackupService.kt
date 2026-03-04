@@ -41,7 +41,10 @@ interface TicketBackupService {
 
     suspend fun verifyLatestBackupIntegrity(): Result<TicketBackupIntegritySummary>
 
-    suspend fun exportTicketHistoryCsvForAi(): Result<TicketHistoryCsvSummary>
+    suspend fun exportTicketHistoryCsvForAi(
+        startRound: Int? = null,
+        endRound: Int? = null,
+    ): Result<TicketHistoryCsvSummary>
 }
 
 object NoOpTicketBackupService : TicketBackupService {
@@ -53,5 +56,8 @@ object NoOpTicketBackupService : TicketBackupService {
 
     override suspend fun verifyLatestBackupIntegrity(): Result<TicketBackupIntegritySummary> = Result.failure(error)
 
-    override suspend fun exportTicketHistoryCsvForAi(): Result<TicketHistoryCsvSummary> = Result.failure(error)
+    override suspend fun exportTicketHistoryCsvForAi(
+        startRound: Int?,
+        endRound: Int?,
+    ): Result<TicketHistoryCsvSummary> = Result.failure(error)
 }

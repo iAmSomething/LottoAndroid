@@ -147,10 +147,25 @@ class SettingsViewModel(
         }
     }
 
-    fun exportTicketHistoryCsvForAi() {
+    fun exportTicketHistoryCsvForAi(
+        startRound: Int? = null,
+        endRound: Int? = null,
+    ) {
+        if (startRound != null && endRound != null && startRound > endRound) {
+            _uiState.update {
+                it.copy(
+                    message = "CSV 회차 범위가 올바르지 않습니다.",
+                    csvShareRequest = null,
+                )
+            }
+            return
+        }
         viewModelScope.launch {
             ticketBackupService
-                .exportTicketHistoryCsvForAi()
+                .exportTicketHistoryCsvForAi(
+                    startRound = startRound,
+                    endRound = endRound,
+                )
                 .onSuccess { summary ->
                     val drawCoverageMessage =
                         if (summary.missingDrawCount == 0) {

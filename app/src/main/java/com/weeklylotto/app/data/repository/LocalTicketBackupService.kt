@@ -166,13 +166,23 @@ class LocalTicketBackupService(
             )
         }
 
-    override suspend fun exportTicketHistoryCsvForAi(): Result<TicketHistoryCsvSummary> =
+    override suspend fun exportTicketHistoryCsvForAi(
+        startRound: Int?,
+        endRound: Int?,
+    ): Result<TicketHistoryCsvSummary> =
         runCatching {
-            val tickets =
+            val allTickets =
                 ticketRepository
                     .observeAllTickets()
                     .first()
                     .sortedWith(compareBy<TicketBundle> { it.round.number }.thenBy { it.createdAt })
+            val tickets =
+                allTickets.filter { ticket ->
+                    val roundNumber = ticket.round.number
+                    val matchStart = startRound == null || roundNumber >= startRound
+                    val matchEnd = endRound == null || roundNumber <= endRound
+                    matchStart && matchEnd
+                }
             val rounds =
                 tickets
                     .map { it.round }
