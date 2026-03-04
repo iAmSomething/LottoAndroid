@@ -18,6 +18,9 @@
   - `BU-001` 완료: `CsvShareRequest`에 동적 공유 텍스트(`shareText`) 필드 추가
   - `BU-002` 완료: Settings CSV 생성 후 AI 분석용 기본 프롬프트 텍스트 자동 생성(요약 지표 + 분석 요청)
   - `BU-003` 완료: Settings CSV 공유 인텐트에 동적 프롬프트 텍스트 반영 + 회귀 테스트 보강
+  - `BV-001` 완료: AI 프롬프트에 누락 회차 경고 문구 추가(`missingDrawCount > 0`)
+  - `BV-002` 완료: 누락 회차 케이스 회귀 테스트 추가(`SettingsViewModelTest`)
+  - `BV-003` 완료: 누락 회차 경고 반영 증적/문서 동기화
   - 앱 매니페스트/리소스 갱신: `FileProvider` 등록 및 `res/xml/file_provider_paths.xml` 추가
   - 회귀 테스트/품질 게이트 통과:
     - `./gradlew :app:testDebugUnitTest --tests "com.weeklylotto.app.LocalTicketBackupServiceTest" --tests "com.weeklylotto.app.SettingsViewModelTest"` PASS
@@ -26,7 +29,8 @@
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_evaluation_columns_local_2026-03-04.md`
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_summary_metrics_local_2026-03-04.md`
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_ai_prompt_share_text_local_2026-03-04.md`
-  - 문서 동기화: `10`(`BR`, `BS`, `BT`, `BU` 섹션), `16`(`F02` v5), `21`(`IDEA-F02` v5), `22`(`F02` 상태 갱신)
+  - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_missing_draw_warning_local_2026-03-04.md`
+  - 문서 동기화: `10`(`BR`, `BS`, `BT`, `BU`, `BV` 섹션), `16`(`F02` v6), `21`(`IDEA-F02` v6), `22`(`F02` 상태 갱신)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
   - `BO-005`, `BP-002`는 실기기 연결 전까지 blocked 유지

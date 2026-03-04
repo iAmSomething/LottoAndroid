@@ -264,6 +264,42 @@ class SettingsViewModelTest {
             assertThat(viewModel.uiState.value.message).isEqualTo("CSV 생성에 실패했습니다.")
             assertThat(viewModel.uiState.value.csvShareRequest).isNull()
         }
+
+    @Test
+    fun csv내보내기_당첨번호누락회차가_있으면_프롬프트에_경고를_포함한다() =
+        runTest {
+            val backupService =
+                FakeTicketBackupService(
+                    csvExportResult =
+                        Result.success(
+                            TicketHistoryCsvSummary(
+                                ticketCount = 4,
+                                gameCount = 8,
+                                roundCount = 3,
+                                matchedDrawCount = 2,
+                                missingDrawCount = 1,
+                                winningGameCount = 0,
+                                totalExpectedPrizeAmount = 0L,
+                                fileName = "tickets_history_with_draw_latest.csv",
+                                filePath = "/tmp/tickets_history_with_draw_latest.csv",
+                            ),
+                        ),
+                )
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.exportTicketHistoryCsvForAi()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 경고: 당첨번호가 없는 회차 1개 포함")
+        }
 }
 
 private class FakeReminderConfigStore(
