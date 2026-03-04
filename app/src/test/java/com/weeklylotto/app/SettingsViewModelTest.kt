@@ -239,6 +239,8 @@ class SettingsViewModelTest {
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("로또 주차별 구매/당첨 CSV 분석 요청")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 데이터 신뢰도: 100% (당첨번호 매칭 회차 기준)")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 당첨 게임 수: 1")
         }
 
@@ -299,6 +301,10 @@ class SettingsViewModelTest {
 
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 경고: 당첨번호가 없는 회차 1개 포함")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 데이터 신뢰도: 66% (당첨번호 매칭 회차 기준)")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 주의: 누락 회차가 있어 결과 해석 시 보수적으로 판단해줘.")
         }
 }
 
