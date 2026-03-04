@@ -2,6 +2,9 @@ package com.weeklylotto.app
 
 import com.google.common.truth.Truth.assertThat
 import com.weeklylotto.app.data.repository.LocalTicketBackupService
+import com.weeklylotto.app.domain.error.AppError
+import com.weeklylotto.app.domain.error.AppResult
+import com.weeklylotto.app.domain.model.DrawResult
 import com.weeklylotto.app.domain.model.GameMode
 import com.weeklylotto.app.domain.model.GameSlot
 import com.weeklylotto.app.domain.model.LottoGame
@@ -10,6 +13,7 @@ import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
+import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsLogger
@@ -208,6 +212,54 @@ class LocalTicketBackupServiceTest {
             assertThat(event.second[AnalyticsParamKey.STATUS]).isEqualTo("warn")
             assertThat(event.second[AnalyticsParamKey.ISSUE_COUNT]).isEqualTo("3")
         }
+
+    @Test
+    fun csv내보내기시_주차별구매와_당첨번호를_함께_생성한다() =
+        runTest {
+            val tickets =
+                listOf(
+                    backupTicket(id = 10L, round = 1201, numbers = listOf(1, 2, 3, 4, 5, 6)),
+                    backupTicket(id = 11L, round = 1200, numbers = listOf(7, 8, 9, 10, 11, 12)),
+                )
+            val repository = BackupFakeTicketRepository(tickets)
+            val backupFile =
+                Files.createTempDirectory(
+                    "ticket-history-csv",
+                ).resolve("tickets_backup_latest.json").toFile()
+            val drawRepository =
+                BackupCsvFakeDrawRepository(
+                    rounds =
+                        mapOf(
+                            1201 to
+                                DrawResult(
+                                    round = Round(1201, LocalDate.of(2026, 3, 7)),
+                                    mainNumbers = listOf(1, 3, 5, 7, 9, 11).map(::LottoNumber),
+                                    bonus = LottoNumber(13),
+                                    drawDate = LocalDate.of(2026, 3, 7),
+                                ),
+                        ),
+                )
+            val service =
+                LocalTicketBackupService(
+                    ticketRepository = repository,
+                    backupFile = backupFile,
+                    drawRepository = drawRepository,
+                )
+
+            val summary = service.exportTicketHistoryCsvForAi().getOrThrow()
+
+            assertThat(summary.ticketCount).isEqualTo(2)
+            assertThat(summary.gameCount).isEqualTo(2)
+            assertThat(summary.roundCount).isEqualTo(2)
+            assertThat(summary.matchedDrawCount).isEqualTo(1)
+            assertThat(summary.missingDrawCount).isEqualTo(1)
+            val csvText = java.io.File(summary.filePath).readText()
+            assertThat(csvText).contains("round_number,round_draw_date,ticket_id,ticket_source")
+            assertThat(csvText).contains("1201,2026-03-07,10,MANUAL,PENDING")
+            assertThat(csvText).contains("1-2-3-4-5-6,1-3-5-7-9-11,13,Y")
+            assertThat(csvText).contains("1200,2026-03-07,11,MANUAL,PENDING")
+            assertThat(csvText).contains("7-8-9-10-11-12,,,N")
+        }
 }
 
 private fun backupTicket(
@@ -273,4 +325,20 @@ private class RecordingAnalyticsLogger : AnalyticsLogger {
     ) {
         events += event to params
     }
+}
+
+private class BackupCsvFakeDrawRepository(
+    private val rounds: Map<Int, DrawResult>,
+) : DrawRepository {
+    override suspend fun fetchLatest(): AppResult<DrawResult> =
+        rounds
+            .values
+            .maxByOrNull { drawResult -> drawResult.round.number }
+            ?.let { AppResult.Success(it) }
+            ?: AppResult.Failure(AppError.StorageError("draw not found"))
+
+    override suspend fun fetchByRound(round: Round): AppResult<DrawResult> =
+        rounds[round.number]
+            ?.let { AppResult.Success(it) }
+            ?: AppResult.Failure(AppError.StorageError("draw not found for round=${round.number}"))
 }

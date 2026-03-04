@@ -1,5 +1,7 @@
 package com.weeklylotto.app.data.repository
 
+import com.weeklylotto.app.domain.error.AppResult
+import com.weeklylotto.app.domain.model.DrawResult
 import com.weeklylotto.app.domain.model.GameMode
 import com.weeklylotto.app.domain.model.GameSlot
 import com.weeklylotto.app.domain.model.LottoGame
@@ -8,6 +10,7 @@ import com.weeklylotto.app.domain.model.Round
 import com.weeklylotto.app.domain.model.TicketBundle
 import com.weeklylotto.app.domain.model.TicketSource
 import com.weeklylotto.app.domain.model.TicketStatus
+import com.weeklylotto.app.domain.repository.DrawRepository
 import com.weeklylotto.app.domain.repository.TicketRepository
 import com.weeklylotto.app.domain.service.AnalyticsEvent
 import com.weeklylotto.app.domain.service.AnalyticsLogger
@@ -16,6 +19,7 @@ import com.weeklylotto.app.domain.service.NoOpAnalyticsLogger
 import com.weeklylotto.app.domain.service.TicketBackupIntegritySummary
 import com.weeklylotto.app.domain.service.TicketBackupService
 import com.weeklylotto.app.domain.service.TicketBackupSummary
+import com.weeklylotto.app.domain.service.TicketHistoryCsvSummary
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -37,6 +41,8 @@ import java.time.LocalDate
 class LocalTicketBackupService(
     private val ticketRepository: TicketRepository,
     private val backupFile: File,
+    private val drawRepository: DrawRepository? = null,
+    private val aiHistoryCsvFile: File = File(backupFile.parentFile ?: File("."), AI_HISTORY_CSV_FILE_NAME),
     private val json: Json = Json { ignoreUnknownKeys = true },
     private val analyticsLogger: AnalyticsLogger = NoOpAnalyticsLogger,
 ) : TicketBackupService {
@@ -156,6 +162,39 @@ class LocalTicketBackupService(
             )
         }
 
+    override suspend fun exportTicketHistoryCsvForAi(): Result<TicketHistoryCsvSummary> =
+        runCatching {
+            val tickets =
+                ticketRepository
+                    .observeAllTickets()
+                    .first()
+                    .sortedWith(compareBy<TicketBundle> { it.round.number }.thenBy { it.createdAt })
+            val rounds =
+                tickets
+                    .map { it.round }
+                    .distinctBy { it.number }
+            val drawResultsByRound =
+                rounds.associate { round ->
+                    round.number to fetchDrawResultOrNull(round)
+                }
+            val rows = buildTicketHistoryCsvRows(tickets, drawResultsByRound)
+            aiHistoryCsvFile.parentFile?.mkdirs()
+            aiHistoryCsvFile.writeText(
+                buildCsvContent(rows),
+                StandardCharsets.UTF_8,
+            )
+            val matchedDrawCount = drawResultsByRound.count { (_, drawResult) -> drawResult != null }
+            TicketHistoryCsvSummary(
+                ticketCount = tickets.size,
+                gameCount = tickets.sumOf { it.games.size },
+                roundCount = rounds.size,
+                matchedDrawCount = matchedDrawCount,
+                missingDrawCount = rounds.size - matchedDrawCount,
+                fileName = aiHistoryCsvFile.name,
+                filePath = aiHistoryCsvFile.absolutePath,
+            )
+        }
+
     private fun TicketBundle.toBackupJson(): JsonObject =
         buildJsonObject {
             put("roundNumber", JsonPrimitive(round.number))
@@ -224,9 +263,65 @@ class LocalTicketBackupService(
             games = games,
         )
     }
+
+    private suspend fun fetchDrawResultOrNull(round: Round): DrawResult? =
+        when (val drawResult = drawRepository?.fetchByRound(round)) {
+            is AppResult.Success -> drawResult.value
+            else -> null
+        }
+
+    private fun buildTicketHistoryCsvRows(
+        tickets: List<TicketBundle>,
+        drawResultsByRound: Map<Int, DrawResult?>,
+    ): List<List<String>> =
+        tickets.flatMap { ticket ->
+            val drawResult = drawResultsByRound[ticket.round.number]
+            ticket.games.map { game ->
+                listOf(
+                    ticket.round.number.toString(),
+                    ticket.round.drawDate.toString(),
+                    ticket.id.toString(),
+                    ticket.source.name,
+                    ticket.status.name,
+                    ticket.createdAt.toString(),
+                    game.slot.name,
+                    game.mode.name,
+                    game.numbers.map { it.value }.sorted().joinToString(separator = "-"),
+                    drawResult?.mainNumbers?.map { it.value }?.sorted()?.joinToString(separator = "-")
+                        .orEmpty(),
+                    drawResult?.bonus?.value?.toString().orEmpty(),
+                    if (drawResult == null) "N" else "Y",
+                )
+            }
+        }
+
+    private fun buildCsvContent(rows: List<List<String>>): String {
+        val builder = StringBuilder()
+        builder.appendLine(TICKET_HISTORY_CSV_HEADERS.joinToString(separator = ","))
+        rows.forEach { row ->
+            builder.appendLine(row.joinToString(separator = ",") { value -> value.toCsvCell() })
+        }
+        return builder.toString()
+    }
 }
 
 private const val BACKUP_SCHEMA_VERSION = 1
+private const val AI_HISTORY_CSV_FILE_NAME = "tickets_history_with_draw_latest.csv"
+private val TICKET_HISTORY_CSV_HEADERS =
+    listOf(
+        "round_number",
+        "round_draw_date",
+        "ticket_id",
+        "ticket_source",
+        "ticket_status",
+        "ticket_created_at",
+        "game_slot",
+        "game_mode",
+        "game_numbers",
+        "draw_main_numbers",
+        "draw_bonus_number",
+        "draw_matched",
+    )
 
 private fun JsonObject.requiredString(key: String): String =
     this[key]?.jsonPrimitive?.contentOrNull ?: error("백업 데이터에 `$key` 값이 없습니다.")
@@ -239,6 +334,15 @@ private fun JsonObject.requiredInt(key: String): Int =
 private fun JsonObject.requiredArray(key: String): JsonArray = this[key]?.jsonArray ?: error("백업 데이터에 `$key` 배열이 없습니다.")
 
 private fun JsonElement.requiredIntValue(): Int = this.jsonPrimitive.intOrNull ?: error("백업 데이터 숫자 값이 올바르지 않습니다.")
+
+private fun String.toCsvCell(): String {
+    val escaped = replace("\"", "\"\"")
+    return if (contains(',') || contains('"') || contains('\n')) {
+        "\"$escaped\""
+    } else {
+        escaped
+    }
+}
 
 private data class IntegrityTicket(
     val signature: String,
