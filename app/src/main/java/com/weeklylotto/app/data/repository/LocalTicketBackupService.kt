@@ -220,6 +220,8 @@ class LocalTicketBackupService(
                 ticketCount = tickets.size,
                 gameCount = tickets.sumOf { it.games.size },
                 roundCount = rounds.size,
+                requestedStartRound = startRound,
+                requestedEndRound = endRound,
                 firstRoundNumber = sortedRoundNumbers.firstOrNull(),
                 lastRoundNumber = sortedRoundNumbers.lastOrNull(),
                 matchedDrawCount = matchedDrawCount,
