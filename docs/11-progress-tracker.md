@@ -4,6 +4,26 @@
 - 날짜 형식: `YYYY-MM-DD`
 - 필수 항목: 완료 작업, 미완료 작업, 블로커, 다음 액션
 
+## 2026-03-04
+- 완료 작업
+  - `BR-001` 완료: `TicketBackupService`에 `exportTicketHistoryCsvForAi` API/요약 모델(`TicketHistoryCsvSummary`) 추가
+  - `BR-002` 완료: `LocalTicketBackupService`에 주차별 구매 게임 + 당첨번호 매핑 CSV 생성 로직 추가(`tickets_history_with_draw_latest.csv`)
+  - `BR-003` 완료: Settings 화면에 `주차별 구매/당첨 CSV 공유` 액션 추가(FileProvider + `ACTION_SEND` 공유 인텐트, ChatGPT/Gemini 업로드 경로)
+  - 앱 매니페스트/리소스 갱신: `FileProvider` 등록 및 `res/xml/file_provider_paths.xml` 추가
+  - 회귀 테스트/품질 게이트 통과:
+    - `./gradlew :app:testDebugUnitTest --tests "com.weeklylotto.app.LocalTicketBackupServiceTest" --tests "com.weeklylotto.app.SettingsViewModelTest"` PASS
+    - `./gradlew :app:ktlintCheck :app:detekt` PASS
+  - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_ai_share_local_2026-03-04.md`
+  - 문서 동기화: `10`(`BR` 섹션), `16`(`F02` v2), `21`(`IDEA-F02` v2), `22`(`F02` 상태 갱신)
+- 미완료 작업
+  - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
+  - `BO-005`, `BP-002`는 실기기 연결 전까지 blocked 유지
+- 블로커
+  - 실기기 미보유로 물리 디바이스 성능/워치 증적은 수집 불가
+- 다음 액션
+  - 실제 단말에서 Settings `주차별 구매/당첨 CSV 공유`를 실행해 ChatGPT/Gemini 앱 대상 공유 동선 스크린샷 1세트 추가
+  - 실기기 연결 즉시 `BO-005`/`BP-002` 체인 재실행
+
 ## 2026-03-03
 - 완료 작업
   - `Release Preflight` 실패 원인(Detekt 10건 + Ktlint 포맷 위반) 수정 및 `main` 반영(PR #37, merge commit `4941468`)

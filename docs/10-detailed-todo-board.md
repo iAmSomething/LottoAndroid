@@ -595,3 +595,8 @@
 ## BQ. BO-005 준비도 주기 점검(2026-03-03 Cycle-66)
 - [x] BQ-001 BO-005 준비도 루틴 점검 스크립트/워크플로우 추가(`run-bo005-readiness-routine-check.sh`, `.github/workflows/bo005-readiness-routine.yml`, 로컬 증적: `bo005_readiness_routine_local_2026-03-03.md`)
 - [x] BQ-002 CI 루틴 실행 증적 1회 확보(`bo005_readiness_routine_ci_22610174888.md`, run `22610174888`)
+
+## BR. F02 v2 주차별 구매/당첨 CSV 공유(2026-03-04 Cycle-67)
+- [x] BR-001 `TicketBackupService` 확장: 주차별 구매 히스토리 + 당첨번호 포함 CSV 내보내기 API 추가(`exportTicketHistoryCsvForAi`)
+- [x] BR-002 `LocalTicketBackupService` 구현: 모든 티켓 회차를 수집하고 회차별 당첨번호를 매핑해 CSV(`tickets_history_with_draw_latest.csv`) 생성
+- [x] BR-003 Settings 화면 액션 추가: `주차별 구매/당첨 CSV 공유` 버튼 + FileProvider 기반 공유 인텐트 연동(ChatGPT/Gemini 업로드 경로), 회귀 테스트/증적/문서 동기화(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `docs/assets/distribution/ticket_history_csv_ai_share_local_2026-03-04.md`, `11`, `16`, `21`, `22`)

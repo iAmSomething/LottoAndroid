@@ -16,12 +16,24 @@ data class TicketBackupIntegritySummary(
     val fileName: String,
 )
 
+data class TicketHistoryCsvSummary(
+    val ticketCount: Int,
+    val gameCount: Int,
+    val roundCount: Int,
+    val matchedDrawCount: Int,
+    val missingDrawCount: Int,
+    val fileName: String,
+    val filePath: String,
+)
+
 interface TicketBackupService {
     suspend fun backupCurrentTickets(): Result<TicketBackupSummary>
 
     suspend fun restoreLatestBackup(): Result<TicketBackupSummary>
 
     suspend fun verifyLatestBackupIntegrity(): Result<TicketBackupIntegritySummary>
+
+    suspend fun exportTicketHistoryCsvForAi(): Result<TicketHistoryCsvSummary>
 }
 
 object NoOpTicketBackupService : TicketBackupService {
@@ -32,4 +44,6 @@ object NoOpTicketBackupService : TicketBackupService {
     override suspend fun restoreLatestBackup(): Result<TicketBackupSummary> = Result.failure(error)
 
     override suspend fun verifyLatestBackupIntegrity(): Result<TicketBackupIntegritySummary> = Result.failure(error)
+
+    override suspend fun exportTicketHistoryCsvForAi(): Result<TicketHistoryCsvSummary> = Result.failure(error)
 }

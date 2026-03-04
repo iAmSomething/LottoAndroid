@@ -1,7 +1,9 @@
 package com.weeklylotto.app.feature.settings
 
 import android.Manifest
+import android.content.ClipData
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
@@ -33,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.weeklylotto.app.di.AppGraph
 import com.weeklylotto.app.domain.service.AnalyticsActionValue
@@ -48,6 +51,7 @@ import com.weeklylotto.app.ui.component.LottoTopAppBar
 import com.weeklylotto.app.ui.component.MotionButton
 import com.weeklylotto.app.ui.navigation.SingleViewModelFactory
 import com.weeklylotto.app.ui.theme.LottoColors
+import java.io.File
 
 @Suppress("CyclomaticComplexMethod")
 @Composable
@@ -132,6 +136,16 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
         uiState.message?.let {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             viewModel.clearMessage()
+        }
+    }
+
+    LaunchedEffect(uiState.csvShareRequest) {
+        uiState.csvShareRequest?.let { request ->
+            val started = shareCsvFile(context = context, filePath = request.filePath)
+            if (!started) {
+                Toast.makeText(context, "CSV 공유를 시작할 수 없습니다.", Toast.LENGTH_SHORT).show()
+            }
+            viewModel.clearCsvShareRequest()
         }
     }
 
@@ -327,6 +341,13 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                 }
 
                 MotionButton(
+                    onClick = viewModel::exportTicketHistoryCsvForAi,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("주차별 구매/당첨 CSV 공유")
+                }
+
+                MotionButton(
                     onClick = {
                         analyticsLogger.log(
                             event = AnalyticsEvent.INTERACTION_CTA_PRESS,
@@ -355,4 +376,32 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
             }
         }
     }
+}
+
+private fun shareCsvFile(
+    context: Context,
+    filePath: String,
+): Boolean {
+    val file = File(filePath)
+    if (!file.exists()) {
+        return false
+    }
+    return runCatching {
+        val uri =
+            FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                file,
+            )
+        val shareIntent =
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/csv"
+                putExtra(Intent.EXTRA_SUBJECT, "로또 주차별 구매/당첨 데이터")
+                putExtra(Intent.EXTRA_TEXT, "첨부된 CSV를 ChatGPT/Gemini 앱에 업로드해 분석할 수 있어요.")
+                putExtra(Intent.EXTRA_STREAM, uri)
+                clipData = ClipData.newUri(context.contentResolver, file.name, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+        context.startActivity(Intent.createChooser(shareIntent, "CSV 공유"))
+    }.isSuccess
 }

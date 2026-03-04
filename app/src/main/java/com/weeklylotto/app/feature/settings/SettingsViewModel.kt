@@ -20,8 +20,15 @@ data class SettingsUiState(
     val config: ReminderConfig = ReminderConfig(),
     val reduceMotionEnabled: Boolean = false,
     val message: String? = null,
+    val csvShareRequest: CsvShareRequest? = null,
 )
 
+data class CsvShareRequest(
+    val filePath: String,
+    val requestId: Long,
+)
+
+@Suppress("TooManyFunctions")
 class SettingsViewModel(
     private val reminderConfigStore: ReminderConfigStore,
     private val reminderScheduler: ReminderScheduler,
@@ -138,7 +145,44 @@ class SettingsViewModel(
         }
     }
 
+    fun exportTicketHistoryCsvForAi() {
+        viewModelScope.launch {
+            ticketBackupService
+                .exportTicketHistoryCsvForAi()
+                .onSuccess { summary ->
+                    val drawCoverageMessage =
+                        if (summary.missingDrawCount == 0) {
+                            "당첨번호 포함 ${summary.matchedDrawCount}회차"
+                        } else {
+                            "당첨번호 누락 ${summary.missingDrawCount}회차"
+                        }
+                    _uiState.update {
+                        it.copy(
+                            message =
+                                "CSV 생성 완료 (${summary.roundCount}회차, ${summary.ticketCount}건, ${summary.gameCount}게임, $drawCoverageMessage)",
+                            csvShareRequest =
+                                CsvShareRequest(
+                                    filePath = summary.filePath,
+                                    requestId = System.currentTimeMillis(),
+                                ),
+                        )
+                    }
+                }.onFailure {
+                    _uiState.update { state ->
+                        state.copy(
+                            message = "CSV 생성에 실패했습니다.",
+                            csvShareRequest = null,
+                        )
+                    }
+                }
+        }
+    }
+
     fun clearMessage() {
         _uiState.update { it.copy(message = null) }
+    }
+
+    fun clearCsvShareRequest() {
+        _uiState.update { it.copy(csvShareRequest = null) }
     }
 }

@@ -8,6 +8,7 @@ import com.weeklylotto.app.domain.service.ReminderScheduler
 import com.weeklylotto.app.domain.service.TicketBackupIntegritySummary
 import com.weeklylotto.app.domain.service.TicketBackupService
 import com.weeklylotto.app.domain.service.TicketBackupSummary
+import com.weeklylotto.app.domain.service.TicketHistoryCsvSummary
 import com.weeklylotto.app.feature.settings.SettingsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -198,6 +199,65 @@ class SettingsViewModelTest {
             assertThat(viewModel.uiState.value.message)
                 .isEqualTo("무결성 점검 완료 (문제 4건: 중복 1, 게임오류 2, 레코드오류 1)")
         }
+
+    @Test
+    fun csv내보내기_성공시_공유경로와_메시지를_노출한다() =
+        runTest {
+            val backupService =
+                FakeTicketBackupService(
+                    csvExportResult =
+                        Result.success(
+                            TicketHistoryCsvSummary(
+                                ticketCount = 3,
+                                gameCount = 12,
+                                roundCount = 2,
+                                matchedDrawCount = 2,
+                                missingDrawCount = 0,
+                                fileName = "tickets_history_with_draw_latest.csv",
+                                filePath = "/tmp/tickets_history_with_draw_latest.csv",
+                            ),
+                        ),
+                )
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.exportTicketHistoryCsvForAi()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.message)
+                .isEqualTo("CSV 생성 완료 (2회차, 3건, 12게임, 당첨번호 포함 2회차)")
+            assertThat(viewModel.uiState.value.csvShareRequest?.filePath)
+                .isEqualTo("/tmp/tickets_history_with_draw_latest.csv")
+        }
+
+    @Test
+    fun csv내보내기_실패시_실패메시지를_노출한다() =
+        runTest {
+            val backupService =
+                FakeTicketBackupService(
+                    csvExportResult = Result.failure(IllegalStateException("csv failed")),
+                )
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.exportTicketHistoryCsvForAi()
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.message).isEqualTo("CSV 생성에 실패했습니다.")
+            assertThat(viewModel.uiState.value.csvShareRequest).isNull()
+        }
 }
 
 private class FakeReminderConfigStore(
@@ -262,10 +322,24 @@ private class FakeTicketBackupService(
                 fileName = "tickets_backup_latest.json",
             ),
         ),
+    private val csvExportResult: Result<TicketHistoryCsvSummary> =
+        Result.success(
+            TicketHistoryCsvSummary(
+                ticketCount = 0,
+                gameCount = 0,
+                roundCount = 0,
+                matchedDrawCount = 0,
+                missingDrawCount = 0,
+                fileName = "tickets_history_with_draw_latest.csv",
+                filePath = "/tmp/tickets_history_with_draw_latest.csv",
+            ),
+        ),
 ) : TicketBackupService {
     override suspend fun backupCurrentTickets(): Result<TicketBackupSummary> = backupResult
 
     override suspend fun restoreLatestBackup(): Result<TicketBackupSummary> = restoreResult
 
     override suspend fun verifyLatestBackupIntegrity(): Result<TicketBackupIntegritySummary> = integrityResult
+
+    override suspend fun exportTicketHistoryCsvForAi(): Result<TicketHistoryCsvSummary> = csvExportResult
 }
