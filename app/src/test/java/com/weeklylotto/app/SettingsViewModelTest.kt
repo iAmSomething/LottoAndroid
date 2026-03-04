@@ -259,6 +259,48 @@ class SettingsViewModelTest {
         }
 
     @Test
+    fun csv내보내기_회차범위를_서비스에_전달한다() =
+        runTest {
+            val backupService = FakeTicketBackupService()
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.exportTicketHistoryCsvForAi(startRound = 1200, endRound = 1201)
+            advanceUntilIdle()
+
+            assertThat(backupService.lastExportStartRound).isEqualTo(1200)
+            assertThat(backupService.lastExportEndRound).isEqualTo(1201)
+            assertThat(backupService.exportCallCount).isEqualTo(1)
+        }
+
+    @Test
+    fun csv내보내기_역전된회차범위면_실패메시지를_노출하고_요청하지않는다() =
+        runTest {
+            val backupService = FakeTicketBackupService()
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.exportTicketHistoryCsvForAi(startRound = 1203, endRound = 1201)
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.message).isEqualTo("CSV 회차 범위가 올바르지 않습니다.")
+            assertThat(viewModel.uiState.value.csvShareRequest).isNull()
+            assertThat(backupService.exportCallCount).isEqualTo(0)
+        }
+
+    @Test
     fun csv내보내기_실패시_실패메시지를_노출한다() =
         runTest {
             val backupService =
@@ -415,11 +457,23 @@ private class FakeTicketBackupService(
             ),
         ),
 ) : TicketBackupService {
+    var lastExportStartRound: Int? = null
+    var lastExportEndRound: Int? = null
+    var exportCallCount: Int = 0
+
     override suspend fun backupCurrentTickets(): Result<TicketBackupSummary> = backupResult
 
     override suspend fun restoreLatestBackup(): Result<TicketBackupSummary> = restoreResult
 
     override suspend fun verifyLatestBackupIntegrity(): Result<TicketBackupIntegritySummary> = integrityResult
 
-    override suspend fun exportTicketHistoryCsvForAi(): Result<TicketHistoryCsvSummary> = csvExportResult
+    override suspend fun exportTicketHistoryCsvForAi(
+        startRound: Int?,
+        endRound: Int?,
+    ): Result<TicketHistoryCsvSummary> {
+        exportCallCount += 1
+        lastExportStartRound = startRound
+        lastExportEndRound = endRound
+        return csvExportResult
+    }
 }

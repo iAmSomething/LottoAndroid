@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -66,6 +69,8 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
     val purchaseRedirectNotice = remember { buildPurchaseRedirectNotice() }
     var showPurchaseNoticeDialog by remember { mutableStateOf(false) }
     var showPurchaseFallbackDialog by remember { mutableStateOf(false) }
+    var csvStartRoundInput by remember { mutableStateOf("") }
+    var csvEndRoundInput by remember { mutableStateOf("") }
     val viewModel =
         viewModel<SettingsViewModel>(
             factory =
@@ -345,8 +350,47 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                     Text("백업 무결성 점검")
                 }
 
+                Text(
+                    "CSV 회차 범위 (비우면 전체)",
+                    color = LottoColors.TextSecondary,
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier.weight(1f),
+                        value = csvStartRoundInput,
+                        onValueChange = { value -> csvStartRoundInput = value.filter { it.isDigit() } },
+                        label = { Text("시작 회차") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier.weight(1f),
+                        value = csvEndRoundInput,
+                        onValueChange = { value -> csvEndRoundInput = value.filter { it.isDigit() } },
+                        label = { Text("끝 회차") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    )
+                }
+
                 MotionButton(
                     onClick = {
+                        val rawStartRound = csvStartRoundInput.trim()
+                        val rawEndRound = csvEndRoundInput.trim()
+                        val startRound = rawStartRound.takeIf { it.isNotEmpty() }?.toIntOrNull()
+                        val endRound = rawEndRound.takeIf { it.isNotEmpty() }?.toIntOrNull()
+                        if (rawStartRound.isNotEmpty() && startRound == null) {
+                            Toast.makeText(context, "시작 회차는 숫자로 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                            return@MotionButton
+                        }
+                        if (rawEndRound.isNotEmpty() && endRound == null) {
+                            Toast.makeText(context, "끝 회차는 숫자로 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                            return@MotionButton
+                        }
                         analyticsLogger.log(
                             event = AnalyticsEvent.INTERACTION_CTA_PRESS,
                             params =
@@ -356,7 +400,10 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
                                     AnalyticsParamKey.ACTION to AnalyticsActionValue.CLICK,
                                 ),
                         )
-                        viewModel.exportTicketHistoryCsvForAi()
+                        viewModel.exportTicketHistoryCsvForAi(
+                            startRound = startRound,
+                            endRound = endRound,
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(),
                 ) {

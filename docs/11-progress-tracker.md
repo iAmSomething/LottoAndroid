@@ -33,6 +33,9 @@
   - `BZ-001` 완료: `TicketHistoryCsvSummary`에 출처별 게임 수 필드(`generatedGameCount`, `manualGameCount`, `qrGameCount`) 추가 + CSV 생성 요약 연동
   - `BZ-002` 완료: AI 프롬프트에 출처별 게임 수 문구 추가(`- 출처별 게임 수: 자동 x, 수동 y, QR z`) + 회귀 테스트 보강(`SettingsViewModelTest`)
   - `BZ-003` 완료: 출처별 게임 수 문구 반영 증적/문서 동기화
+  - `CA-001` 완료: CSV 내보내기 API에 회차 범위 필터 파라미터(`startRound`, `endRound`) 추가 + `LocalTicketBackupService` 필터 집계 연동
+  - `CA-002` 완료: Settings에 시작/끝 회차 입력 UI 추가 + 숫자/범위 유효성 검증 후 CSV 공유 호출 연동
+  - `CA-003` 완료: 회귀 테스트/증적/문서 동기화(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`)
   - 앱 매니페스트/리소스 갱신: `FileProvider` 등록 및 `res/xml/file_provider_paths.xml` 추가
   - 회귀 테스트/품질 게이트 통과:
     - `./gradlew :app:testDebugUnitTest --tests "com.weeklylotto.app.LocalTicketBackupServiceTest" --tests "com.weeklylotto.app.SettingsViewModelTest"` PASS
@@ -46,7 +49,8 @@
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_prompt_schema_guide_local_2026-03-04.md`
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_missing_round_numbers_local_2026-03-04.md`
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_source_breakdown_prompt_local_2026-03-04.md`
-  - 문서 동기화: `10`(`BR`, `BS`, `BT`, `BU`, `BV`, `BW`, `BX`, `BY`, `BZ` 섹션), `16`(`F02` v11), `21`(`IDEA-F02` v11), `22`(`F02` 상태 갱신)
+  - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_round_range_filter_local_2026-03-04.md`
+  - 문서 동기화: `10`(`BR`, `BS`, `BT`, `BU`, `BV`, `BW`, `BX`, `BY`, `BZ`, `CA` 섹션), `16`(`F02` v12), `21`(`IDEA-F02` v12), `22`(`F02` 상태 갱신)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
   - `BO-005`, `BP-002`는 실기기 연결 전까지 blocked 유지

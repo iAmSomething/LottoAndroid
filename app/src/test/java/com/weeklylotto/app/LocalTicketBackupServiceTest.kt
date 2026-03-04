@@ -264,7 +264,7 @@ class LocalTicketBackupServiceTest {
                     resultEvaluator = DefaultResultEvaluator(),
                 )
 
-            val summary = service.exportTicketHistoryCsvForAi().getOrThrow()
+            val summary = service.exportTicketHistoryCsvForAi(startRound = null, endRound = null).getOrThrow()
 
             assertThat(summary.ticketCount).isEqualTo(3)
             assertThat(summary.gameCount).isEqualTo(3)
@@ -291,6 +291,42 @@ class LocalTicketBackupServiceTest {
             assertThat(csvText).contains("1200,2026-03-07,11,GENERATED,PENDING")
             assertThat(csvText).contains("7-8-9-10-11-12,,,N,,,,")
             assertThat(csvText).contains("1201,2026-03-07,12,QR_SCAN,PENDING")
+        }
+
+    @Test
+    fun csv내보내기시_회차필터를_적용한다() =
+        runTest {
+            val repository =
+                BackupFakeTicketRepository(
+                    listOf(
+                        backupTicket(id = 20L, round = 1199, numbers = listOf(1, 2, 3, 4, 5, 6)),
+                        backupTicket(id = 21L, round = 1200, numbers = listOf(7, 8, 9, 10, 11, 12)),
+                        backupTicket(id = 22L, round = 1201, numbers = listOf(13, 14, 15, 16, 17, 18)),
+                    ),
+                )
+            val backupFile =
+                Files.createTempDirectory(
+                    "ticket-history-csv-filter",
+                ).resolve("tickets_backup_latest.json").toFile()
+            val service =
+                LocalTicketBackupService(
+                    ticketRepository = repository,
+                    backupFile = backupFile,
+                    drawRepository = BackupCsvFakeDrawRepository(rounds = emptyMap()),
+                    resultEvaluator = DefaultResultEvaluator(),
+                )
+
+            val summary = service.exportTicketHistoryCsvForAi(startRound = 1200, endRound = 1200).getOrThrow()
+
+            assertThat(summary.ticketCount).isEqualTo(1)
+            assertThat(summary.gameCount).isEqualTo(1)
+            assertThat(summary.roundCount).isEqualTo(1)
+            assertThat(summary.firstRoundNumber).isEqualTo(1200)
+            assertThat(summary.lastRoundNumber).isEqualTo(1200)
+            val csvText = java.io.File(summary.filePath).readText()
+            assertThat(csvText).contains("1200,2026-03-07,21,MANUAL,PENDING")
+            assertThat(csvText).doesNotContain("1199,2026-03-07,20")
+            assertThat(csvText).doesNotContain("1201,2026-03-07,22")
         }
 }
 
