@@ -645,3 +645,8 @@
 - [x] CA-001 `TicketBackupService`/`LocalTicketBackupService` 확장: CSV 내보내기 API에 `startRound`/`endRound` 필터 파라미터 추가 및 필터 집계 연동
 - [x] CA-002 `SettingsScreen`/`SettingsViewModel` 반영: 시작/끝 회차 입력 UI + 숫자/범위 유효성 검증 + 필터 기반 CSV 공유 호출
 - [x] CA-003 회귀 테스트/증적/문서 동기화(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `docs/assets/distribution/ticket_history_csv_round_range_filter_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## CB. F02 v13 CSV 필터 무데이터 가드 강화(2026-03-04 Cycle-77)
+- [x] CB-001 `SettingsViewModel` 보강: CSV 필터 결과 `ticketCount=0`일 때 공유 요청 생성을 차단하고 안내 메시지 노출
+- [x] CB-002 회차 필터 무데이터 회귀 테스트 추가(`SettingsViewModelTest`, `LocalTicketBackupServiceTest`)
+- [x] CB-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_empty_range_guard_local_2026-03-04.md`, `11`, `16`, `21`, `22`)

@@ -167,6 +167,15 @@ class SettingsViewModel(
                     endRound = endRound,
                 )
                 .onSuccess { summary ->
+                    if (summary.ticketCount == 0) {
+                        _uiState.update {
+                            it.copy(
+                                message = "선택한 회차 범위에 내보낼 데이터가 없습니다.",
+                                csvShareRequest = null,
+                            )
+                        }
+                        return@onSuccess
+                    }
                     val drawCoverageMessage =
                         if (summary.missingDrawCount == 0) {
                             "당첨번호 포함 ${summary.matchedDrawCount}회차"
