@@ -200,6 +200,9 @@ class SettingsViewModel(
             appendLine("- 당첨번호 매칭 회차: ${summary.matchedDrawCount}")
             appendLine("- 당첨 게임 수: ${summary.winningGameCount}")
             appendLine("- 예상 당첨금 합계: ${summary.totalExpectedPrizeAmount}원")
+            if (summary.missingDrawCount > 0) {
+                appendLine("- 경고: 당첨번호가 없는 회차 ${summary.missingDrawCount}개 포함")
+            }
             appendLine()
             appendLine("요청:")
             appendLine("1) 최근/누적 기준 번호 패턴과 중복 조합 리스크를 요약해줘.")

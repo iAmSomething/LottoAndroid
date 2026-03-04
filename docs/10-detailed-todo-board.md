@@ -615,3 +615,8 @@
 - [x] BU-001 `CsvShareRequest` 확장: 공유 텍스트(`shareText`) 포함
 - [x] BU-002 `SettingsViewModel`에서 AI 분석용 기본 프롬프트 텍스트 생성(요약 지표 + 분석 요청 3개 항목)
 - [x] BU-003 Settings CSV 공유 인텐트에 동적 프롬프트 텍스트 반영 + 회귀 테스트/증적/문서 동기화(`SettingsViewModelTest`, `LocalTicketBackupServiceTest`, `docs/assets/distribution/ticket_history_csv_ai_prompt_share_text_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## BV. F02 v6 AI 프롬프트 누락 회차 경고 강화(2026-03-04 Cycle-71)
+- [x] BV-001 `SettingsViewModel` AI 프롬프트에 누락 회차 경고 문구 추가(`missingDrawCount > 0` 조건)
+- [x] BV-002 누락 회차 케이스 회귀 테스트 추가(`SettingsViewModelTest`: 경고 문구 포함 검증)
+- [x] BV-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_missing_draw_warning_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
