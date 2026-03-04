@@ -20,6 +20,8 @@ data class TicketHistoryCsvSummary(
     val ticketCount: Int,
     val gameCount: Int,
     val roundCount: Int,
+    val firstRoundNumber: Int?,
+    val lastRoundNumber: Int?,
     val matchedDrawCount: Int,
     val missingDrawCount: Int,
     val winningGameCount: Int,
