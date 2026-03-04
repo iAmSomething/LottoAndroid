@@ -1,6 +1,7 @@
 package com.weeklylotto.app
 
 import com.google.common.truth.Truth.assertThat
+import com.weeklylotto.app.data.repository.DefaultResultEvaluator
 import com.weeklylotto.app.data.repository.LocalTicketBackupService
 import com.weeklylotto.app.domain.error.AppError
 import com.weeklylotto.app.domain.error.AppResult
@@ -244,6 +245,7 @@ class LocalTicketBackupServiceTest {
                     ticketRepository = repository,
                     backupFile = backupFile,
                     drawRepository = drawRepository,
+                    resultEvaluator = DefaultResultEvaluator(),
                 )
 
             val summary = service.exportTicketHistoryCsvForAi().getOrThrow()
@@ -255,10 +257,15 @@ class LocalTicketBackupServiceTest {
             assertThat(summary.missingDrawCount).isEqualTo(1)
             val csvText = java.io.File(summary.filePath).readText()
             assertThat(csvText).contains("round_number,round_draw_date,ticket_id,ticket_source")
+            assertThat(csvText)
+                .contains(
+                    "draw_matched,matched_main_count,bonus_matched,draw_rank,expected_prize_amount",
+                )
             assertThat(csvText).contains("1201,2026-03-07,10,MANUAL,PENDING")
-            assertThat(csvText).contains("1-2-3-4-5-6,1-3-5-7-9-11,13,Y")
+            assertThat(csvText)
+                .contains("1-2-3-4-5-6,1-3-5-7-9-11,13,Y,3,false,FIFTH,5000")
             assertThat(csvText).contains("1200,2026-03-07,11,MANUAL,PENDING")
-            assertThat(csvText).contains("7-8-9-10-11-12,,,N")
+            assertThat(csvText).contains("7-8-9-10-11-12,,,N,,,,")
         }
 }
 

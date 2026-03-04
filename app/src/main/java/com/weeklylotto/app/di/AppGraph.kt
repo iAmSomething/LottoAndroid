@@ -185,6 +185,7 @@ object AppGraph {
                     ticketRepository = ticketRepository,
                     backupFile = File(appContext.filesDir, "backups/tickets_backup_latest.json"),
                     drawRepository = drawRepository,
+                    resultEvaluator = resultEvaluator,
                     analyticsLogger = analyticsLogger,
                 )
 
