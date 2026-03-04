@@ -605,3 +605,8 @@
 - [x] BS-001 `LocalTicketBackupService` CSV 컬럼 확장: `matched_main_count`, `bonus_matched`, `draw_rank`, `expected_prize_amount` 추가
 - [x] BS-002 회차별 당첨번호 존재 시 게임별 평가값 계산 연동(`ResultEvaluator`, `PrizeAmountPolicy`) 및 draw 미존재 시 빈값 처리
 - [x] BS-003 Settings CSV 공유 CTA 계측 이벤트 추가 + 회귀 테스트/증적/문서 동기화(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `docs/assets/distribution/ticket_history_csv_evaluation_columns_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## BT. F02 v4 CSV 요약 지표 확장(2026-03-04 Cycle-69)
+- [x] BT-001 `TicketHistoryCsvSummary`에 요약 지표 추가(`winningGameCount`, `totalExpectedPrizeAmount`)
+- [x] BT-002 CSV 생성 시 요약 지표 계산 연동(당첨 게임 수/예상 당첨금 합계) 및 Settings 완료 메시지 확장
+- [x] BT-003 회귀 테스트/증적/문서 동기화(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `docs/assets/distribution/ticket_history_csv_summary_metrics_local_2026-03-04.md`, `11`, `16`, `21`, `22`)

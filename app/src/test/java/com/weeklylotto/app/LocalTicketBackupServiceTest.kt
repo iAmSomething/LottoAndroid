@@ -255,6 +255,8 @@ class LocalTicketBackupServiceTest {
             assertThat(summary.roundCount).isEqualTo(2)
             assertThat(summary.matchedDrawCount).isEqualTo(1)
             assertThat(summary.missingDrawCount).isEqualTo(1)
+            assertThat(summary.winningGameCount).isEqualTo(1)
+            assertThat(summary.totalExpectedPrizeAmount).isEqualTo(5000L)
             val csvText = java.io.File(summary.filePath).readText()
             assertThat(csvText).contains("round_number,round_draw_date,ticket_id,ticket_source")
             assertThat(csvText)

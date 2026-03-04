@@ -12,13 +12,17 @@
   - `BS-001` 완료: CSV 평가 컬럼 확장(`matched_main_count`, `bonus_matched`, `draw_rank`, `expected_prize_amount`)
   - `BS-002` 완료: CSV 생성 시 당첨결과 평가 연동(`ResultEvaluator` + `PrizeAmountPolicy`), draw 미존재 회차는 빈값 처리
   - `BS-003` 완료: Settings CSV 공유 CTA 계측 이벤트 추가(`interaction_cta_press`, `component=ticket_history_csv_share`) 및 회귀 테스트 보강
+  - `BT-001` 완료: CSV 내보내기 요약 모델 확장(`winningGameCount`, `totalExpectedPrizeAmount`)
+  - `BT-002` 완료: CSV 생성 시 요약 지표(당첨 게임 수/예상당첨금 합계) 계산 연동 + Settings 완료 메시지 보강
+  - `BT-003` 완료: 요약 지표 회귀 테스트/증적 반영(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `ticket_history_csv_summary_metrics_local_2026-03-04.md`)
   - 앱 매니페스트/리소스 갱신: `FileProvider` 등록 및 `res/xml/file_provider_paths.xml` 추가
   - 회귀 테스트/품질 게이트 통과:
     - `./gradlew :app:testDebugUnitTest --tests "com.weeklylotto.app.LocalTicketBackupServiceTest" --tests "com.weeklylotto.app.SettingsViewModelTest"` PASS
     - `./gradlew :app:ktlintCheck :app:detekt` PASS
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_ai_share_local_2026-03-04.md`
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_evaluation_columns_local_2026-03-04.md`
-  - 문서 동기화: `10`(`BR`, `BS` 섹션), `16`(`F02` v3), `21`(`IDEA-F02` v3), `22`(`F02` 상태 갱신)
+  - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_summary_metrics_local_2026-03-04.md`
+  - 문서 동기화: `10`(`BR`, `BS`, `BT` 섹션), `16`(`F02` v4), `21`(`IDEA-F02` v4), `22`(`F02` 상태 갱신)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
   - `BO-005`, `BP-002`는 실기기 연결 전까지 blocked 유지

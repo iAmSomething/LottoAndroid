@@ -181,10 +181,10 @@ class LocalTicketBackupService(
                 rounds.associate { round ->
                     round.number to fetchDrawResultOrNull(round)
                 }
-            val rows = buildTicketHistoryCsvRows(tickets, drawResultsByRound)
+            val csvBuildResult = buildTicketHistoryCsvRows(tickets, drawResultsByRound)
             aiHistoryCsvFile.parentFile?.mkdirs()
             aiHistoryCsvFile.writeText(
-                buildCsvContent(rows),
+                buildCsvContent(csvBuildResult.rows),
                 StandardCharsets.UTF_8,
             )
             val matchedDrawCount = drawResultsByRound.count { (_, drawResult) -> drawResult != null }
@@ -194,6 +194,8 @@ class LocalTicketBackupService(
                 roundCount = rounds.size,
                 matchedDrawCount = matchedDrawCount,
                 missingDrawCount = rounds.size - matchedDrawCount,
+                winningGameCount = csvBuildResult.winningGameCount,
+                totalExpectedPrizeAmount = csvBuildResult.totalExpectedPrizeAmount,
                 fileName = aiHistoryCsvFile.name,
                 filePath = aiHistoryCsvFile.absolutePath,
             )
@@ -277,32 +279,46 @@ class LocalTicketBackupService(
     private fun buildTicketHistoryCsvRows(
         tickets: List<TicketBundle>,
         drawResultsByRound: Map<Int, DrawResult?>,
-    ): List<List<String>> =
-        tickets.flatMap { ticket ->
-            val drawResult = drawResultsByRound[ticket.round.number]
-            ticket.games.map { game ->
-                val evaluation = drawResult?.let { draw -> resultEvaluator?.evaluate(game, draw) }
-                listOf(
-                    ticket.round.number.toString(),
-                    ticket.round.drawDate.toString(),
-                    ticket.id.toString(),
-                    ticket.source.name,
-                    ticket.status.name,
-                    ticket.createdAt.toString(),
-                    game.slot.name,
-                    game.mode.name,
-                    game.numbers.map { it.value }.sorted().joinToString(separator = "-"),
-                    drawResult?.mainNumbers?.map { it.value }?.sorted()?.joinToString(separator = "-")
-                        .orEmpty(),
-                    drawResult?.bonus?.value?.toString().orEmpty(),
-                    if (drawResult == null) "N" else "Y",
-                    evaluation?.matchedMainCount?.toString().orEmpty(),
-                    evaluation?.bonusMatched?.toString().orEmpty(),
-                    evaluation?.rank?.name.orEmpty(),
-                    evaluation?.let { PrizeAmountPolicy.amountFor(it.rank).toString() }.orEmpty(),
-                )
+    ): TicketHistoryCsvBuildResult {
+        var winningGameCount = 0
+        var totalExpectedPrizeAmount = 0L
+        val rows =
+            tickets.flatMap { ticket ->
+                val drawResult = drawResultsByRound[ticket.round.number]
+                ticket.games.map { game ->
+                    val evaluation = drawResult?.let { draw -> resultEvaluator?.evaluate(game, draw) }
+                    val expectedPrizeAmount = evaluation?.let { PrizeAmountPolicy.amountFor(it.rank) }
+                    if ((expectedPrizeAmount ?: 0L) > 0L) {
+                        winningGameCount += 1
+                        totalExpectedPrizeAmount += expectedPrizeAmount ?: 0L
+                    }
+                    listOf(
+                        ticket.round.number.toString(),
+                        ticket.round.drawDate.toString(),
+                        ticket.id.toString(),
+                        ticket.source.name,
+                        ticket.status.name,
+                        ticket.createdAt.toString(),
+                        game.slot.name,
+                        game.mode.name,
+                        game.numbers.map { it.value }.sorted().joinToString(separator = "-"),
+                        drawResult?.mainNumbers?.map { it.value }?.sorted()?.joinToString(separator = "-")
+                            .orEmpty(),
+                        drawResult?.bonus?.value?.toString().orEmpty(),
+                        if (drawResult == null) "N" else "Y",
+                        evaluation?.matchedMainCount?.toString().orEmpty(),
+                        evaluation?.bonusMatched?.toString().orEmpty(),
+                        evaluation?.rank?.name.orEmpty(),
+                        expectedPrizeAmount?.toString().orEmpty(),
+                    )
+                }
             }
-        }
+        return TicketHistoryCsvBuildResult(
+            rows = rows,
+            winningGameCount = winningGameCount,
+            totalExpectedPrizeAmount = totalExpectedPrizeAmount,
+        )
+    }
 
     private fun buildCsvContent(rows: List<List<String>>): String {
         val builder = StringBuilder()
@@ -356,6 +372,12 @@ private fun String.toCsvCell(): String {
         escaped
     }
 }
+
+private data class TicketHistoryCsvBuildResult(
+    val rows: List<List<String>>,
+    val winningGameCount: Int,
+    val totalExpectedPrizeAmount: Long,
+)
 
 private data class IntegrityTicket(
     val signature: String,
