@@ -24,6 +24,7 @@ data class TicketHistoryCsvSummary(
     val lastRoundNumber: Int?,
     val matchedDrawCount: Int,
     val missingDrawCount: Int,
+    val missingRoundNumbers: List<Int>,
     val winningGameCount: Int,
     val totalExpectedPrizeAmount: Long,
     val fileName: String,

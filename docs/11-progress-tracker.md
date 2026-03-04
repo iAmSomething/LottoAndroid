@@ -27,6 +27,9 @@
   - `BX-001` 완료: AI 프롬프트에 CSV 스키마 가이드 문구 추가(`game_numbers`, `draw_main_numbers`, `draw_rank`)
   - `BX-002` 완료: 스키마 가이드 문구 회귀 테스트 추가(`SettingsViewModelTest`)
   - `BX-003` 완료: CSV 스키마 가이드 문구 반영 증적/문서 동기화
+  - `BY-001` 완료: `TicketHistoryCsvSummary`에 누락 회차 번호 목록 필드(`missingRoundNumbers`) 추가 + CSV 생성 요약 연동
+  - `BY-002` 완료: AI 프롬프트에 누락 회차 번호 문구 추가(`- 누락 회차 번호: ...`) + 회귀 테스트 보강(`SettingsViewModelTest`)
+  - `BY-003` 완료: 누락 회차 번호 문구 반영 증적/문서 동기화
   - 앱 매니페스트/리소스 갱신: `FileProvider` 등록 및 `res/xml/file_provider_paths.xml` 추가
   - 회귀 테스트/품질 게이트 통과:
     - `./gradlew :app:testDebugUnitTest --tests "com.weeklylotto.app.LocalTicketBackupServiceTest" --tests "com.weeklylotto.app.SettingsViewModelTest"` PASS
@@ -38,7 +41,8 @@
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_missing_draw_warning_local_2026-03-04.md`
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_prompt_data_reliability_local_2026-03-04.md`
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_prompt_schema_guide_local_2026-03-04.md`
-  - 문서 동기화: `10`(`BR`, `BS`, `BT`, `BU`, `BV`, `BW`, `BX` 섹션), `16`(`F02` v9), `21`(`IDEA-F02` v9), `22`(`F02` 상태 갱신)
+  - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_missing_round_numbers_local_2026-03-04.md`
+  - 문서 동기화: `10`(`BR`, `BS`, `BT`, `BU`, `BV`, `BW`, `BX`, `BY` 섹션), `16`(`F02` v10), `21`(`IDEA-F02` v10), `22`(`F02` 상태 갱신)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
   - `BO-005`, `BP-002`는 실기기 연결 전까지 blocked 유지

@@ -215,6 +215,7 @@ class SettingsViewModelTest {
                                 lastRoundNumber = 1201,
                                 matchedDrawCount = 2,
                                 missingDrawCount = 0,
+                                missingRoundNumbers = emptyList(),
                                 winningGameCount = 1,
                                 totalExpectedPrizeAmount = 5000L,
                                 fileName = "tickets_history_with_draw_latest.csv",
@@ -290,6 +291,7 @@ class SettingsViewModelTest {
                                 lastRoundNumber = 1203,
                                 matchedDrawCount = 2,
                                 missingDrawCount = 1,
+                                missingRoundNumbers = listOf(1202),
                                 winningGameCount = 0,
                                 totalExpectedPrizeAmount = 0L,
                                 fileName = "tickets_history_with_draw_latest.csv",
@@ -311,6 +313,8 @@ class SettingsViewModelTest {
 
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 경고: 당첨번호가 없는 회차 1개 포함")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 누락 회차 번호: 1202")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 회차 범위: 1201~1203회")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
@@ -392,6 +396,7 @@ private class FakeTicketBackupService(
                 lastRoundNumber = null,
                 matchedDrawCount = 0,
                 missingDrawCount = 0,
+                missingRoundNumbers = emptyList(),
                 winningGameCount = 0,
                 totalExpectedPrizeAmount = 0L,
                 fileName = "tickets_history_with_draw_latest.csv",

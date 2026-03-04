@@ -630,3 +630,8 @@
 - [x] BX-001 `SettingsViewModel` AI 프롬프트에 CSV 스키마 가이드 섹션 추가(`game_numbers`, `draw_main_numbers`, `draw_rank`)
 - [x] BX-002 스키마 가이드 문구 회귀 테스트 추가(`SettingsViewModelTest`)
 - [x] BX-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_prompt_schema_guide_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## BY. F02 v10 AI 프롬프트 누락 회차 번호 가이드 강화(2026-03-04 Cycle-74)
+- [x] BY-001 `TicketHistoryCsvSummary`에 누락 회차 번호 목록 필드 추가(`missingRoundNumbers`) 및 `LocalTicketBackupService` 계산 연동
+- [x] BY-002 `SettingsViewModel` AI 프롬프트에 누락 회차 번호 문구 추가(`- 누락 회차 번호: ...`) + 회귀 테스트 보강(`SettingsViewModelTest`)
+- [x] BY-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_missing_round_numbers_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
