@@ -236,6 +236,10 @@ class SettingsViewModelTest {
                 .isEqualTo("CSV 생성 완료 (2회차, 3건, 12게임, 당첨번호 포함 2회차, 당첨게임 1개, 예상당첨금 5000원)")
             assertThat(viewModel.uiState.value.csvShareRequest?.filePath)
                 .isEqualTo("/tmp/tickets_history_with_draw_latest.csv")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("로또 주차별 구매/당첨 CSV 분석 요청")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 당첨 게임 수: 1")
         }
 
     @Test

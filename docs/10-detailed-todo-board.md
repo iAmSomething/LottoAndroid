@@ -610,3 +610,8 @@
 - [x] BT-001 `TicketHistoryCsvSummary`에 요약 지표 추가(`winningGameCount`, `totalExpectedPrizeAmount`)
 - [x] BT-002 CSV 생성 시 요약 지표 계산 연동(당첨 게임 수/예상 당첨금 합계) 및 Settings 완료 메시지 확장
 - [x] BT-003 회귀 테스트/증적/문서 동기화(`LocalTicketBackupServiceTest`, `SettingsViewModelTest`, `docs/assets/distribution/ticket_history_csv_summary_metrics_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## BU. F02 v5 AI 공유 프롬프트 텍스트 강화(2026-03-04 Cycle-70)
+- [x] BU-001 `CsvShareRequest` 확장: 공유 텍스트(`shareText`) 포함
+- [x] BU-002 `SettingsViewModel`에서 AI 분석용 기본 프롬프트 텍스트 생성(요약 지표 + 분석 요청 3개 항목)
+- [x] BU-003 Settings CSV 공유 인텐트에 동적 프롬프트 텍스트 반영 + 회귀 테스트/증적/문서 동기화(`SettingsViewModelTest`, `LocalTicketBackupServiceTest`, `docs/assets/distribution/ticket_history_csv_ai_prompt_share_text_local_2026-03-04.md`, `11`, `16`, `21`, `22`)

@@ -8,6 +8,7 @@ import com.weeklylotto.app.domain.service.NoOpTicketBackupService
 import com.weeklylotto.app.domain.service.ReminderConfigStore
 import com.weeklylotto.app.domain.service.ReminderScheduler
 import com.weeklylotto.app.domain.service.TicketBackupService
+import com.weeklylotto.app.domain.service.TicketHistoryCsvSummary
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +26,7 @@ data class SettingsUiState(
 
 data class CsvShareRequest(
     val filePath: String,
+    val shareText: String,
     val requestId: Long,
 )
 
@@ -165,6 +167,7 @@ class SettingsViewModel(
                             csvShareRequest =
                                 CsvShareRequest(
                                     filePath = summary.filePath,
+                                    shareText = buildAiShareText(summary),
                                     requestId = System.currentTimeMillis(),
                                 ),
                         )
@@ -187,4 +190,20 @@ class SettingsViewModel(
     fun clearCsvShareRequest() {
         _uiState.update { it.copy(csvShareRequest = null) }
     }
+
+    private fun buildAiShareText(summary: TicketHistoryCsvSummary): String =
+        buildString {
+            appendLine("로또 주차별 구매/당첨 CSV 분석 요청")
+            appendLine("- 회차 수: ${summary.roundCount}")
+            appendLine("- 티켓 수: ${summary.ticketCount}")
+            appendLine("- 게임 수: ${summary.gameCount}")
+            appendLine("- 당첨번호 매칭 회차: ${summary.matchedDrawCount}")
+            appendLine("- 당첨 게임 수: ${summary.winningGameCount}")
+            appendLine("- 예상 당첨금 합계: ${summary.totalExpectedPrizeAmount}원")
+            appendLine()
+            appendLine("요청:")
+            appendLine("1) 최근/누적 기준 번호 패턴과 중복 조합 리스크를 요약해줘.")
+            appendLine("2) 출처별(자동/수동/QR) 성과 차이를 분석해줘.")
+            appendLine("3) 다음 주차용 번호 전략 3가지를 제안해줘.")
+        }
 }
