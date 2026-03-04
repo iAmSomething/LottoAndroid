@@ -186,6 +186,7 @@ class SettingsViewModel(
                         "당첨게임 ${summary.winningGameCount}개, 예상당첨금 ${summary.totalExpectedPrizeAmount}원"
                     val requestedRangeMessage = "요청 필터 ${formatRequestedRange(summary)}"
                     val filterFulfillmentMessage = buildFilterFulfillmentMessage(summary)
+                    val reliabilityGrade = buildReliabilityGrade(summary)
                     val roundRangeMessage = "회차 범위 ${formatRoundRange(summary)}"
                     val filterFulfillmentClause =
                         if (filterFulfillmentMessage == null) {
@@ -196,7 +197,7 @@ class SettingsViewModel(
                     _uiState.update {
                         it.copy(
                             message =
-                                "CSV 생성 완료 (${summary.roundCount}회차, $requestedRangeMessage$filterFulfillmentClause, $roundRangeMessage, ${summary.ticketCount}건, ${summary.gameCount}게임, $drawCoverageMessage, $winningSummaryMessage)",
+                                "CSV 생성 완료 (${summary.roundCount}회차, $requestedRangeMessage$filterFulfillmentClause, 신뢰등급 $reliabilityGrade, $roundRangeMessage, ${summary.ticketCount}건, ${summary.gameCount}게임, $drawCoverageMessage, $winningSummaryMessage)",
                             csvShareRequest =
                                 CsvShareRequest(
                                     filePath = summary.filePath,
@@ -226,12 +227,8 @@ class SettingsViewModel(
 
     private fun buildAiShareText(summary: TicketHistoryCsvSummary): String =
         buildString {
-            val coverageRatePercent =
-                if (summary.roundCount == 0) {
-                    100
-                } else {
-                    (summary.matchedDrawCount * 100) / summary.roundCount
-                }
+            val coverageRatePercent = calculateCoverageRatePercent(summary)
+            val reliabilityGrade = buildReliabilityGrade(summary)
             val requestedRange = formatRequestedRange(summary)
             val effectiveRange = formatRoundRange(summary)
             val filterFulfillmentMessage = buildFilterFulfillmentMessage(summary)
@@ -245,6 +242,7 @@ class SettingsViewModel(
             if (requestedRange != "전체" && requestedRange != effectiveRange) {
                 appendLine("- 필터 반영: 요청 범위 대비 실제 데이터 포함 회차는 $effectiveRange")
             }
+            appendLine("- 분석 신뢰 등급: $reliabilityGrade")
             appendLine("- 티켓 수: ${summary.ticketCount}")
             appendLine("- 게임 수: ${summary.gameCount}")
             appendLine(
@@ -299,20 +297,49 @@ class SettingsViewModel(
     }
 
     private fun buildFilterFulfillmentMessage(summary: TicketHistoryCsvSummary): String? {
-        val start = summary.requestedStartRound
-        val end = summary.requestedEndRound
-        val requestedRoundCount =
-            if (start == null || end == null || start > end) {
-                null
-            } else {
-                end - start + 1
-            }
+        val requestedRoundCount = calculateRequestedRoundCount(summary)
         return if (requestedRoundCount == null || requestedRoundCount <= 0) {
             null
         } else {
             val fulfilledRoundCount = summary.roundCount
             val fulfillmentPercent = (fulfilledRoundCount * 100) / requestedRoundCount
             "필터 충족률 $fulfilledRoundCount/${requestedRoundCount}회차 ($fulfillmentPercent%)"
+        }
+    }
+
+    private fun calculateCoverageRatePercent(summary: TicketHistoryCsvSummary): Int =
+        if (summary.roundCount == 0) {
+            100
+        } else {
+            (summary.matchedDrawCount * 100) / summary.roundCount
+        }
+
+    private fun calculateRequestedRoundCount(summary: TicketHistoryCsvSummary): Int? {
+        val start = summary.requestedStartRound
+        val end = summary.requestedEndRound
+        return if (start == null || end == null || start > end) {
+            null
+        } else {
+            end - start + 1
+        }
+    }
+
+    private fun calculateFilterFulfillmentPercent(summary: TicketHistoryCsvSummary): Int? {
+        val requestedRoundCount = calculateRequestedRoundCount(summary)
+        return if (requestedRoundCount == null || requestedRoundCount <= 0) {
+            null
+        } else {
+            (summary.roundCount * 100) / requestedRoundCount
+        }
+    }
+
+    private fun buildReliabilityGrade(summary: TicketHistoryCsvSummary): String {
+        val coverageRatePercent = calculateCoverageRatePercent(summary)
+        val fulfillmentPercent = calculateFilterFulfillmentPercent(summary) ?: 100
+        return when {
+            coverageRatePercent >= 90 && fulfillmentPercent >= 80 -> "높음"
+            coverageRatePercent >= 60 && fulfillmentPercent >= 50 -> "보통"
+            else -> "낮음"
         }
     }
 }
