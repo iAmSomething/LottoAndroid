@@ -245,6 +245,10 @@ class SettingsViewModelTest {
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 데이터 신뢰도: 100% (당첨번호 매칭 회차 기준)")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("CSV 스키마 가이드:")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- draw_rank/expected_prize_amount: 게임별 평가 등수/예상 당첨금")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 당첨 게임 수: 1")
         }
 

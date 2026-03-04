@@ -214,6 +214,11 @@ class SettingsViewModel(
                 appendLine("- 주의: 누락 회차가 있어 결과 해석 시 보수적으로 판단해줘.")
             }
             appendLine()
+            appendLine("CSV 스키마 가이드:")
+            appendLine("- game_numbers: 각 게임의 선택 번호(오름차순)")
+            appendLine("- draw_main_numbers/draw_bonus_number: 회차 당첨 번호")
+            appendLine("- draw_rank/expected_prize_amount: 게임별 평가 등수/예상 당첨금")
+            appendLine()
             appendLine("요청:")
             appendLine("1) 최근/누적 기준 번호 패턴과 중복 조합 리스크를 요약해줘.")
             appendLine("2) 출처별(자동/수동/QR) 성과 차이를 분석해줘.")

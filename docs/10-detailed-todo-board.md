@@ -625,3 +625,8 @@
 - [x] BW-001 `SettingsViewModel` AI 프롬프트에 데이터 신뢰도 + 회차 범위 문구 추가(누락 회차 비율 기반 해석 유의 포함)
 - [x] BW-002 누락 회차 경고 문구와 함께 신뢰도/회차 범위 문구가 동시 포함되는 회귀 테스트 추가(`SettingsViewModelTest`)
 - [x] BW-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_prompt_data_reliability_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## BX. F02 v9 AI 프롬프트 CSV 스키마 가이드 강화(2026-03-04 Cycle-73)
+- [x] BX-001 `SettingsViewModel` AI 프롬프트에 CSV 스키마 가이드 섹션 추가(`game_numbers`, `draw_main_numbers`, `draw_rank`)
+- [x] BX-002 스키마 가이드 문구 회귀 테스트 추가(`SettingsViewModelTest`)
+- [x] BX-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_prompt_schema_guide_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
