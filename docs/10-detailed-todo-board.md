@@ -660,3 +660,8 @@
 - [x] CD-001 `SettingsViewModel` 보강: 요청 필터와 실제 포함 회차가 다를 때 보정 안내 문구(`필터 반영`)를 AI 프롬프트에 추가
 - [x] CD-002 회귀 테스트 보강: 요청/실제 불일치 케이스 문구 포함 + 동일 케이스 문구 비포함 검증(`SettingsViewModelTest`)
 - [x] CD-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_effective_range_note_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## CE. F02 v16 AI 프롬프트 필터 충족률 문구 강화(2026-03-04 Cycle-80)
+- [x] CE-001 `SettingsViewModel` 보강: 요청 범위(`start~end`)가 있을 때 `필터 충족률 x/y회차(z%)` 문구를 CSV 완료 메시지/AI 프롬프트에 추가
+- [x] CE-002 회귀 테스트 보강: 전체 필터(미표시), 100% 충족, 부분 충족(33%) 케이스 검증(`SettingsViewModelTest`)
+- [x] CE-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_filter_fulfillment_rate_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
