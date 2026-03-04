@@ -141,7 +141,12 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
 
     LaunchedEffect(uiState.csvShareRequest) {
         uiState.csvShareRequest?.let { request ->
-            val started = shareCsvFile(context = context, filePath = request.filePath)
+            val started =
+                shareCsvFile(
+                    context = context,
+                    filePath = request.filePath,
+                    shareText = request.shareText,
+                )
             if (!started) {
                 Toast.makeText(context, "CSV 공유를 시작할 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
@@ -392,6 +397,7 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
 private fun shareCsvFile(
     context: Context,
     filePath: String,
+    shareText: String,
 ): Boolean {
     val file = File(filePath)
     if (!file.exists()) {
@@ -408,7 +414,7 @@ private fun shareCsvFile(
             Intent(Intent.ACTION_SEND).apply {
                 type = "text/csv"
                 putExtra(Intent.EXTRA_SUBJECT, "로또 주차별 구매/당첨 데이터")
-                putExtra(Intent.EXTRA_TEXT, "첨부된 CSV를 ChatGPT/Gemini 앱에 업로드해 분석할 수 있어요.")
+                putExtra(Intent.EXTRA_TEXT, shareText)
                 putExtra(Intent.EXTRA_STREAM, uri)
                 clipData = ClipData.newUri(context.contentResolver, file.name, uri)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
