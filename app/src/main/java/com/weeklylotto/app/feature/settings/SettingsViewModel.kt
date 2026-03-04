@@ -156,10 +156,12 @@ class SettingsViewModel(
                         } else {
                             "당첨번호 누락 ${summary.missingDrawCount}회차"
                         }
+                    val winningSummaryMessage =
+                        "당첨게임 ${summary.winningGameCount}개, 예상당첨금 ${summary.totalExpectedPrizeAmount}원"
                     _uiState.update {
                         it.copy(
                             message =
-                                "CSV 생성 완료 (${summary.roundCount}회차, ${summary.ticketCount}건, ${summary.gameCount}게임, $drawCoverageMessage)",
+                                "CSV 생성 완료 (${summary.roundCount}회차, ${summary.ticketCount}건, ${summary.gameCount}게임, $drawCoverageMessage, $winningSummaryMessage)",
                             csvShareRequest =
                                 CsvShareRequest(
                                     filePath = summary.filePath,

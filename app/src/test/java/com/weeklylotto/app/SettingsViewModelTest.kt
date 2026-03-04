@@ -213,6 +213,8 @@ class SettingsViewModelTest {
                                 roundCount = 2,
                                 matchedDrawCount = 2,
                                 missingDrawCount = 0,
+                                winningGameCount = 1,
+                                totalExpectedPrizeAmount = 5000L,
                                 fileName = "tickets_history_with_draw_latest.csv",
                                 filePath = "/tmp/tickets_history_with_draw_latest.csv",
                             ),
@@ -231,7 +233,7 @@ class SettingsViewModelTest {
             advanceUntilIdle()
 
             assertThat(viewModel.uiState.value.message)
-                .isEqualTo("CSV 생성 완료 (2회차, 3건, 12게임, 당첨번호 포함 2회차)")
+                .isEqualTo("CSV 생성 완료 (2회차, 3건, 12게임, 당첨번호 포함 2회차, 당첨게임 1개, 예상당첨금 5000원)")
             assertThat(viewModel.uiState.value.csvShareRequest?.filePath)
                 .isEqualTo("/tmp/tickets_history_with_draw_latest.csv")
         }
@@ -330,6 +332,8 @@ private class FakeTicketBackupService(
                 roundCount = 0,
                 matchedDrawCount = 0,
                 missingDrawCount = 0,
+                winningGameCount = 0,
+                totalExpectedPrizeAmount = 0L,
                 fileName = "tickets_history_with_draw_latest.csv",
                 filePath = "/tmp/tickets_history_with_draw_latest.csv",
             ),
