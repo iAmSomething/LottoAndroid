@@ -42,6 +42,9 @@
   - `CC-001` 완료: `TicketHistoryCsvSummary`에 요청 필터 필드(`requestedStartRound`, `requestedEndRound`) 추가 + `LocalTicketBackupService` 요약 연동
   - `CC-002` 완료: CSV 완료 메시지/AI 프롬프트에 요청 필터 문구 추가(`전체`, `n회 이상`, `n회 이하`, `n~m회`)
   - `CC-003` 완료: 요청 필터 문구 회귀 테스트/증적/문서 동기화(`SettingsViewModelTest`, `LocalTicketBackupServiceTest`)
+  - `CD-001` 완료: 요청 필터와 실제 포함 회차가 다를 때 AI 프롬프트에 `필터 반영` 보정 안내 문구 추가(`SettingsViewModel`)
+  - `CD-002` 완료: 요청/실제 불일치 케이스 문구 포함 + 동일 케이스 문구 비포함 회귀 테스트 추가(`SettingsViewModelTest`)
+  - `CD-003` 완료: 보정 안내 문구 증적/문서 동기화
   - 앱 매니페스트/리소스 갱신: `FileProvider` 등록 및 `res/xml/file_provider_paths.xml` 추가
   - 회귀 테스트/품질 게이트 통과:
     - `./gradlew :app:testDebugUnitTest --tests "com.weeklylotto.app.LocalTicketBackupServiceTest" --tests "com.weeklylotto.app.SettingsViewModelTest"` PASS
@@ -58,7 +61,8 @@
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_round_range_filter_local_2026-03-04.md`
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_empty_range_guard_local_2026-03-04.md`
   - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_requested_filter_context_local_2026-03-04.md`
-  - 문서 동기화: `10`(`BR`, `BS`, `BT`, `BU`, `BV`, `BW`, `BX`, `BY`, `BZ`, `CA`, `CB`, `CC` 섹션), `16`(`F02` v14), `21`(`IDEA-F02` v14), `22`(`F02` 상태 갱신)
+  - 로컬 증적 추가: `docs/assets/distribution/ticket_history_csv_effective_range_note_local_2026-03-04.md`
+  - 문서 동기화: `10`(`BR`, `BS`, `BT`, `BU`, `BV`, `BW`, `BX`, `BY`, `BZ`, `CA`, `CB`, `CC`, `CD` 섹션), `16`(`F02` v15), `21`(`IDEA-F02` v15), `22`(`F02` 상태 갱신)
 - 미완료 작업
   - 실기기 의존 항목(`P-004`, `BK-001`, `BK-002`)은 여전히 대기
   - `BO-005`, `BP-002`는 실기기 연결 전까지 blocked 유지

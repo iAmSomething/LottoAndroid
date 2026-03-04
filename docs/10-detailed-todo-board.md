@@ -655,3 +655,8 @@
 - [x] CC-001 `TicketHistoryCsvSummary` 확장: 요청 회차 필터 필드(`requestedStartRound`, `requestedEndRound`) 추가 및 `LocalTicketBackupService` 연동
 - [x] CC-002 `SettingsViewModel` 반영: CSV 완료 메시지/AI 프롬프트에 `요청 필터` 문구 추가(`전체`, `n회 이상`, `n회 이하`, `n~m회`)
 - [x] CC-003 회귀 테스트/증적/문서 동기화(`SettingsViewModelTest`, `LocalTicketBackupServiceTest`, `docs/assets/distribution/ticket_history_csv_requested_filter_context_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## CD. F02 v15 AI 프롬프트 실포함 회차 보정 안내 강화(2026-03-04 Cycle-79)
+- [x] CD-001 `SettingsViewModel` 보강: 요청 필터와 실제 포함 회차가 다를 때 보정 안내 문구(`필터 반영`)를 AI 프롬프트에 추가
+- [x] CD-002 회귀 테스트 보강: 요청/실제 불일치 케이스 문구 포함 + 동일 케이스 문구 비포함 검증(`SettingsViewModelTest`)
+- [x] CD-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_effective_range_note_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
