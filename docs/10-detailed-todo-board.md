@@ -620,3 +620,8 @@
 - [x] BV-001 `SettingsViewModel` AI 프롬프트에 누락 회차 경고 문구 추가(`missingDrawCount > 0` 조건)
 - [x] BV-002 누락 회차 케이스 회귀 테스트 추가(`SettingsViewModelTest`: 경고 문구 포함 검증)
 - [x] BV-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_missing_draw_warning_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## BW. F02 v7 AI 프롬프트 데이터 신뢰도 문구 강화(2026-03-04 Cycle-72)
+- [x] BW-001 `SettingsViewModel` AI 프롬프트에 데이터 신뢰도 안내 문구 추가(누락 회차 비율 기반 해석 유의)
+- [x] BW-002 누락 회차 경고 문구와 함께 신뢰도 문구가 동시 포함되는 회귀 테스트 추가(`SettingsViewModelTest`)
+- [x] BW-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_prompt_data_reliability_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
