@@ -177,6 +177,7 @@ class LocalTicketBackupService(
                 tickets
                     .map { it.round }
                     .distinctBy { it.number }
+            val sortedRoundNumbers = rounds.map { it.number }.sorted()
             val drawResultsByRound =
                 rounds.associate { round ->
                     round.number to fetchDrawResultOrNull(round)
@@ -192,6 +193,8 @@ class LocalTicketBackupService(
                 ticketCount = tickets.size,
                 gameCount = tickets.sumOf { it.games.size },
                 roundCount = rounds.size,
+                firstRoundNumber = sortedRoundNumbers.firstOrNull(),
+                lastRoundNumber = sortedRoundNumbers.lastOrNull(),
                 matchedDrawCount = matchedDrawCount,
                 missingDrawCount = rounds.size - matchedDrawCount,
                 winningGameCount = csvBuildResult.winningGameCount,

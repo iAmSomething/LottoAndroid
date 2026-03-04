@@ -253,6 +253,8 @@ class LocalTicketBackupServiceTest {
             assertThat(summary.ticketCount).isEqualTo(2)
             assertThat(summary.gameCount).isEqualTo(2)
             assertThat(summary.roundCount).isEqualTo(2)
+            assertThat(summary.firstRoundNumber).isEqualTo(1200)
+            assertThat(summary.lastRoundNumber).isEqualTo(1201)
             assertThat(summary.matchedDrawCount).isEqualTo(1)
             assertThat(summary.missingDrawCount).isEqualTo(1)
             assertThat(summary.winningGameCount).isEqualTo(1)

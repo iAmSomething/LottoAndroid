@@ -160,10 +160,11 @@ class SettingsViewModel(
                         }
                     val winningSummaryMessage =
                         "당첨게임 ${summary.winningGameCount}개, 예상당첨금 ${summary.totalExpectedPrizeAmount}원"
+                    val roundRangeMessage = "회차 범위 ${formatRoundRange(summary)}"
                     _uiState.update {
                         it.copy(
                             message =
-                                "CSV 생성 완료 (${summary.roundCount}회차, ${summary.ticketCount}건, ${summary.gameCount}게임, $drawCoverageMessage, $winningSummaryMessage)",
+                                "CSV 생성 완료 (${summary.roundCount}회차, $roundRangeMessage, ${summary.ticketCount}건, ${summary.gameCount}게임, $drawCoverageMessage, $winningSummaryMessage)",
                             csvShareRequest =
                                 CsvShareRequest(
                                     filePath = summary.filePath,
@@ -201,6 +202,7 @@ class SettingsViewModel(
                 }
             appendLine("로또 주차별 구매/당첨 CSV 분석 요청")
             appendLine("- 회차 수: ${summary.roundCount}")
+            appendLine("- 회차 범위: ${formatRoundRange(summary)}")
             appendLine("- 티켓 수: ${summary.ticketCount}")
             appendLine("- 게임 수: ${summary.gameCount}")
             appendLine("- 당첨번호 매칭 회차: ${summary.matchedDrawCount}")
@@ -217,4 +219,14 @@ class SettingsViewModel(
             appendLine("2) 출처별(자동/수동/QR) 성과 차이를 분석해줘.")
             appendLine("3) 다음 주차용 번호 전략 3가지를 제안해줘.")
         }
+
+    private fun formatRoundRange(summary: TicketHistoryCsvSummary): String {
+        val first = summary.firstRoundNumber
+        val last = summary.lastRoundNumber
+        return when {
+            first == null || last == null -> "없음"
+            first == last -> first.toString() + "회"
+            else -> first.toString() + "~" + last + "회"
+        }
+    }
 }
