@@ -185,11 +185,18 @@ class SettingsViewModel(
                     val winningSummaryMessage =
                         "당첨게임 ${summary.winningGameCount}개, 예상당첨금 ${summary.totalExpectedPrizeAmount}원"
                     val requestedRangeMessage = "요청 필터 ${formatRequestedRange(summary)}"
+                    val filterFulfillmentMessage = buildFilterFulfillmentMessage(summary)
                     val roundRangeMessage = "회차 범위 ${formatRoundRange(summary)}"
+                    val filterFulfillmentClause =
+                        if (filterFulfillmentMessage == null) {
+                            ""
+                        } else {
+                            ", $filterFulfillmentMessage"
+                        }
                     _uiState.update {
                         it.copy(
                             message =
-                                "CSV 생성 완료 (${summary.roundCount}회차, $requestedRangeMessage, $roundRangeMessage, ${summary.ticketCount}건, ${summary.gameCount}게임, $drawCoverageMessage, $winningSummaryMessage)",
+                                "CSV 생성 완료 (${summary.roundCount}회차, $requestedRangeMessage$filterFulfillmentClause, $roundRangeMessage, ${summary.ticketCount}건, ${summary.gameCount}게임, $drawCoverageMessage, $winningSummaryMessage)",
                             csvShareRequest =
                                 CsvShareRequest(
                                     filePath = summary.filePath,
@@ -227,9 +234,13 @@ class SettingsViewModel(
                 }
             val requestedRange = formatRequestedRange(summary)
             val effectiveRange = formatRoundRange(summary)
+            val filterFulfillmentMessage = buildFilterFulfillmentMessage(summary)
             appendLine("로또 주차별 구매/당첨 CSV 분석 요청")
             appendLine("- 회차 수: ${summary.roundCount}")
             appendLine("- 요청 필터: $requestedRange")
+            if (filterFulfillmentMessage != null) {
+                appendLine("- $filterFulfillmentMessage")
+            }
             appendLine("- 회차 범위: $effectiveRange")
             if (requestedRange != "전체" && requestedRange != effectiveRange) {
                 appendLine("- 필터 반영: 요청 범위 대비 실제 데이터 포함 회차는 $effectiveRange")
@@ -284,6 +295,24 @@ class SettingsViewModel(
             start != null && end != null -> "$start~${end}회"
             start != null -> "${start}회 이상"
             else -> "${end}회 이하"
+        }
+    }
+
+    private fun buildFilterFulfillmentMessage(summary: TicketHistoryCsvSummary): String? {
+        val start = summary.requestedStartRound
+        val end = summary.requestedEndRound
+        val requestedRoundCount =
+            if (start == null || end == null || start > end) {
+                null
+            } else {
+                end - start + 1
+            }
+        return if (requestedRoundCount == null || requestedRoundCount <= 0) {
+            null
+        } else {
+            val fulfilledRoundCount = summary.roundCount
+            val fulfillmentPercent = (fulfilledRoundCount * 100) / requestedRoundCount
+            "필터 충족률 $fulfilledRoundCount/${requestedRoundCount}회차 ($fulfillmentPercent%)"
         }
     }
 }
