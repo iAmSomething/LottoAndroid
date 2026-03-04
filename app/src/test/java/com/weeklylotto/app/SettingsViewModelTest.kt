@@ -251,6 +251,8 @@ class SettingsViewModelTest {
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 회차 범위: 1200~1201회")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .doesNotContain("필터 반영: 요청 범위 대비 실제 데이터 포함 회차는")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 출처별 게임 수: 자동 5, 수동 4, QR 3")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 데이터 신뢰도: 100% (당첨번호 매칭 회차 기준)")
@@ -421,9 +423,59 @@ class SettingsViewModelTest {
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 회차 범위: 1201~1203회")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .doesNotContain("필터 반영: 요청 범위 대비 실제 데이터 포함 회차는")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 데이터 신뢰도: 66% (당첨번호 매칭 회차 기준)")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 주의: 누락 회차가 있어 결과 해석 시 보수적으로 판단해줘.")
+        }
+
+    @Test
+    fun csv내보내기_요청필터와_실제회차가_다르면_보정안내를_포함한다() =
+        runTest {
+            val backupService =
+                FakeTicketBackupService(
+                    csvExportResult =
+                        Result.success(
+                            TicketHistoryCsvSummary(
+                                ticketCount = 2,
+                                gameCount = 6,
+                                roundCount = 2,
+                                requestedStartRound = 1200,
+                                requestedEndRound = 1205,
+                                firstRoundNumber = 1202,
+                                lastRoundNumber = 1204,
+                                matchedDrawCount = 1,
+                                missingDrawCount = 1,
+                                missingRoundNumbers = listOf(1204),
+                                generatedGameCount = 2,
+                                manualGameCount = 4,
+                                qrGameCount = 0,
+                                winningGameCount = 0,
+                                totalExpectedPrizeAmount = 0L,
+                                fileName = "tickets_history_with_draw_latest.csv",
+                                filePath = "/tmp/tickets_history_with_draw_latest.csv",
+                            ),
+                        ),
+                )
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.exportTicketHistoryCsvForAi(startRound = 1200, endRound = 1205)
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 요청 필터: 1200~1205회")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 회차 범위: 1202~1204회")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 필터 반영: 요청 범위 대비 실제 데이터 포함 회차는 1202~1204회")
         }
 }
 

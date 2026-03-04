@@ -225,10 +225,15 @@ class SettingsViewModel(
                 } else {
                     (summary.matchedDrawCount * 100) / summary.roundCount
                 }
+            val requestedRange = formatRequestedRange(summary)
+            val effectiveRange = formatRoundRange(summary)
             appendLine("로또 주차별 구매/당첨 CSV 분석 요청")
             appendLine("- 회차 수: ${summary.roundCount}")
-            appendLine("- 요청 필터: ${formatRequestedRange(summary)}")
-            appendLine("- 회차 범위: ${formatRoundRange(summary)}")
+            appendLine("- 요청 필터: $requestedRange")
+            appendLine("- 회차 범위: $effectiveRange")
+            if (requestedRange != "전체" && requestedRange != effectiveRange) {
+                appendLine("- 필터 반영: 요청 범위 대비 실제 데이터 포함 회차는 $effectiveRange")
+            }
             appendLine("- 티켓 수: ${summary.ticketCount}")
             appendLine("- 게임 수: ${summary.gameCount}")
             appendLine(
