@@ -241,13 +241,17 @@ class SettingsViewModelTest {
             advanceUntilIdle()
 
             assertThat(viewModel.uiState.value.message)
-                .isEqualTo("CSV 생성 완료 (2회차, 요청 필터 전체, 회차 범위 1200~1201회, 3건, 12게임, 당첨번호 포함 2회차, 당첨게임 1개, 예상당첨금 5000원)")
+                .isEqualTo(
+                    "CSV 생성 완료 (2회차, 요청 필터 전체, 신뢰등급 높음, 회차 범위 1200~1201회, 3건, 12게임, 당첨번호 포함 2회차, 당첨게임 1개, 예상당첨금 5000원)",
+                )
             assertThat(viewModel.uiState.value.csvShareRequest?.filePath)
                 .isEqualTo("/tmp/tickets_history_with_draw_latest.csv")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("로또 주차별 구매/당첨 CSV 분석 요청")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 요청 필터: 전체")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 분석 신뢰 등급: 높음")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .doesNotContain("- 필터 충족률")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
@@ -423,6 +427,8 @@ class SettingsViewModelTest {
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 요청 필터: 1201~1203회")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 분석 신뢰 등급: 보통")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 필터 충족률 3/3회차 (100%)")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 회차 범위: 1201~1203회")
@@ -477,6 +483,8 @@ class SettingsViewModelTest {
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 요청 필터: 1200~1205회")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
+                .contains("- 분석 신뢰 등급: 낮음")
+            assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 필터 충족률 2/6회차 (33%)")
             assertThat(viewModel.uiState.value.csvShareRequest?.shareText)
                 .contains("- 회차 범위: 1202~1204회")
@@ -484,6 +492,8 @@ class SettingsViewModelTest {
                 .contains("- 필터 반영: 요청 범위 대비 실제 데이터 포함 회차는 1202~1204회")
             assertThat(viewModel.uiState.value.message)
                 .contains("필터 충족률 2/6회차 (33%)")
+            assertThat(viewModel.uiState.value.message)
+                .contains("신뢰등급 낮음")
         }
 }
 

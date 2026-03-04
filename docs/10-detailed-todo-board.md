@@ -665,3 +665,8 @@
 - [x] CE-001 `SettingsViewModel` 보강: 요청 범위(`start~end`)가 있을 때 `필터 충족률 x/y회차(z%)` 문구를 CSV 완료 메시지/AI 프롬프트에 추가
 - [x] CE-002 회귀 테스트 보강: 전체 필터(미표시), 100% 충족, 부분 충족(33%) 케이스 검증(`SettingsViewModelTest`)
 - [x] CE-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_filter_fulfillment_rate_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
+
+## CF. F02 v17 AI 프롬프트 분석 신뢰 등급 강화(2026-03-04 Cycle-81)
+- [x] CF-001 `SettingsViewModel` 보강: 커버리지/필터충족률 기반 `분석 신뢰 등급(높음/보통/낮음)` 계산 추가
+- [x] CF-002 CSV 완료 메시지/AI 프롬프트에 신뢰 등급 문구 추가(`신뢰등급`, `- 분석 신뢰 등급: ...`) + 회귀 테스트 보강(`SettingsViewModelTest`)
+- [x] CF-003 증적/문서 동기화(`docs/assets/distribution/ticket_history_csv_reliability_grade_local_2026-03-04.md`, `11`, `16`, `21`, `22`)
