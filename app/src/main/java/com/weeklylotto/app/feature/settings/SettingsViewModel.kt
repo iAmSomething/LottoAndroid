@@ -210,7 +210,14 @@ class SettingsViewModel(
             appendLine("- 당첨 게임 수: ${summary.winningGameCount}")
             appendLine("- 예상 당첨금 합계: ${summary.totalExpectedPrizeAmount}원")
             if (summary.missingDrawCount > 0) {
+                val missingRoundsText =
+                    if (summary.missingRoundNumbers.isEmpty()) {
+                        "미확인"
+                    } else {
+                        summary.missingRoundNumbers.joinToString(separator = ", ")
+                    }
                 appendLine("- 경고: 당첨번호가 없는 회차 ${summary.missingDrawCount}개 포함")
+                appendLine("- 누락 회차 번호: $missingRoundsText")
                 appendLine("- 주의: 누락 회차가 있어 결과 해석 시 보수적으로 판단해줘.")
             }
             appendLine()
