@@ -301,6 +301,49 @@ class SettingsViewModelTest {
         }
 
     @Test
+    fun csv내보내기_대상데이터가없으면_공유를_생성하지않는다() =
+        runTest {
+            val backupService =
+                FakeTicketBackupService(
+                    csvExportResult =
+                        Result.success(
+                            TicketHistoryCsvSummary(
+                                ticketCount = 0,
+                                gameCount = 0,
+                                roundCount = 0,
+                                firstRoundNumber = null,
+                                lastRoundNumber = null,
+                                matchedDrawCount = 0,
+                                missingDrawCount = 0,
+                                missingRoundNumbers = emptyList(),
+                                generatedGameCount = 0,
+                                manualGameCount = 0,
+                                qrGameCount = 0,
+                                winningGameCount = 0,
+                                totalExpectedPrizeAmount = 0L,
+                                fileName = "tickets_history_with_draw_latest.csv",
+                                filePath = "/tmp/tickets_history_with_draw_latest.csv",
+                            ),
+                        ),
+                )
+            val viewModel =
+                SettingsViewModel(
+                    reminderConfigStore = FakeReminderConfigStore(ReminderConfig()),
+                    reminderScheduler = FakeReminderScheduler(),
+                    motionPreferenceStore = FakeMotionPreferenceStore(),
+                    ticketBackupService = backupService,
+                )
+
+            advanceUntilIdle()
+            viewModel.exportTicketHistoryCsvForAi(startRound = 1300, endRound = 1301)
+            advanceUntilIdle()
+
+            assertThat(viewModel.uiState.value.message).isEqualTo("선택한 회차 범위에 내보낼 데이터가 없습니다.")
+            assertThat(viewModel.uiState.value.csvShareRequest).isNull()
+            assertThat(backupService.exportCallCount).isEqualTo(1)
+        }
+
+    @Test
     fun csv내보내기_실패시_실패메시지를_노출한다() =
         runTest {
             val backupService =

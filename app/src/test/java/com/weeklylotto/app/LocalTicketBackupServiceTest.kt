@@ -328,6 +328,41 @@ class LocalTicketBackupServiceTest {
             assertThat(csvText).doesNotContain("1199,2026-03-07,20")
             assertThat(csvText).doesNotContain("1201,2026-03-07,22")
         }
+
+    @Test
+    fun csv내보내기시_회차필터결과가없으면_빈요약을_반환한다() =
+        runTest {
+            val repository =
+                BackupFakeTicketRepository(
+                    listOf(
+                        backupTicket(id = 30L, round = 1200, numbers = listOf(1, 2, 3, 4, 5, 6)),
+                        backupTicket(id = 31L, round = 1201, numbers = listOf(7, 8, 9, 10, 11, 12)),
+                    ),
+                )
+            val backupFile =
+                Files.createTempDirectory(
+                    "ticket-history-csv-filter-empty",
+                ).resolve("tickets_backup_latest.json").toFile()
+            val service =
+                LocalTicketBackupService(
+                    ticketRepository = repository,
+                    backupFile = backupFile,
+                    drawRepository = BackupCsvFakeDrawRepository(rounds = emptyMap()),
+                    resultEvaluator = DefaultResultEvaluator(),
+                )
+
+            val summary = service.exportTicketHistoryCsvForAi(startRound = 1300, endRound = 1301).getOrThrow()
+
+            assertThat(summary.ticketCount).isEqualTo(0)
+            assertThat(summary.gameCount).isEqualTo(0)
+            assertThat(summary.roundCount).isEqualTo(0)
+            assertThat(summary.firstRoundNumber).isNull()
+            assertThat(summary.lastRoundNumber).isNull()
+            val csvText = java.io.File(summary.filePath).readText()
+            assertThat(csvText.lines().first()).contains("round_number,round_draw_date,ticket_id,ticket_source")
+            assertThat(csvText).doesNotContain("1200,2026-03-07,30")
+            assertThat(csvText).doesNotContain("1201,2026-03-07,31")
+        }
 }
 
 private fun backupTicket(
